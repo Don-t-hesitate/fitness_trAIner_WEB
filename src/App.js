@@ -2,27 +2,27 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Col } from 'react-bootstrap';
-import LoginPage from './LoginPage';
-import HamburgerMenu from './HamburgerMenu';
-import AdminDashboard from './AdminDashboard';
-import MemberManage from './MemberManage';
-import MemberInfo from './MemberInfo'
-import ExercisePoseManage from './ExercisePoseManage';
-import ExercisePoseInfo from './ExercisePoseInfo';
-import ExercisePoseAdd from './ExercisePoseAdd';
-import ExerciseManage from './ExerciseManage';
-import ExerciseAdd from './ExerciseAdd';
-import ExerciseInfo from './ExerciseInfo';
-import FoodManage from './FoodManage';
-import FoodAdd from './FoodAdd';
-import FoodInfo from './FoodInfo';
-import SideBar from './SideBar';
-import FoodAiManage from './FoodAiManage';
-import FoodAiTrain from './FoodAiTrain';
-import FoodAiInfo from './FoodAiInfo';
-import WorkoutAiManage from './WorkoutAiManage';
-import WorkoutAiTrain from './WorkoutAiTrain';
-import WorkoutAiInfo from './WorkoutAiInfo';
+import LoginPage from './pages/LoginPage';
+import AdminDashboard from './pages/AdminDashboard';
+import HamburgerMenu from './components/HamburgerMenu';
+import SideBar from './components/SideBar';
+import MemberInfo from './components/Member/MemberInfo'
+import MemberManage from './components/Member/MemberManage';
+import ExercisePoseManage from './components/Exercise/ExercisePoseManage';
+import ExercisePoseAdd from './components/Exercise/ExercisePoseAdd';
+import ExercisePoseInfo from './components/Exercise/ExercisePoseInfo';
+import ExerciseManage from './components/Exercise/ExerciseManage';
+import ExerciseAdd from './components/Exercise/ExerciseAdd';
+import ExerciseInfo from './components/Exercise/ExerciseInfo';
+import FoodManage from './components/Food/FoodManage';
+import FoodAdd from './components/Food/FoodAdd';
+import FoodInfo from './components/Food/FoodInfo';
+import FoodAiManage from './components/Ai/FoodAiManage';
+import FoodAiTrain from './components/Ai/FoodAiTrain';
+import FoodAiInfo from './components/Ai/FoodAiInfo';
+import WorkoutAiManage from './components/Ai/WorkoutAiManage';
+import WorkoutAiTrain from './components/Ai/WorkoutAiTrain';
+import WorkoutAiInfo from './components/Ai/WorkoutAiInfo';
 
 const MemberInfoWrapper = () => {
   const { userId } = useParams();

@@ -1,6 +1,6 @@
 import React from 'react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import { useRouteMatch } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import HamburgerMenu from './components/HamburgerMenu';
@@ -25,7 +25,7 @@ import WorkoutAiInfo from './components/Ai/WorkoutAiInfo';
 
 
 const MemberInfoWrapper = () => {
-  const { params: { userId } } = useRouteMatch('/member/:userId');
+  const { userId } = useRouteLoaderData('/member/:userId');
 
   return (
     <>
@@ -43,7 +43,7 @@ const MemberInfoWrapper = () => {
 };
 
 const FoodAiInfoWrapper = () => {
-  const { params: { foodAiId } } = useRouteMatch('/ai/food/:foodAiId');
+  const { foodAiId } = useRouteLoaderData('/ai/food/:foodAiId');
 
   return (
     <>
@@ -61,7 +61,7 @@ const FoodAiInfoWrapper = () => {
 };
 
 const WorkoutAiManageWrapper = () => {
-  const { params: { parentId } } = useRouteMatch('/ai/workout/:parentId?');
+  const { parentId } = useRouteLoaderData('/ai/workout/:parentId?');
 
   return (
     <>
@@ -79,7 +79,7 @@ const WorkoutAiManageWrapper = () => {
 };
 
 const WorkoutAiInfoWrapper = () => {
-  const { params: { parentId, subId } } = useRouteMatch('/ai/workout/:parentId/:subId');
+  const { parentId, subId } = useRouteLoaderData('/ai/workout/:parentId/:subId');
 
   return (
     <>
@@ -97,7 +97,7 @@ const WorkoutAiInfoWrapper = () => {
 };
 
 const ExerciseInfoWrapper = () => {
-  const { params: { exerId } } = useRouteMatch('/exercise/:exerId');
+  const { exerId } = useRouteLoaderData('/exercise/:exerId');
 
   return (
     <>
@@ -115,7 +115,7 @@ const ExerciseInfoWrapper = () => {
 };
 
 const ExercisePoseInfoWrapper = () => {
-  const { params: { exerId } } = useRouteMatch('/exercise/pose/:exerId');
+  const { exerId } = useRouteLoaderData('/exercise/pose/:exerId');
 
   return (
     <>
@@ -133,7 +133,7 @@ const ExercisePoseInfoWrapper = () => {
 };
 
 const FoodInfoWrapper = () => {
-  const { params: { foodId } } = useRouteMatch('/food/:foodId');
+  const { foodId } = useRouteLoaderData('/food/:foodId');
 
   return (
     <>
@@ -184,7 +184,7 @@ const routes = [
       </>
     ),
   },
-  { path: '/member/:userId', element: <MemberInfoWrapper /> },
+  { path: '/member/:userId', element: <MemberInfoWrapper />, loader: ({ params }) => ({ userId: params.userId }) },
   {
     path: '/exercise',
     element: (
@@ -217,7 +217,7 @@ const routes = [
       </>
     ),
   },
-  { path: '/exercise/:exerId', element: <ExerciseInfoWrapper /> },
+  { path: '/exercise/:exerId', element: <ExerciseInfoWrapper />, loader: ({ params }) => ({ exerId: params.exerId }) },
   {
     path: '/exercise/pose',
     element: (
@@ -250,7 +250,7 @@ const routes = [
       </>
     ),
   },
-  { path: '/exercise/pose/:exerId', element: <ExercisePoseInfoWrapper /> },
+  { path: '/exercise/pose/:exerId', element: <ExercisePoseInfoWrapper />, loader: ({ params }) => ({ exerId: params.exerId }) },
   {
     path: '/food',
     element: (
@@ -283,7 +283,7 @@ const routes = [
       </>
     ),
   },
-  { path: '/food/:foodId', element: <FoodInfoWrapper /> },
+  { path: '/food/:foodId', element: <FoodInfoWrapper />, loader: ({ params }) => ({ foodId: params.foodId }) },
   {
     path: '/ai/food',
     element: (
@@ -316,8 +316,8 @@ const routes = [
       </>
     ),
   },
-  { path: '/ai/food/:foodAiId', element: <FoodAiInfoWrapper /> },
-  { path: '/ai/workout/:parentId?', element: <WorkoutAiManageWrapper /> },
+  { path: '/ai/food/:foodAiId', element: <FoodAiInfoWrapper />, loader: ({ params }) => ({ foodAiId: params.foodAiId }) },
+  { path: '/ai/workout/:parentId?', element: <WorkoutAiManageWrapper />, loader: ({ params }) => ({ parentId: params.parentId }) },
   {
     path: '/ai/workout/train',
     element: (
@@ -334,7 +334,7 @@ const routes = [
       </>
     ),
   },
-  { path: '/ai/workout/:parentId/:subId', element: <WorkoutAiInfoWrapper /> },
+  { path: '/ai/workout/:parentId/:subId', element: <WorkoutAiInfoWrapper />, loader: ({ params }) => ({ parentId: params.parentId, subId: params.subId }) },
 ];
 
 export default routes;

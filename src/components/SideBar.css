@@ -1,0 +1,43 @@
+.sidebar {
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  min-width: 200px;
+}
+
+.sidebar a {
+  color: #333;
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar a.disabled {
+  color: #888;
+  font-weight: bold;
+  cursor: default;
+  margin-top: 20px;
+}
+
+.sidebar .sub-menu {
+  font-size: 14px;
+  padding-left: 20px;
+  margin-top: 5px;
+
+  display: block;
+  width: 100%;
+  font-size: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item {
+  width: 100%; /* 너비 */
+  height: 80%; /* 높이 */
+}

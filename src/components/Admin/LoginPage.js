@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../../AuthContext';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
@@ -7,16 +9,32 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const { login } = useContext(AuthContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 로그인 인증 로직을 구현합니다.
     // 로그인 성공 시 대시보드 페이지로 이동합니다.
-    if (username === 'admin' && password === 'admin') {
-      navigate('/dashboard');
-    } else if (username === ' ' && password === ' ') {
-      alert('hello');
-    } else {
-      alert('잘못된 아이디 또는 비밀번호를 입력하셨습니다.');
+    try {
+      const response = await axios.post(
+        '/api/login',
+        { username, password },
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        // 로그인 성공 시 대시보드 페이지로 이동합니다.
+        console.log('success, ' + response.data.user);
+        login(response.data.user);
+        navigate('/dashboard');
+        console.log('success~~');
+      } else {
+        // 로그인 실패 시 에러 메시지를 표시합니다.
+        alert('잘못된 아이디 또는 비밀번호를 입력하셨습니다.');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('로그인 요청에 실패했습니다. 서비스 관리자에게 문의 후 다시 시도해주세요.');
     }
   };
 

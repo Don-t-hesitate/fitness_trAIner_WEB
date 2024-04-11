@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Offcanvas, Button, Accordion } from 'react-bootstrap';
 import './HamburgerMenu.css';
+import { AuthContext } from '../AuthContext';
 import { Link } from 'react-router-dom';
 
 const HamburgerMenu = () => {
   const [show, setShow] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   // const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
 
@@ -15,7 +19,7 @@ const HamburgerMenu = () => {
         {/* <Button variant="outline-dark" onClick={handleShow}>
           <span className="navbar-toggler-icon"></span>
         </Button> */}
-        
+        <Button style={{margin: "10px"}} onClick={() => {logout(); navigate('/');}}>로그아웃</Button>
       </Navbar>
 
       {/* <Offcanvas show={show} onHide={handleClose} placement="end" className="offcanvas-slide">
@@ -76,10 +80,7 @@ const HamburgerMenu = () => {
         </Offcanvas.Body>
       </Offcanvas> */}
 
-      {/* 기존 컨텐츠 */}
-      <div className="content-wrapper">
-        {/* 여기에 기존 컨텐츠를 렌더링합니다. */}
-      </div>
+      
     </>
   );
 };

@@ -1,21 +1,28 @@
 import React from 'react';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useRouteLoaderData, useLoaderData } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import LoginPage from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
+import PrivateRoute from './PrivateRoute';
+import LoginPage from './components/Admin//LoginPage';
+import InfoFind from './components/Admin/InfoFind';
 import HamburgerMenu from './components/HamburgerMenu';
 import SideBar from './components/SideBar';
+
+import AdminDashboard from './components/Admin//AdminDashboard';
+
 import MemberInfo from './components/Member/MemberInfo'
 import MemberManage from './components/Member/MemberManage';
+
 import ExercisePoseManage from './components/Exercise/ExercisePoseManage';
 import ExercisePoseAdd from './components/Exercise/ExercisePoseAdd';
 import ExercisePoseInfo from './components/Exercise/ExercisePoseInfo';
 import ExerciseManage from './components/Exercise/ExerciseManage';
 import ExerciseAdd from './components/Exercise/ExerciseAdd';
 import ExerciseInfo from './components/Exercise/ExerciseInfo';
+
 import FoodManage from './components/Food/FoodManage';
 import FoodAdd from './components/Food/FoodAdd';
 import FoodInfo from './components/Food/FoodInfo';
+
 import FoodAiManage from './components/Ai/FoodAiManage';
 import FoodAiTrain from './components/Ai/FoodAiTrain';
 import FoodAiInfo from './components/Ai/FoodAiInfo';
@@ -25,7 +32,7 @@ import WorkoutAiInfo from './components/Ai/WorkoutAiInfo';
 
 
 const MemberInfoWrapper = () => {
-  const { userId } = useRouteLoaderData('/member/:userId');
+  const { userId } = useLoaderData();
 
   return (
     <>
@@ -43,6 +50,7 @@ const MemberInfoWrapper = () => {
 };
 
 const FoodAiInfoWrapper = () => {
+  console.log("sibel: "+ useRouteLoaderData('/ai/food/:foodAiId'));
   const { foodAiId } = useRouteLoaderData('/ai/food/:foodAiId');
 
   return (
@@ -152,189 +160,239 @@ const FoodInfoWrapper = () => {
 
 const routes = [
   { path: '/', element: <LoginPage /> },
+  { path: '/find', element: <PrivateRoute element={InfoFind} /> },
   {
     path: '/dashboard',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={11}>
-            <AdminDashboard />
-          </Col>
-          <Col md={1}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="g-0">
+              <Col md={9}>
+                <AdminDashboard />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
   {
     path: '/member',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <MemberManage />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="g-0">
+              <Col md={9}>
+                <MemberManage />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/member/:userId', element: <MemberInfoWrapper />, loader: ({ params }) => ({ userId: params.userId }) },
+  { path: '/member/:userId', element: <PrivateRoute element={MemberInfoWrapper} />, loader: ({ params }) => { 
+      const userId = params.userId;
+      // userId를 사용하여 필요한 데이터 로드 로직 구현
+      return { userId };
+    } 
+  },
   {
     path: '/exercise',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <ExerciseManage />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <ExerciseManage />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
   {
     path: '/exercise/add',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <ExerciseAdd />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <ExerciseAdd />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/exercise/:exerId', element: <ExerciseInfoWrapper />, loader: ({ params }) => ({ exerId: params.exerId }) },
+  { path: '/exercise/:exerId', element: <PrivateRoute element={ExerciseInfoWrapper} />, loader: ({ params }) => ({ exerId: params.exerId }) },
   {
     path: '/exercise/pose',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <ExercisePoseManage />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <ExercisePoseManage />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
   {
     path: '/exercise/pose/add',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <ExercisePoseAdd />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <ExercisePoseAdd />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/exercise/pose/:exerId', element: <ExercisePoseInfoWrapper />, loader: ({ params }) => ({ exerId: params.exerId }) },
+  { path: '/exercise/pose/:exerId', element: <PrivateRoute element={ExercisePoseInfoWrapper} />, loader: ({ params }) => ({ exerId: params.exerId }) },
   {
     path: '/food',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <FoodManage />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <FoodManage />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
   {
     path: '/food/add',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <FoodAdd />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <FoodAdd />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/food/:foodId', element: <FoodInfoWrapper />, loader: ({ params }) => ({ foodId: params.foodId }) },
+  { path: '/food/:foodId', element: <PrivateRoute element={FoodInfoWrapper} />, loader: ({ params }) => ({ foodId: params.foodId }) },
   {
     path: '/ai/food',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <FoodAiManage />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <FoodAiManage />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
   {
     path: '/ai/food/train',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <FoodAiTrain />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <FoodAiTrain />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/ai/food/:foodAiId', element: <FoodAiInfoWrapper />, loader: ({ params }) => ({ foodAiId: params.foodAiId }) },
-  { path: '/ai/workout/:parentId?', element: <WorkoutAiManageWrapper />, loader: ({ params }) => ({ parentId: params.parentId }) },
+  { path: '/ai/food/:foodAiId', element: <PrivateRoute element={FoodAiInfoWrapper} />, loader: ({ params }) => ({ foodAiId: params.foodAiId }) },
+  { path: '/ai/workout/:parentId?', element: <PrivateRoute element={WorkoutAiManageWrapper} />, loader: ({ params }) => ({ parentId: params.parentId }) },
   {
     path: '/ai/workout/train',
     element: (
-      <>
-        <HamburgerMenu />
-        <Row className="align-items-center">
-          <Col md={9}>
-            <WorkoutAiTrain />
-          </Col>
-          <Col md={3}>
-            <SideBar />
-          </Col>
-        </Row>
-      </>
+      <PrivateRoute
+        element={() => (
+          <>
+            <HamburgerMenu />
+            <Row className="align-items-center">
+              <Col md={9}>
+                <WorkoutAiTrain />
+              </Col>
+              <Col md={3}>
+                <SideBar />
+              </Col>
+            </Row>
+          </>
+        )}
+      />
     ),
   },
-  { path: '/ai/workout/:parentId/:subId', element: <WorkoutAiInfoWrapper />, loader: ({ params }) => ({ parentId: params.parentId, subId: params.subId }) },
+  { path: '/ai/workout/:parentId/:subId', element: <PrivateRoute element={WorkoutAiInfoWrapper} />, loader: ({ params }) => ({ parentId: params.parentId, subId: params.subId }) },
 ];
 
 export default routes;

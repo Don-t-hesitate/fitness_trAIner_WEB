@@ -1,176 +1,40 @@
 import React from 'react';
-import { useRouteLoaderData, useLoaderData } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { createBrowserRouter } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import PrivateRoute from './PrivateRoute';
-import LoginPage from './components/Admin//LoginPage';
-import InfoFind from './components/Admin/InfoFind';
-import HamburgerMenu from './components/HamburgerMenu';
-import SideBar from './components/SideBar';
+import PrivateRoute from './PrivateRoute'; // 인증된 사용자만 접근할 수 있는 라우트 컴포넌트
+import HeaderBar from './components/HeaderBar'; // 헤더바 컴포넌트
+import SideBar from './components/SideBar'; // 사이드바 컴포넌트
+import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 
-import AdminDashboard from './components/Admin//AdminDashboard';
+// 각 페이지 컴포넌트 임포트
+import { LoginPage, PasswordReset, Dashboard } from './components/Admin/';
+import { MemberInfo, MemberManage } from './components/Member/';
+import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './components/Exercise/';
+import { FoodManage, FoodAdd, FoodInfo } from './components/Food/';
+import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './components/Ai/';
 
-import MemberInfo from './components/Member/MemberInfo'
-import MemberManage from './components/Member/MemberManage';
+// 브라우저 라우터 생성 및 라우트 정의
+const routes = createBrowserRouter([
+  // 잘못된 경로에 대한 처리
+  { path: '*', element: <><Helmet><title>잘못된 접근</title></Helmet><h1>없는 페이지입니다.</h1><p style={{fontSize: '24px'}}>유효한 주소로 접근하세요.</p></> },
+  // 로그인 페이지
+  { path: '/', element: <><Helmet><title>로그인</title></Helmet><LoginPage /></> },
+  // 비밀번호 찾기 페이지
+  { path: '/find-password', element: <><Helmet><title>비밀번호 찾기</title></Helmet><PasswordReset /></>},
 
-import ExercisePoseManage from './components/Exercise/ExercisePoseManage';
-import ExercisePoseAdd from './components/Exercise/ExercisePoseAdd';
-import ExercisePoseInfo from './components/Exercise/ExercisePoseInfo';
-import ExerciseManage from './components/Exercise/ExerciseManage';
-import ExerciseAdd from './components/Exercise/ExerciseAdd';
-import ExerciseInfo from './components/Exercise/ExerciseInfo';
-
-import FoodManage from './components/Food/FoodManage';
-import FoodAdd from './components/Food/FoodAdd';
-import FoodInfo from './components/Food/FoodInfo';
-
-import FoodAiManage from './components/Ai/FoodAiManage';
-import FoodAiTrain from './components/Ai/FoodAiTrain';
-import FoodAiInfo from './components/Ai/FoodAiInfo';
-import WorkoutAiManage from './components/Ai/WorkoutAiManage';
-import WorkoutAiTrain from './components/Ai/WorkoutAiTrain';
-import WorkoutAiInfo from './components/Ai/WorkoutAiInfo';
-
-
-const MemberInfoWrapper = () => {
-  const { userId } = useLoaderData();
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <MemberInfo userId={userId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const FoodAiInfoWrapper = () => {
-  console.log("sibel: "+ useRouteLoaderData('/ai/food/:foodAiId'));
-  const { foodAiId } = useRouteLoaderData('/ai/food/:foodAiId');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <FoodAiInfo foodAiId={foodAiId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const WorkoutAiManageWrapper = () => {
-  const { parentId } = useRouteLoaderData('/ai/workout/:parentId?');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <WorkoutAiManage parentId={parentId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const WorkoutAiInfoWrapper = () => {
-  const { parentId, subId } = useRouteLoaderData('/ai/workout/:parentId/:subId');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <WorkoutAiInfo parentId={parentId} subId={subId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const ExerciseInfoWrapper = () => {
-  const { exerId } = useRouteLoaderData('/exercise/:exerId');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <ExerciseInfo exerId={exerId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const ExercisePoseInfoWrapper = () => {
-  const { exerId } = useRouteLoaderData('/exercise/pose/:exerId');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <ExercisePoseInfo exerId={exerId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const FoodInfoWrapper = () => {
-  const { foodId } = useRouteLoaderData('/food/:foodId');
-
-  return (
-    <>
-      <HamburgerMenu />
-      <Row className="align-items-center">
-        <Col md={9}>
-          <FoodInfo foodId={foodId} />
-        </Col>
-        <Col md={3}>
-          <SideBar />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
-const routes = [
-  { path: '/', element: <LoginPage /> },
-  { path: '/find', element: <PrivateRoute element={InfoFind} /> },
+  // 대시보드 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/dashboard',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
+            <Helmet><title>대시보드</title></Helmet>
+            <HeaderBar />
             <Row className="g-0">
               <Col md={9}>
-                <AdminDashboard />
+                <Dashboard />
               </Col>
               <Col md={3}>
                 <SideBar />
@@ -181,13 +45,16 @@ const routes = [
       />
     ),
   },
+
+  // 회원 관리 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/member',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
+            <Helmet><title>회원 관리</title></Helmet>
+            <HeaderBar />
             <Row className="g-0">
               <Col md={9}>
                 <MemberManage />
@@ -201,20 +68,19 @@ const routes = [
       />
     ),
   },
-  { path: '/member/:userId', element: <PrivateRoute element={MemberInfoWrapper} />, loader: ({ params }) => { 
-      const userId = params.userId;
-      // userId를 사용하여 필요한 데이터 로드 로직 구현
-      return { userId };
-    } 
-  },
+  // 회원 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/member/:userId', element: <><Helmet><title>회원 상세보기</title></Helmet><GenericWrapper mainComponent={MemberInfo} paramKeys={['userId']} /></> },
+
+  // 운동 카테고리 관리 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>운동 카테고리 관리</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <ExerciseManage />
               </Col>
@@ -227,14 +93,16 @@ const routes = [
       />
     ),
   },
+  // 운동 카테고리 추가 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise/add',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>운동 카테고리 추가</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <ExerciseAdd />
               </Col>
@@ -247,15 +115,19 @@ const routes = [
       />
     ),
   },
-  { path: '/exercise/:exerId', element: <PrivateRoute element={ExerciseInfoWrapper} />, loader: ({ params }) => ({ exerId: params.exerId }) },
+  // 운동 카테고리 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/exercise/:exerId', element:  <><Helmet><title>운동 카테고리 상세보기</title></Helmet><GenericWrapper mainComponent={ExerciseInfo} paramKeys={["exerId"]}  /></> },
+
+  // 운동 자세 데이터 관리 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise/pose',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>운동 자세 데이터 관리</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <ExercisePoseManage />
               </Col>
@@ -268,14 +140,16 @@ const routes = [
       />
     ),
   },
+  // 운동 자세 데이터 추가 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise/pose/add',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>운동 자세 데이터 추가</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <ExercisePoseAdd />
               </Col>
@@ -288,15 +162,19 @@ const routes = [
       />
     ),
   },
-  { path: '/exercise/pose/:exerId', element: <PrivateRoute element={ExercisePoseInfoWrapper} />, loader: ({ params }) => ({ exerId: params.exerId }) },
+  // 운동 자세 데이터 상세보기 페이지 (GenericWrapper 컴포넌트 사용)  
+  { path: '/exercise/pose/:exerId', element: <><Helmet><title>운동 자세 데이터 상세보기</title></Helmet><GenericWrapper mainComponent={ExercisePoseInfo} paramKeys={["exerId"]} /></> },
+
+  // 식품 데이터 관리 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/food',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>식품 데이터 관리</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <FoodManage />
               </Col>
@@ -309,14 +187,16 @@ const routes = [
       />
     ),
   },
+  // 식품 데이터 추가 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/food/add',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>식품 데이터 추가</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <FoodAdd />
               </Col>
@@ -329,57 +209,68 @@ const routes = [
       />
     ),
   },
-  { path: '/food/:foodId', element: <PrivateRoute element={FoodInfoWrapper} />, loader: ({ params }) => ({ foodId: params.foodId }) },
+  // 식품 데이터 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/food/:foodId', element: <><Helmet><title>식품 데이터 상세보기</title></Helmet><GenericWrapper mainComponent={FoodInfo} paramKeys={["foodId"]} /></> },
+  
+  // 식단 추천 AI 관리 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/ai/food',
     element: (
       <PrivateRoute
-        element={() => (
-          <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
-              <Col md={9}>
-                <FoodAiManage />
-              </Col>
-              <Col md={3}>
-                <SideBar />
-              </Col>
-            </Row>
-          </>
-        )}
+      element={() => (
+        <>
+          <Helmet><title>식단 추천 AI 관리</title></Helmet>
+          <HeaderBar />
+          <Row className="g-0">
+            <Col md={9}>
+              <FoodAiManage />
+            </Col>
+            <Col md={3}>
+              <SideBar />
+            </Col>
+          </Row>
+        </>
+      )}
       />
     ),
   },
+  // 식단 추천 AI 학습 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/ai/food/train',
     element: (
       <PrivateRoute
-        element={() => (
-          <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
-              <Col md={9}>
-                <FoodAiTrain />
-              </Col>
-              <Col md={3}>
-                <SideBar />
-              </Col>
-            </Row>
-          </>
-        )}
+      element={() => (
+        <>
+          <Helmet><title>식단 추천 AI 학습</title></Helmet>
+          <HeaderBar />
+          <Row className="g-0">
+            <Col md={9}>
+              <FoodAiTrain />
+            </Col>
+            <Col md={3}>
+              <SideBar />
+            </Col>
+          </Row>
+        </>
+      )}
       />
     ),
   },
-  { path: '/ai/food/:foodAiId', element: <PrivateRoute element={FoodAiInfoWrapper} />, loader: ({ params }) => ({ foodAiId: params.foodAiId }) },
-  { path: '/ai/workout/:parentId?', element: <PrivateRoute element={WorkoutAiManageWrapper} />, loader: ({ params }) => ({ parentId: params.parentId }) },
+  // 식단 추천 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/ai/food/:foodAiId', element:  <><Helmet><title>식단 추천 AI 상세보기</title></Helmet><GenericWrapper mainComponent={FoodAiInfo} paramKeys={["foodAiId"]} /></> },
+
+  // 운동 자세 AI 관리 페이지 (GenericWrapper 컴포넌트 사용, parentId 파라미터 옵션)
+  { path: '/ai/workout/:parentId?', element: <><Helmet><title>운동 자세 AI 관리</title></Helmet><GenericWrapper mainComponent={WorkoutAiManage} paramKeys={["parentId"]} /></> },
+  // 운동 자세 AI 학습 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/ai/workout/train',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <HamburgerMenu />
-            <Row className="align-items-center">
+            <Helmet><title>운동 자세 AI 학습</title></Helmet>
+            <HeaderBar />
+            <Row className="g-0">
               <Col md={9}>
                 <WorkoutAiTrain />
               </Col>
@@ -392,7 +283,8 @@ const routes = [
       />
     ),
   },
-  { path: '/ai/workout/:parentId/:subId', element: <PrivateRoute element={WorkoutAiInfoWrapper} />, loader: ({ params }) => ({ parentId: params.parentId, subId: params.subId }) },
-];
+  // 운동 자세 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용, parentId와 subId 파라미터)
+  { path: '/ai/workout/:parentId/:subId', element: <><Helmet><title>운동 자세 AI 상세보기</title></Helmet><GenericWrapper mainComponent={WorkoutAiInfo} paramKeys={['parentId', 'subId']} /></> }
+]);
 
 export default routes;

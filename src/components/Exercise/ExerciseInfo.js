@@ -17,7 +17,7 @@ function ExerciseInfo({ exerId }) {
     useEffect(() => {
       const fetchExerciseData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/api/exercise/${exerId}`);
+          const response = await axios.get(`/api/exercise/${exerId}`);
           setExerciseData(response.data);
         } catch (error) {
           console.error('Error fetching exercise data:', error);
@@ -67,33 +67,6 @@ function ExerciseInfo({ exerId }) {
                   <Form.Control value={exerciseData.cal} />
                 </Col>
               </Form.Group>
-              {/* {
-    "condition": "팔꿈치 위치 고정",
-    "value": false
-},
-{
-    "condition": "손목의 중립",
-    "value": false
-},
-{
-    "condition": "척추의 중립",
-    "value": false
-},
-{
-    "condition": "이완 시 팔 긴장 유지",
-    "value": true
-},
-{
-    "condition": "수축 시 어깨 으쓱 없음",
-    "value": false
-} */}
-
-              {/* <Form.Group as={Row}>
-                <Col sm={{ span: 9, offset: 3 }}>
-                  <Button variant="secondary" className="mr-3">변경내용 초기화</Button>
-                  <Button variant="secondary">과거 계약 조회</Button>
-                </Col>
-              </Form.Group> */}
             </Form>
           </Col>
         </Row>

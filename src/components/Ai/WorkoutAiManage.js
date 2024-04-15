@@ -11,7 +11,7 @@ function WorkoutAiVersion(props) {
   useEffect(() => {
     const fetchVerData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/ai/workout/${props.parentId}`);
+        const response = await axios.get(`/api/ai/workout/${props.parentId}`);
         setAiVerData(response.data);
       } catch (error) {
         console.error('Error fetching ver data:', error);
@@ -24,7 +24,7 @@ function WorkoutAiVersion(props) {
   useEffect(() => {
     const fetchAiData = async () => {
       try {
-      const response = await axios.get('http://localhost:3001/api/exercise');
+      const response = await axios.get('/api/exercise');
       setAiData(response.data);
       } catch (error) {
       console.error('Error fetching ai data:', error);
@@ -96,7 +96,7 @@ function WorkoutAiList() {
   useEffect(() => {
     const fetchAiData = async () => {
       try {
-      const response = await axios.get('http://localhost:3001/api/exercise');
+      const response = await axios.get('/api/exercise');
       setAiData(response.data);
       } catch (error) {
       console.error('Error fetching ai data:', error);

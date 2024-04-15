@@ -1,23 +1,12 @@
 import React from "react";
-import { FiHome, FiUsers, FiSettings } from 'react-icons/fi';
-import { Button, Nav, Accordion } from "react-bootstrap";
+import { Nav, Accordion } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import './SideBar.css';
 
 function SideBar() {
   return (
-    // <Nav className="d-flex justify-content-end align-items-center sidebar">
-    //   <LinkContainer to="/dashboard">
-    //     <Nav.Link><FiHome />대시보드</Nav.Link>
-    //   </LinkContainer>
-    //   <LinkContainer to="/member">
-    //     <Nav.Link><FiUsers />사용자</Nav.Link>
-    //   </LinkContainer>
-    //   <LinkContainer to="/ai">
-    //     <Nav.Link><FiSettings />AI</Nav.Link>
-    //   </LinkContainer>
-    // </Nav>
     <Nav className="flex-column sidebar">
+      {/* 대시보드와 회원 관리 링크 */}
       <Nav.Item>
         <LinkContainer to="/dashboard">
           <Nav.Link>대시보드</Nav.Link>
@@ -27,6 +16,7 @@ function SideBar() {
         </LinkContainer>
       </Nav.Item>
 
+      {/* 운동 데이터 관리 아코디언 */}
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>운동 데이터 관리</Accordion.Header>
@@ -43,6 +33,7 @@ function SideBar() {
         </Accordion.Item>
       </Accordion>
 
+      {/* 식품 데이터 관리 아코디언 */}
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>식품 데이터 관리</Accordion.Header>
@@ -59,6 +50,7 @@ function SideBar() {
         </Accordion.Item>
       </Accordion>
 
+      {/* 음식 취향 분석 AI 관리 아코디언 */}
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>음식 취향 분석 AI 관리</Accordion.Header>
@@ -75,6 +67,7 @@ function SideBar() {
         </Accordion.Item>
       </Accordion>
 
+      {/* 운동 자세 분석 AI 관리 아코디언 */}
       <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">
           <Accordion.Header>운동 자세 분석 AI 관리</Accordion.Header>

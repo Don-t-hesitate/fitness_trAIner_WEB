@@ -18,7 +18,7 @@ function FoodAiInfo({ foodAiId }) {
   useEffect(() => {
       const fetchAiData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/api/ai/food/${foodAiId}`);
+          const response = await axios.get(`/api/ai/food/${foodAiId}`);
           setAiData(response.data);
         } catch (error) {
           console.error('Error fetching ai data:', error);

@@ -1,0 +1,9 @@
+/* 콘텐츠 사이 공간 분배 */
+.justify-content-between {
+  justify-content: space-between;
+}
+
+/* 커스텀 네비게이션 바 높이 */
+.custom-navbar {
+  height: 60px;
+}

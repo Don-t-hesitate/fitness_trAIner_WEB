@@ -17,7 +17,7 @@ function ExerciseInfo({ exerId }) {
     useEffect(() => {
       const fetchExerciseData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3001/api/exercise/pose/${exerId}`);
+          const response = await axios.get(`/api/exercise/pose/${exerId}`);
           setExerciseData(response.data);
         } catch (error) {
           console.error('Error fetching exercise data:', error);

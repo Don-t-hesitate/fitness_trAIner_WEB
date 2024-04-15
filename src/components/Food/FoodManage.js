@@ -10,7 +10,7 @@ function FoodManage() {
   useEffect(() => {
     const fetchFoodData = async () => {
       try {
-      const response = await axios.get('http://localhost:3001/api/food');
+      const response = await axios.get('/api/food');
       setFoodData(response.data);
       } catch (error) {
       console.error('Error fetching food data:', error);

@@ -10,7 +10,7 @@ function ExerciseManage() {
   useEffect(() => {
     const fetchExerciseData = async () => {
       try {
-      const response = await axios.get('http://localhost:3001/api/exercise');
+      const response = await axios.get('/api/exercise');
       setExerciseData(response.data);
       } catch (error) {
       console.error('Error fetching exercise data:', error);

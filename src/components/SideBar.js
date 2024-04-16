@@ -11,7 +11,7 @@ function SideBar() {
         <LinkContainer to="/dashboard">
           <Nav.Link>대시보드</Nav.Link>
         </LinkContainer>
-        <LinkContainer to="/member">
+        <LinkContainer to="/user">
           <Nav.Link>회원 관리</Nav.Link>
         </LinkContainer>
       </Nav.Item>

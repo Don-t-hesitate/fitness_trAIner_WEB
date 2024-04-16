@@ -8,8 +8,8 @@ import SideBar from './components/SideBar'; // 사이드바 컴포넌트
 import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 
 // 각 페이지 컴포넌트 임포트
-import { LoginPage, PasswordReset, Dashboard } from './components/Admin/';
-import { MemberInfo, MemberManage } from './components/Member/';
+import { LoginPage, Dashboard } from './components/Admin/';
+import { UserInfo, UserManage } from './components/User/';
 import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './components/Exercise/';
 import { FoodManage, FoodAdd, FoodInfo } from './components/Food/';
 import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './components/Ai/';
@@ -20,8 +20,6 @@ const routes = createBrowserRouter([
   { path: '*', element: <><Helmet><title>잘못된 접근</title></Helmet><h1>없는 페이지입니다.</h1><p style={{fontSize: '24px'}}>유효한 주소로 접근하세요.</p></> },
   // 로그인 페이지
   { path: '/', element: <><Helmet><title>로그인</title></Helmet><LoginPage /></> },
-  // 비밀번호 찾기 페이지
-  { path: '/find-password', element: <><Helmet><title>비밀번호 찾기</title></Helmet><PasswordReset /></>},
 
   // 대시보드 페이지 (인증된 사용자만 접근 가능)
   {
@@ -48,7 +46,7 @@ const routes = createBrowserRouter([
 
   // 회원 관리 페이지 (인증된 사용자만 접근 가능)
   {
-    path: '/member',
+    path: '/user',
     element: (
       <PrivateRoute
         element={() => (
@@ -57,7 +55,7 @@ const routes = createBrowserRouter([
             <HeaderBar />
             <Row className="g-0">
               <Col md={9}>
-                <MemberManage />
+                <UserManage />
               </Col>
               <Col md={3}>
                 <SideBar />
@@ -69,7 +67,7 @@ const routes = createBrowserRouter([
     ),
   },
   // 회원 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
-  { path: '/member/:userId', element: <><Helmet><title>회원 상세보기</title></Helmet><GenericWrapper mainComponent={MemberInfo} paramKeys={['userId']} /></> },
+  { path: '/user/:userId', element: <><Helmet><title>회원 상세보기</title></Helmet><GenericWrapper mainComponent={UserInfo} paramKeys={['userId']} /></> },
 
   // 운동 카테고리 관리 페이지 (인증된 사용자만 접근 가능)
   {

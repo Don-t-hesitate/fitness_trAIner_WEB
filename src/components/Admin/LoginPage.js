@@ -20,25 +20,26 @@ function LoginPage() {
     try {
       // 서버에 로그인 요청 전송
       const response = await axios.post(
-        '/api/login',
+        '/api/admin/login',
         { username, password },
         { withCredentials: true }
       );
 
       if (response.data.success) {
         // 로그인 성공 시 대시보드 페이지로 이동
-        console.log('success, ' + response.data.user);
-        login(response.data.user);
+        console.log(response.config.data.split(","));
+        const user = JSON.parse(response.config.data)
+        login(user);
         navigate('/dashboard');
         console.log('success~~');
-      } else {
+      } /* else if (response.data.success === false) {
         // 로그인 실패 시 에러 메시지 표시
-        alert('잘못된 아이디 또는 비밀번호를 입력하셨습니다.');
-      }
+        alert(response.data.message, "status: ", response.data.status);
+      } */
     } catch (error) {
       // 로그인 요청 실패 시 에러 처리
       console.error('Login failed:', error);
-      alert('로그인 요청에 실패했습니다. 서비스 관리자에게 문의 후 다시 시도해주세요.');
+      alert('Login failed: ' + JSON.stringify(error.response.data.message));
     }
   };
 

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-
 
 
 function FoodInfo({ foodId }) {
     const [foodData, setFoodData] = useState(null);
-    const navigate = useNavigate();
 
     const handleClick = (e) => {
       e.preventDefault();

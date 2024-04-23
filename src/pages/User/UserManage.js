@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Table } from 'react-bootstrap';
+import { Container, Row, Col, Table, Pagination } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function UserManage() {
   // 회원 데이터를 저장할 상태
   const [userData, setUserData] = useState(null); 
+  // 현재 페이지 번호를 저장할 상태 및 보여줄 회원 수를 저장할 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(12);
   // 페이지 이동을 위한 navigate 함수
   const navigate = useNavigate(); 
   
@@ -38,6 +41,22 @@ function UserManage() {
     navigate(`/user/${userId}`);
   };
 
+  // 현재 페이지에 해당하는 사용자 목록 계산
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = userData.slice(indexOfFirstUser, indexOfLastUser);
+
+  // 페이지 번호 클릭 시 실행되는 함수
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 페이지네이션에 표시할 페이지 번호 계산
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(userData.length / usersPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <Container>
       <Row>
@@ -52,8 +71,8 @@ function UserManage() {
               </tr>
             </thead>
             <tbody>
-              {userData && // 회원 데이터가 존재하는 경우에만 렌더링
-                userData.map((user, index) => (
+              {currentUsers && // currentUsers가 존재하면 테이블 행을 렌더링
+                currentUsers.map((user, index) => (
                   <tr key={user.userId} onClick={() => handleRowClick(user.userId)}>
                     {/* 각 행을 클릭하면 handleRowClick 함수가 실행되어 회원 정보 페이지로 이동 */}
                     <td>{user.userId}</td>
@@ -63,6 +82,17 @@ function UserManage() {
                 ))}
             </tbody>
           </Table>
+          <Pagination>
+            {pageNumbers.map((number) => (
+              <Pagination.Item
+                key={number}
+                active={number === currentPage}
+                onClick={() => handlePageClick(number)}
+              >
+                {number}
+              </Pagination.Item>
+            ))}
+          </Pagination>
         </Col>
       </Row>
     </Container>

@@ -77,16 +77,12 @@ function LoginPage() {
                   </div>
                 </div>
                 <p></p>
-                <Button variant="primary" type="submit" className="ml-2" style={{ height: '100%', width: '100%' }}>
-                  Enter
+                <Button variant="primary" type="submit" className="ml-2" style={{ height: '150%', width: '100%' }}>
+                  <div style={{fontWeight: "bold"}}>로그인</div>
                 </Button>
               </Form>
-              
             </Card.Body>
           </Card>
-          <div className="text-center mt-3">
-            <a href="/find-password">비밀번호 찾기</a>
-          </div>
         </Col>
       </Row>
     </Container>

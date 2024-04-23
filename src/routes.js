@@ -8,11 +8,11 @@ import SideBar from './components/SideBar'; // 사이드바 컴포넌트
 import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 
 // 각 페이지 컴포넌트 임포트
-import { LoginPage, Dashboard } from './components/Admin/';
-import { UserInfo, UserManage } from './components/User/';
-import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './components/Exercise/';
-import { FoodManage, FoodAdd, FoodInfo } from './components/Food/';
-import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './components/Ai/';
+import { LoginPage, Dashboard } from './pages/Admin';
+import { UserInfo, UserManage } from './pages/User';
+import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './pages/Exercise';
+import { FoodManage, FoodAdd, FoodInfo } from './pages/Food';
+import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
 
 // 브라우저 라우터 생성 및 라우트 정의
 const routes = createBrowserRouter([

@@ -20,7 +20,9 @@ const HeaderBar = () => {
         </Navbar.Brand>
         {/* 로그아웃 버튼 */}
         <Button style={{margin: "10px"}} onClick={() => {logout(); navigate('/');}}>
-          로그아웃
+          <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>logout</span>
+          <span style={{verticalAlign: "middle", fontWeight: "bold"}}> 로그아웃</span>
+          
         </Button>
       </Navbar>
     </>

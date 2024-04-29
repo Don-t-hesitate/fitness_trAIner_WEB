@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+## ignore
+build1/
+workoutAI.code-workspace - 바로 가기.lnk
+webpack.config.js

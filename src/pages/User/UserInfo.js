@@ -25,7 +25,7 @@ function UserInfo({ userId }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(`/api/admin/${userId}`);
+      const response = await axios.delete(`/admin/${userId}`);
       if (response.data.success) {
         alert(response.data.message);
         navigate('/user');
@@ -42,7 +42,7 @@ function UserInfo({ userId }) {
     e.preventDefault();
     try {
       // PUT 요청을 보내 회원 정보 업데이트
-      const response = await axios.put(`/api/admin/${userId}`, {
+      const response = await axios.put(`/admin/${userId}`, {
         id: userData.userId,
         username,
         nickname,
@@ -54,7 +54,7 @@ function UserInfo({ userId }) {
       if (response.data.success) {
         // 업데이트 성공 메시지 출력
         alert(response.data.message);
-        navigate(0 , { replace: true });
+        // navigate(0 , { replace: true });
       } else {
         // 업데이트 실패
         console.error('회원 정보 업데이트 실패');
@@ -70,7 +70,7 @@ function UserInfo({ userId }) {
     const fetchUserData = async () => {
       try {
         // 컴포넌트 마운트 및 userId 변경 시 실행되는 hook
-        const response = await axios.get(`/api/admin/users`);
+        const response = await axios.get(`/admin/users`);
         let data = response.data.result.userList;
         data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트

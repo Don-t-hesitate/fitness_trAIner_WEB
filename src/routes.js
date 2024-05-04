@@ -8,6 +8,7 @@ import SideBar from './components/SideBar'; // 사이드바 컴포넌트
 import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 
 // 각 페이지 컴포넌트 임포트
+import MainPage from './pages/MainPage';
 import { LoginPage, Dashboard } from './pages/Admin';
 import { UserInfo, UserManage } from './pages/User';
 import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './pages/Exercise';
@@ -16,10 +17,11 @@ import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain,
 
 // 브라우저 라우터 생성 및 라우트 정의
 const routes = createBrowserRouter([
+  { path: '/', element: <><Helmet><title>메인 페이지</title></Helmet><MainPage /></>},
   // 잘못된 경로에 대한 처리
   { path: '*', element: <><Helmet><title>잘못된 접근</title></Helmet><h1>없는 페이지입니다.</h1><p style={{fontSize: '24px'}}>유효한 주소로 접근하세요.</p></> },
   // 로그인 페이지
-  { path: '/', element: <><Helmet><title>로그인</title></Helmet><LoginPage /></> },
+  { path: '/login', element: <><Helmet><title>로그인</title></Helmet><LoginPage /></> },
 
   // 대시보드 페이지 (인증된 사용자만 접근 가능)
   {

@@ -2,32 +2,33 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import FoodExcel from './FoodExcel';
 
 function FoodManage() {
   const [foodData, setFoodData] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchFoodData = async () => {
-      try {
-      const response = await axios.get('/api/food');
-      setFoodData(response.data);
-      } catch (error) {
-      console.error('Error fetching food data:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFoodData = async () => {
+  //     try {
+  //     const response = await axios.get('/api/food');
+  //     setFoodData(response.data);
+  //     } catch (error) {
+  //     console.error('Error fetching food data:', error);
+  //     }
+  //   };
   
-    fetchFoodData();
-  }, []);
+  //   fetchFoodData();
+  // }, []);
 
-  if (!foodData) {
-    return <div>Loading...</div>;
-  }
+  // if (!foodData) {
+  //   return <div>Loading...</div>;
+  // }
 
-  const handleRowClick = (foodId) => {
-    // Navigate to the desired page with the food ID as a parameter
-    navigate(`/food/${foodId}`);
-  };
+  // const handleRowClick = (foodId) => {
+  //   // Navigate to the desired page with the food ID as a parameter
+  //   navigate(`/food/${foodId}`);
+  // };
 
   return (
     <Container>
@@ -69,7 +70,7 @@ function FoodManage() {
                 </th>
               </tr>
             </thead>
-            <tbody>
+            {/* <tbody>
               {foodData.map((food, index) => (
                 <tr key={food.id}  onClick={() => handleRowClick(food.code)}>
                   <td>{food.code}</td>
@@ -86,14 +87,14 @@ function FoodManage() {
                   <td>{food.cookMethod}</td>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
           </Table>
+          <FoodExcel />
         </Col>
       </Row>
-      <Row className="align-items-center">
+      {/* <Row className="align-items-center">
         <Col>
           <div>
-            {/* 페이지 번호 컴포넌트 또는 엘리먼트 추가 */}
             <span style={{color: 'blue', fontWeight: 'bold', textDecoration: "underline"}}>1</span> <span> 2 3 4 5</span>
           </div>
         </Col>
@@ -102,7 +103,7 @@ function FoodManage() {
             추가
           </Button>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 }

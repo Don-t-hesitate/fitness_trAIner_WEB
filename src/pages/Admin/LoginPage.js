@@ -20,7 +20,7 @@ function LoginPage() {
     try {
       // 서버에 로그인 요청 전송
       const response = await axios.post(
-        '/admin/login',
+        '/api/admin/login',
         { username, password },
         { withCredentials: true }
       );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataGrid, { textEditor } from "react-data-grid";
-import { read, utils, writeFile } from "xlsx";
+import { read, utils, writeFile, write } from "xlsx";
+import { Button, ButtonGroup, Stack } from 'react-bootstrap';
 
 import 'react-data-grid/lib/styles.css';
 
@@ -33,6 +34,8 @@ export default function FoodExcel() {
   const [sheets, setSheets] = useState([]);
   const [current, setCurrent] = useState("");
   const [deletedRows, setDeletedRows] = useState([]);
+  const [__html, setHTML] = React.useState("");
+  const [sz, setSz] = React.useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,10 +57,7 @@ export default function FoodExcel() {
   }
 
   async function handleAB(file) {
-    console.log("before read");
-    console.log("file: " + file);
     const data = await read(file);
-    console.log("after read");
 
     setWorkBook(data.Sheets);
     setSheets(data.SheetNames);
@@ -72,9 +72,9 @@ export default function FoodExcel() {
   useEffect(() => { (async () => {
     const res = await fetch("http://localhost:8080/admin/excel");
     const ab = await res.arrayBuffer();
-    console.log("before ab ");
+
     await handleAB(ab);
-    console.log("after ab");
+
     setIsLoading(false);
   })(); }, []);
 
@@ -82,14 +82,28 @@ export default function FoodExcel() {
     return <div>Loading...</div>;
   }
 
-  function saveFile(ext) {
+  async function saveFile() { try {
     workBook[current] = utils.aoa_to_sheet(arrayify(rows));
-
+    
     const wb = utils.book_new();
     sheets.forEach((n) => { utils.book_append_sheet(wb, workBook[n], n); });
+    
+    // writeFile(wb, "final_food_db.xlsx");
+    
+    /* Export to XLSX */
+    const data = write(wb, {bookType: 'xlsx', type: 'array'});
 
-    writeFile(wb, "SheetJSRDG." + ext);
-  }
+    /* Make FormData */
+    const fdata = new FormData();
+    fdata.append('file', new File([data], 'sheetjs.xlsx'));
+
+    (async() => {
+      /* send data using fetch */
+      const res = await fetch("http://localhost:8080/admin/excel", { method: "POST", body: fdata });
+      const txt = await res.text();
+      console.log(txt);
+    })();
+  } catch (e) { console.error(e); } }
 
   function addRow() {
     setRows(prevRows => [...prevRows, []]);
@@ -102,15 +116,21 @@ export default function FoodExcel() {
           <select onChange={async (e) => selectSheet(sheets[+(e.target.value)])}>
             {sheets.map((sheet, idx) => (<option key={sheet} value={idx}>{sheet}</option>))}
           </select>
+          <br></br>열 삭제는 해당 열의 셀 더블클릭, 열 추가는 아래 Add Row 버튼
         </p>
-        <p>열 삭제는 해당 열의 셀 더블클릭, 열 추가는 아래 Add Row 버튼</p>
-        <div className="flex-cont"><b>현재 시트: {current}</b></div>
+        <Stack direction="horizontal">
+          <div className="flex-cont"><b>현재 시트: {current}</b></div>
+          <ButtonGroup className='ms-auto'>
+            <Button variant="secondary" onClick={addRow}>행 추가</Button>
+            <Button onClick={() => saveFile()}>업데이트</Button>
+          </ButtonGroup>
+        </Stack>
         <DataGrid 
         columns={columns}
         rows={rows}
         onRowsChange={setRows}
         onRowDoubleClick={(row) => {
-          console.log('this is row' + row);
+          console.log('this is row: ' + row);
           deleteRow(row);
         }}
         defaultColumnOptions={{resizable: true, minWidth: 110, maxWidth:210}}
@@ -119,7 +139,6 @@ export default function FoodExcel() {
         {/* <div className="flex-cont">{["xlsx", "xlsb", "xls"].map((ext) => (
           <button key={ext} onClick={() => saveFile(ext)}>export [.{ext}]</button>
         ))}</div> */}
-        <button onClick={addRow}>Add Row</button>
       </> )}
     </>
   );

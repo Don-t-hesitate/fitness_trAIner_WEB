@@ -17,6 +17,7 @@ import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain,
 
 // 브라우저 라우터 생성 및 라우트 정의
 const routes = createBrowserRouter([
+  // 메인 페이지
   { path: '/', element: <><Helmet><title>메인 페이지</title></Helmet><MainPage /></>},
   // 잘못된 경로에 대한 처리
   { path: '*', element: <><Helmet><title>잘못된 접근</title></Helmet><h1>없는 페이지입니다.</h1><p style={{fontSize: '24px'}}>유효한 주소로 접근하세요.</p></> },

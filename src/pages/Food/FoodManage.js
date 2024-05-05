@@ -35,7 +35,7 @@ function FoodManage() {
       <Row>
         <Col>
           <h2>음식 관리</h2>
-          <Table striped bordered hover>
+          {/* <Table striped bordered hover>
             <thead>
               <tr>
                 <th>음식 코드</th>
@@ -69,7 +69,7 @@ function FoodManage() {
                   요리방식
                 </th>
               </tr>
-            </thead>
+            </thead> */}
             {/* <tbody>
               {foodData.map((food, index) => (
                 <tr key={food.id}  onClick={() => handleRowClick(food.code)}>
@@ -88,7 +88,7 @@ function FoodManage() {
                 </tr>
               ))}
             </tbody> */}
-          </Table>
+          {/* </Table> */}
           <FoodExcel />
         </Col>
       </Row>

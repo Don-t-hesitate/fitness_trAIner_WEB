@@ -10,6 +10,7 @@ function UserInfo({ userId }) {
   const [age, setAge] = useState(''); // 회원 나이를 저장할 상태
   const [height, setHeight] = useState(''); // 회원 키를 저장할 상태
   const [weight, setWeight] = useState(''); // 회원 몸무게를 저장할 상태
+  const [gender, setGender] = useState(''); // 회원 성별을 저장할 상태
   
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
@@ -42,13 +43,13 @@ function UserInfo({ userId }) {
     e.preventDefault();
     try {
       // PUT 요청을 보내 회원 정보 업데이트
-      const response = await axios.put(`/admin/${userId}`, {
-        id: userData.userId,
-        username,
+      const response = await axios.put(`/api/admin/${userId}`, {
+        userId: userData.userId,
         nickname,
         age,
         height,
-        weight
+        weight,
+        gender
       });
 
       if (response.data.success) {
@@ -70,7 +71,7 @@ function UserInfo({ userId }) {
     const fetchUserData = async () => {
       try {
         // 컴포넌트 마운트 및 userId 변경 시 실행되는 hook
-        const response = await axios.get(`/admin/users`);
+        const response = await axios.get(`/api/admin/users`);
         let data = response.data.result.userList;
         data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트
@@ -82,6 +83,7 @@ function UserInfo({ userId }) {
           setAge(data.age);
           setHeight(data.height);
           setWeight(data.weight);
+          setGender(data.gender);
         }
       } catch (error) {
         // 에러 발생 시 에러 메시지 출력
@@ -159,6 +161,16 @@ function UserInfo({ userId }) {
               </Form.Label>
               <Col sm="9">
                 <Form.Control value={weight || ''} onChange={(e) => setWeight(e.target.value)} />
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row}>
+              <Form.Label column sm="3">
+                <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>wc</span>
+                <span style={{verticalAlign: "middle"}}> 회원 성별</span>
+              </Form.Label>
+              <Col sm="9">
+                <Form.Control value={gender || ''} onChange={(e) => setGender(e.target.value)} />
               </Col>
             </Form.Group>
             

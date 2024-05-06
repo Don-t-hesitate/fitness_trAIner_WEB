@@ -12,7 +12,7 @@ import MainPage from './pages/MainPage';
 import { LoginPage, Dashboard } from './pages/Admin';
 import { UserInfo, UserManage } from './pages/User';
 import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './pages/Exercise';
-import { FoodManage, FoodAdd, FoodInfo } from './pages/Food';
+import { FoodManage, PreferenceManage, PreferenceInfo } from './pages/Food';
 import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
 
 // 브라우저 라우터 생성 및 라우트 정의
@@ -188,30 +188,11 @@ const routes = createBrowserRouter([
       />
     ),
   },
-  // 식품 데이터 추가 페이지 (인증된 사용자만 접근 가능)
-  {
-    path: '/food/add',
-    element: (
-      <PrivateRoute
-        element={() => (
-          <>
-            <Helmet><title>식품 데이터 추가</title></Helmet>
-            <HeaderBar />
-            <Row className="g-0">
-              <Col md={9}>
-                <FoodAdd />
-              </Col>
-              <Col md={3}>
-                <SideBar />
-              </Col>
-            </Row>
-          </>
-        )}
-      />
-    ),
-  },
-  // 식품 데이터 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
-  { path: '/food/:foodId', element: <><Helmet><title>식품 데이터 상세보기</title></Helmet><GenericWrapper mainComponent={FoodInfo} paramKeys={["foodId"]} /></> },
+  
+  // 사용자 음식 선호도 관리 페이지 (인증된 사용자만 접근 가능)
+  { path: '/preference', element: <><Helmet><title>음식 선호도 관리</title></Helmet><GenericWrapper mainComponent={PreferenceManage} /></> },
+  // 사용자 음식 선호도 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/preference/:userId', element: <><Helmet><title>음식 선호도 상세보기</title></Helmet><GenericWrapper mainComponent={PreferenceInfo} paramKeys={["userId"]} /></> },
   
   // 식단 추천 AI 관리 페이지 (인증된 사용자만 접근 가능)
   {

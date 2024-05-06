@@ -63,7 +63,7 @@ function SideBar() {
                   <span style={{verticalAlign: "middle"}}> 식품 정보 데이터 관리</span>
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/food">
+              <LinkContainer to="/preference">
                 <Nav.Link className="sub-menu">
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>thumbs_up_down</span>
                   <span style={{verticalAlign: "middle"}}> 사용자 음식 선호도 데이터 관리</span>

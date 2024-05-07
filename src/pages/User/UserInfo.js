@@ -23,6 +23,7 @@ function UserInfo({ userId }) {
     }
   };
 
+  // 회원 정보 삭제 함수
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
@@ -43,7 +44,7 @@ function UserInfo({ userId }) {
     e.preventDefault();
     try {
       // PUT 요청을 보내 회원 정보 업데이트
-      const response = await axios.put(`/api/admin/${userId}`, {
+      const response = await axios.put(`/admin/${userId}`, {
         userId: userData.userId,
         nickname,
         age,
@@ -71,7 +72,8 @@ function UserInfo({ userId }) {
     const fetchUserData = async () => {
       try {
         // 컴포넌트 마운트 및 userId 변경 시 실행되는 hook
-        const response = await axios.get(`/api/admin/users`);
+        const response = await axios.get(`/admin/users`);
+
         let data = response.data.result.userList;
         data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트
@@ -120,7 +122,7 @@ function UserInfo({ userId }) {
                 <span style={{verticalAlign: "middle"}}> 회원 ID</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={username || ''} onChange={(e) => setUsername(e.target.value)} disabled />
+                <Form.Control value={username || ''} disabled />
               </Col>
             </Form.Group>
 

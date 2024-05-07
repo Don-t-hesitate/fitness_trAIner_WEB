@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DataGrid, { textEditor } from "react-data-grid";
-import { read, utils, writeFile, write } from "xlsx";
+import { read, utils, write } from "xlsx";
 import { Button, ButtonGroup, Stack } from 'react-bootstrap';
 
 import 'react-data-grid/lib/styles.css';
@@ -28,17 +28,16 @@ const getRowsCols = (data, sheetName) => ({
 });
 
 export default function FoodExcel() {
-  const [rows, setRows] = useState([]);
-  const [columns, setColumns] = useState([]);
-  const [workBook, setWorkBook] = useState({});
-  const [sheets, setSheets] = useState([]);
-  const [current, setCurrent] = useState("");
-  const [deletedRows, setDeletedRows] = useState([]);
-  const [__html, setHTML] = React.useState("");
-  const [sz, setSz] = React.useState(0);
+  const [rows, setRows] = useState([]); // 엑셀 행을 저장할 상태
+  const [columns, setColumns] = useState([]); // 엑셀 열을 저장할 상태
+  const [workBook, setWorkBook] = useState({}); // 엑셀 워크북을 저장할 상태
+  const [sheets, setSheets] = useState([]); // 엑셀 시트 이름을 저장할 상태
+  const [current, setCurrent] = useState(""); // 현재 선택된 시트 이름을 저장할 상태
+  const [deletedRows, setDeletedRows] = useState([]); // 삭제된 행을 저장할 상태
 
   const [isLoading, setIsLoading] = useState(false);
 
+  // 특정 행을 삭제하는 함수
   const deleteRow = (rowToDelete) => {
     const newRows = rows.filter(
       (row) => JSON.stringify(row) !== JSON.stringify(rowToDelete)
@@ -47,6 +46,7 @@ export default function FoodExcel() {
     setDeletedRows([...deletedRows, rowToDelete]);
   };
 
+  // 엑셀 시트 선택 시 실행되는 함수
   function selectSheet(name) {
     workBook[current] = utils.aoa_to_sheet(arrayify(rows));
 
@@ -56,6 +56,7 @@ export default function FoodExcel() {
     setCurrent(name);
   }
 
+  // 엑셀 파일을 읽어와서 상태에 저장하는 함수
   async function handleAB(file) {
     const data = await read(file);
 
@@ -69,19 +70,22 @@ export default function FoodExcel() {
     setCurrent(name);
   }
 
+  // 컴포넌트가 마운트될 때 한 번만 실행
   useEffect(() => { (async () => {
     const res = await fetch("http://localhost:8080/admin/excel");
-    const ab = await res.arrayBuffer();
+    const ab = await res.arrayBuffer(); // ArrayBuffer로 변환
 
     await handleAB(ab);
 
     setIsLoading(false);
   })(); }, []);
 
+  // 엑셀 파일이 로딩 중인 경우 로딩 메시지 표시
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
+  // 엑셀 파일을 서버에 반영하는 함수
   async function saveFile() { try {
     workBook[current] = utils.aoa_to_sheet(arrayify(rows));
     
@@ -105,6 +109,7 @@ export default function FoodExcel() {
     })();
   } catch (e) { console.error(e); } }
 
+  // 행 추가 함수
   function addRow() {
     setRows(prevRows => [...prevRows, []]);
   }

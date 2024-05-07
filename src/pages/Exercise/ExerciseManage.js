@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Row, Col, Table, Button } from 'react-bootstrap';
+import { Container, Row, Col, Table, Button, Pagination, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function ExerciseManage() {
+  // 운동 데이터를 저장할 상태
   const [exerciseData, setExerciseData] = useState(null);
+  // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const [exercisesPerPage] = useState(12);
+  // 페이지 이동을 위한 navigate 함수
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExerciseData = async () => {
       try {
-      const response = await axios.get('/api/exercise');
-      setExerciseData(response.data);
+      const response = await axios.get('/exercises');
+      setExerciseData(response.data.result.exerciseList);
+      console.log(response.data.result.exerciseList);
       } catch (error) {
       console.error('Error fetching exercise data:', error);
       }
@@ -25,9 +31,25 @@ function ExerciseManage() {
   }
 
   const handleRowClick = (exerciseId) => {
-    // Navigate to the desired page with the exercise ID as a parameter
+    // 운동 ID를 파라미터로 전달하여 운동 정보 페이지로 이동
     navigate(`/exercise/${exerciseId}`);
   };
+
+  // 현재 페이지에 해당하는 운동 목록 계산
+  const indexOfLastExercise = currentPage * exercisesPerPage;
+  const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
+  const currentExercises = exerciseData.slice(indexOfFirstExercise, indexOfLastExercise);
+
+  // 페이지 번호 클릭 시 실행되는 함수
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 페이지네이션에 표시할 페이지 번호 계산
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(exerciseData.length / exercisesPerPage); i++) {
+    pageNumbers.push(i);
+  }
 
   return (
     <Container>
@@ -43,28 +65,28 @@ function ExerciseManage() {
               </tr>
             </thead>
             <tbody>
-              {exerciseData.map((exercise, index) => (
-                <tr key={exercise.no}  onClick={() => handleRowClick(exercise.no)}>
-                  <td>{exercise.no}</td>
-                  <td>{exercise.name}</td>
-                  <td>{exercise.cal}</td>
+              {currentExercises.map((exercise, index) => (
+                <tr key={exercise.exerciseId}  onClick={() => handleRowClick(exercise.exerciseId)}>
+                  <td>{exercise.exerciseId}</td>
+                  <td>{exercise.exerciseName}</td>
+                  <td>{exercise.perKcal}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
-        </Col>
-      </Row>
-      <Row className="align-items-center">
-        <Col>
-          <div>
-            {/* 페이지 번호 컴포넌트 또는 엘리먼트 추가 */}
-            <span style={{color: 'blue', fontWeight: 'bold', textDecoration: "underline"}}>1</span> <span> 2 3 4 5</span>
-          </div>
-        </Col>
-        <Col xs="auto" className="ml-auto">
-          <Button variant="primary" size="sm" href="/exercise/add">
-            추가
-          </Button>
+          <Stack direction="horizontal">
+            <Pagination className='mb-0'>
+              {pageNumbers.map((number) => (
+                <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageClick(number)}>
+                  {number}
+                </Pagination.Item>
+              ))}
+            </Pagination>
+            <Button variant="primary" className="ms-auto" href='/exercise/add' style={{fontWeight: "bold"}}>
+                <span className="material-symbols-outlined" style={{ verticalAlign: "middle"}}>add</span>
+                <span style={{ verticalAlign: "middle" }}> 추가</span>
+              </Button>
+          </Stack>
         </Col>
       </Row>
     </Container>

@@ -18,9 +18,11 @@ function LoginPage() {
     e.preventDefault();
     
     try {
+      console.log('env: ' + process.env.REACT_APP_API_URL);
+      console.log('env + url: ' +  String(process.env.REACT_APP_API_URL) + '/admin/login');
       // 서버에 로그인 요청 전송
       const response = await axios.post(
-        '/admin/login',
+        process.env.REACT_APP_API_URL + '/admin/login',
         { username, password },
         { withCredentials: true }
       );

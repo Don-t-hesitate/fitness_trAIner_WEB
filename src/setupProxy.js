@@ -6,6 +6,7 @@ module.exports = function(app) {
     '/api',
     createProxyMiddleware({
       target: 'http://localhost:8080', // 프록시 요청을 전달할 백엔드 서버 URL
+      // changeOrigin: true // 대상 서버의 도메인을 프록시 요청의 호스트 헤더로 변경
       changeOrigin: true, // 대상 서버의 도메인을 프록시 요청의 호스트 헤더로 변경
       pathRewrite: {
         '^/api': '' // URL ^/api -> 공백 변경

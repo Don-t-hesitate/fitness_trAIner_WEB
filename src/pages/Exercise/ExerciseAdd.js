@@ -23,7 +23,7 @@ function ExerciseAdd() {
         perKcal
       };
   
-      const response = await axios.post(`/exercises`, data);
+      const response = await axios.post(process.env.REACT_APP_API_URL + `/exercises`, data);
   
       console.log("response?!: ", response);
       // response 객체와 response.data 객체가 존재하는지 확인
@@ -31,7 +31,7 @@ function ExerciseAdd() {
         if (response.data.success) {
           if (uploadFile) {
             console.log("uploadFile: ", uploadFile);
-            const videoResponse = await axios.post(`/exercises/video/${exerciseName}`, uploadFile, {
+            const videoResponse = await axios.post(process.env.REACT_APP_API_URL + `/exercises/video/${exerciseName}`, uploadFile, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },

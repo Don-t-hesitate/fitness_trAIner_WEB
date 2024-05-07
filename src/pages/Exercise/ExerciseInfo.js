@@ -26,7 +26,7 @@ function ExerciseInfo({ exerId }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(`/exercises/${exerciseData.exerciseName}`);
+      const response = await axios.delete(process.env.REACT_APP_API_URL + `/exercises/${exerciseData.exerciseName}`);
       if (response.data.success) {
         alert(response.data.result);
         navigate('/exercise');
@@ -44,7 +44,7 @@ function ExerciseInfo({ exerId }) {
     console.log("버튼 누름");
     try {
       // PUT 요청을 보내 운동 정보 업데이트
-      const response = await axios.put(`/exercises`, {
+      const response = await axios.put(process.env.REACT_APP_API_URL + `/exercises`, {
         exerciseName: exerciseData.exerciseName,
         newExerciseName: exerciseName,
         newExerciseType: exerciseType,
@@ -71,7 +71,7 @@ function ExerciseInfo({ exerId }) {
   useEffect(() => {
     const fetchExerciseData = async () => {
       try {
-        const response = await axios.get(`/exercises`);
+        const response = await axios.get(process.env.REACT_APP_API_URL + `/exercises`);
         
         let data = response.data.result.exerciseList;
         data = data.find((item) => item.exerciseId === Number(exerId));

@@ -10,11 +10,15 @@ function PreferenceInfo({ userId }) {
   const [activityLevel, setActivityLevel] = useState(''); // 활동량을 저장할 상태
   const [preferenceTypeFood, setPreferenceTypeFood] = useState(''); // 선호 음식 종류를 저장할 상태
 
+  // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
+  const [spicyPreferenceError, setSpicyPreferenceError] = useState(null);
+  const [activityLevelError, setActivityLevelError] = useState(null);
+
   // 수정 버튼 클릭 시 실행되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/admin/food/preferences/${userId}`, {
+      const response = await axios.put(process.env.REACT_APP_API_URL + `/admin/food/preferences/${userId}`, {
         userId: preferenceData.userId,
         nickname: preferenceData.nickname,
         spicyPreference,
@@ -39,7 +43,7 @@ function PreferenceInfo({ userId }) {
   useEffect(() => {
     const fetchPreferenceData = async () => {
       try {
-        const response = await axios.get("/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
+        const response = await axios.get(process.env.REACT_APP_API_URL + "/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
         let data = response.data.result;
         data = data.find((preference) => preference.userId === Number(userId));
         setPreferenceData(data); // 선호도 데이터를 상태에 저장
@@ -62,6 +66,19 @@ function PreferenceInfo({ userId }) {
   if (!preferenceData) {
     return <div>Loading...</div>;
   }
+
+  // 숫자만 입력 가능하도록 하는 함수
+  const handleChange = (e, setValue, setError) => {
+    const inputValue = e.target.value;
+    const isNumber = /^\d+$/.test(inputValue);
+
+    if (!isNumber && inputValue !== '') {
+      setError('숫자만 입력 가능합니다.');
+    } else {
+      setError(null);
+      setValue(inputValue);
+    }
+  };
 
   return (
     <Container>
@@ -105,8 +122,10 @@ function PreferenceInfo({ userId }) {
                 <Form.Control
                   type="text"
                   value={spicyPreference}
-                  onChange={(e) => setSpicyPreference(e.target.value)}
+                  onChange={(e) => handleChange(e, setSpicyPreference, setSpicyPreferenceError)}
+                  isInvalid={!!spicyPreferenceError}
                 />
+                <Form.Control.Feedback type="invalid">{spicyPreferenceError}</Form.Control.Feedback>
               </Col>
             </Form.Group>
 
@@ -115,7 +134,7 @@ function PreferenceInfo({ userId }) {
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>egg_alt</span>
                 <span style={{verticalAlign: "middle"}}> 육류 섭취량</span>
               </Form.Label>
-              <Col sm="9">
+              <Col sm="9" className="mt-2">
                 <Form.Check
                   inline
                   label="True"
@@ -162,8 +181,10 @@ function PreferenceInfo({ userId }) {
                 <Form.Control
                   type="text"
                   value={activityLevel}
-                  onChange={(e) => setActivityLevel(e.target.value)}
+                  onChange={(e) => handleChange(e, setActivityLevel, setActivityLevelError)}
+                  isInvalid={!!activityLevelError}
                 />
+                <Form.Control.Feedback type="invalid">{activityLevelError}</Form.Control.Feedback>
               </Col>
             </Form.Group>
 

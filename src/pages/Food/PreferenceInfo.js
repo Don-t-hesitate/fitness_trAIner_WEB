@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col, Table, Pagination, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 function PreferenceInfo({ userId }) {
   const [preferenceData, setPreferenceData] = useState(null); // 선호도 데이터를 저장할 상태
@@ -14,7 +14,7 @@ function PreferenceInfo({ userId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/admin/food/preferences/${userId}`, {
+      const response = await axios.put(`/admin/food/preferences/${userId}`, {
         userId: preferenceData.userId,
         nickname: preferenceData.nickname,
         spicyPreference,
@@ -39,11 +39,11 @@ function PreferenceInfo({ userId }) {
   useEffect(() => {
     const fetchPreferenceData = async () => {
       try {
-        const response = await axios.get("/api/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
+        const response = await axios.get("/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
         let data = response.data.result;
         data = data.find((preference) => preference.userId === Number(userId));
         setPreferenceData(data); // 선호도 데이터를 상태에 저장
-        console.log('data?: ', data);
+        console.log('data: ', data);
         if (data) {
           setSpicyPreference(data.spicyPreference);
           setMeatConsumption(data.meatConsumption);
@@ -195,7 +195,6 @@ function PreferenceInfo({ userId }) {
           </Form>
         </Col>
       </Row>
-      <Button onClick={console.log("meatCnsmptn: ", meatConsumption)}>check</Button>
     </Container>
   );
 }

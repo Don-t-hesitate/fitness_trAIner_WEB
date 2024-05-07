@@ -17,7 +17,7 @@ function PreferenceManage() {
     const fetchPreferenceData = async () => {
       try {
         console.log("fetchPreferenceData");
-        const response = await axios.get("/api/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
+        const response = await axios.get("/admin/food/preferences"); // 서버에서 선호도 데이터를 가져옴
         setPreferenceData(response.data.result); // 선호도 데이터를 상태에 저장
         if (response.data.success) {
           console.log(response.data.message);

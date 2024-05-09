@@ -10,6 +10,9 @@ function ExerciseInfo({ exerId }) {
   const [perKcal, setPerKcal] = useState(''); // 운동 소모 칼로리를 저장할 상태
   const [exerciseType, setExerciseType] = useState(''); // 운동 타입을 저장할 상태
 
+  // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
+  const [error, setError] = useState(null);
+
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
 
@@ -41,7 +44,7 @@ function ExerciseInfo({ exerId }) {
   // 수정 버튼 클릭 시 실행되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("버튼 누름");
+    
     try {
       // PUT 요청을 보내 운동 정보 업데이트
       const response = await axios.put(process.env.REACT_APP_API_URL + `/exercises`, {
@@ -50,11 +53,10 @@ function ExerciseInfo({ exerId }) {
         newExerciseType: exerciseType,
         newPerKcal: perKcal
       });
-      console.log("response: ", response);
-      console.log("ㅇㅇ?");
+      
       if (response.data.success) {
         // 업데이트 성공 메시지 출력
-        alert(response.data.message);
+        alert(response.data.message + ': ' + response.data.result);
       } else {
         // 업데이트 실패
         alert('운동 정보 수정 실패');
@@ -62,7 +64,7 @@ function ExerciseInfo({ exerId }) {
     } catch (error) {
       // 에러 메시지 출력
       alert('Error updating exercise data:', JSON.stringify(error.response.data.message));
-      console.log('exerData', exerciseData);
+      console.log('error: ', error);
     }
   };
 
@@ -76,7 +78,6 @@ function ExerciseInfo({ exerId }) {
         let data = response.data.result.exerciseList;
         data = data.find((item) => item.exerciseId === Number(exerId));
         setExerciseData(data);
-        console.log("data: ", data);
 
         if (data) {
           // 각 필드 상태 업데이트
@@ -85,7 +86,6 @@ function ExerciseInfo({ exerId }) {
           setPerKcal(data.perKcal);
           setExerciseType(data.exerciseType);
         }
-        console.log(exerciseData);
       } catch (error) {
         console.error('Error fetching exercise data:', error);
       }
@@ -98,6 +98,19 @@ function ExerciseInfo({ exerId }) {
   if (!exerciseData) {
     return <div>Loading...</div>;
   }
+
+  // 숫자만 입력 가능하도록 하는 함수
+  const handleChange = (e, setValue, setError) => {
+    const inputValue = e.target.value;
+    const isNumber = /^\d+$/.test(inputValue);
+
+    if (!isNumber && inputValue !== '') {
+      setError('숫자(소수점 *제외*)만 입력 가능합니다.');
+    } else {
+      setError(null);
+      setValue(inputValue);
+    }
+  };
 
   return (
     <Container>
@@ -131,7 +144,7 @@ function ExerciseInfo({ exerId }) {
                 <span style={{verticalAlign: "middle"}}> 운동 이름</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={exerciseName} onChange={(e) => setExerciseName(e.target.value)} />
+                <Form.Control value={exerciseName || ''} onChange={(e) => setExerciseName(e.target.value)} />
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
@@ -140,7 +153,8 @@ function ExerciseInfo({ exerId }) {
                 <span style={{verticalAlign: "middle"}}> 소모 칼로리</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={perKcal} onChange={(e) => setPerKcal(e.target.value)} />
+                <Form.Control value={perKcal || ''} onChange={(e) => handleChange(e, setPerKcal, setError)} isInvalid={!!error} />
+                <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
@@ -149,7 +163,7 @@ function ExerciseInfo({ exerId }) {
                 <span style={{verticalAlign: "middle"}}> 운동 타입</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={exerciseType} onChange={(e) => setExerciseType(e.target.value)} />
+                <Form.Control value={exerciseType || ''} onChange={(e) => setExerciseType(e.target.value)} />
               </Col>
             </Form.Group>
             <Stack direction="horizontal">

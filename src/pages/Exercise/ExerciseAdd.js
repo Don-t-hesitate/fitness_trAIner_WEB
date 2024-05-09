@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Container, Row, Col, Form, Button, Stack } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Container, Row, Col, Form, Button, Stack } from "react-bootstrap";
 import UploadBox from "../../components/UploadBox";
 
 function ExerciseAdd() {
@@ -9,14 +9,17 @@ function ExerciseAdd() {
   const [perKcal, setPerKcal] = useState(''); // 운동 소모 칼로리를 저장할 상태
   const [exerciseType, setExerciseType] = useState(''); // 운동 타입을 저장할 상태
   const [uploadFile, setUploadFile] = useState(null); // 운동 영상 URL을 저장할 상태
+  
+  // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
+  const [error, setError] = useState(null);
 
+  // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      console.log('테스트');
       const data = {
         exerciseName,
         exerciseType,
@@ -24,8 +27,7 @@ function ExerciseAdd() {
       };
   
       const response = await axios.post(process.env.REACT_APP_API_URL + `/exercises`, data);
-  
-      console.log("response?!: ", response);
+
       // response 객체와 response.data 객체가 존재하는지 확인
       if (response && response.data) {
         if (response.data.success) {
@@ -39,21 +41,34 @@ function ExerciseAdd() {
             console.log("Video upload response: ", videoResponse);
             // 비디오 업로드 성공 시 추가 작업 수행 (예: 비디오 URL 저장)
           }
-          alert("추가 성공?: ", response.data.message);
-          // navigate('/exercise');
+          console.log("response: ", response);
+          alert("추가 성공: ", response.data.message);
+          navigate('/exercise');
         } else {
-          alert('운동 정보 추가 실패');
+          alert('운동 정보 추가 실패: ' + response.data.message);
         }
-        console.log("response.data?: ", response.data);
       } else {
         // response 객체나 response.data 객체가 없는 경우 처리
-        alert('서버 응답 오류');
+        alert('서버 응답 오류: ' + response.data.message);
       }
     } catch (error) {
       console.log("error: ", error);
-      alert('Error adding exercise data:', JSON.stringify(error));
+      alert('Error adding exercise data:', error.response.data.message);
     }
   }
+
+  // 숫자만 입력 가능하도록 하는 함수
+  const handleChange = (e, setValue, setError) => {
+    const inputValue = e.target.value;
+    const isNumber = /^\d+$/.test(inputValue);
+
+    if (!isNumber && inputValue !== '') {
+      setError('숫자(소수점 *제외*)만 입력 가능합니다.');
+    } else {
+      setError(null);
+      setValue(inputValue);
+    }
+  };
 
   return (
     <Container>
@@ -69,7 +84,7 @@ function ExerciseAdd() {
           <Form onSubmit={handleSubmit}>
             <Form.Group as={Row}>
               <Form.Label column sm="3">
-                <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>format_list_numbered</span>
+                <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>exercise</span>
                 <span style={{ verticalAlign: "middle" }}> 운동 이름</span>
               </Form.Label>
               <Col sm="9">
@@ -82,7 +97,8 @@ function ExerciseAdd() {
                 <span style={{ verticalAlign: "middle" }}> 소모 칼로리</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control onChange={(e) => setPerKcal(e.target.value)} />
+                <Form.Control value={perKcal || ''} onChange={(e) => handleChange(e, setPerKcal, setError)} isInvalid={!!error} />
+                <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
@@ -93,15 +109,14 @@ function ExerciseAdd() {
               <Col sm="9">
                 <Form.Control onChange={(e) => setExerciseType(e.target.value)} />
               </Col>
+              <Stack direction="horizontal">
+                <div></div>
+                <Button variant="primary" type="submit" className="ms-auto mt-2" style={{fontWeight: "bold"}}>
+                  <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>send</span>
+                  <span style={{ verticalAlign: "middle" }}> 추가</span>
+                </Button>
+              </Stack>
             </Form.Group>
-            <Button variant="primary" type="submit" className="ms-auto mt-3" style={{fontWeight: "bold"}}>
-              <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>send</span>
-              <span style={{ verticalAlign: "middle" }}> 추가</span>
-            </Button>
-            <Stack direction="horizontal">
-              <div></div>
-              
-            </Stack>
           </Form>
         </Col>
       </Row>

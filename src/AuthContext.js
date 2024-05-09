@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
   // 로그인 함수
   const login = (userData) => {
     setUser(userData);
-    console.log("useData: " + userData);
     sessionStorage.setItem('user', JSON.stringify(userData));
   };
 

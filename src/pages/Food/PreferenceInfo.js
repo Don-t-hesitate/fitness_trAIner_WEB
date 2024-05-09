@@ -132,7 +132,7 @@ function PreferenceInfo({ userId }) {
             <Form.Group as={Row}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>egg_alt</span>
-                <span style={{verticalAlign: "middle"}}> 육류 섭취량</span>
+                <span style={{verticalAlign: "middle"}}> 육류 선호 여부</span>
               </Form.Label>
               <Col sm="9" className="mt-2">
                 <Form.Check
@@ -161,7 +161,7 @@ function PreferenceInfo({ userId }) {
             <Form.Group as={Row}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>recommend</span>
-                <span style={{verticalAlign: "middle"}}> 맛 선호도</span>
+                <span style={{verticalAlign: "middle"}}> 선호하는 맛</span>
               </Form.Label>
               <Col sm="9">
                 <Form.Control
@@ -202,11 +202,11 @@ function PreferenceInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Row classsName='align-items-center'>
+            <Row className='align-items-center'>
               <Col>
                 <div></div>
               </Col>
-              <Col xs='auto' className='ml-auto'>
+              <Col xs='auto' className='ml-auto mt-2'>
                 <Button type='submit' size='sm' variant='primary' style={{fontWeight: 'bold'}}> 
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>edit</span>
                   <span style={{verticalAlign: 'middle'}}> 정보 수정</span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, ButtonGroup, Stack } from 'react-bootstrap';
 
 function UserInfo({ userId }) {
   const [userData, setUserData] = useState(null); // 회원 데이터를 저장할 상태
@@ -130,7 +130,7 @@ function UserInfo({ userId }) {
     const isNumber = /^\d+$/.test(inputValue);
 
     if (!isNumber && inputValue !== '') {
-      setError('숫자(소수점 제외)만 입력 가능합니다.');
+      setError('숫자(소수점 *제외*)만 입력 가능합니다.');
     } else {
       setError(null);
       setValue(inputValue);
@@ -139,10 +139,10 @@ function UserInfo({ userId }) {
 
   const handleRnumberChange = (e, setValue, setError) => {
     const inputValue = e.target.value;
-    const isNumber = /^\d*\.?\d*$/; // 실수(소수점 포함) 허용 정규식
+    const isNumber = /^\d*\.?\d*$/.test(inputValue); // 실수(소수점 포함) 허용 정규식
   
-    if (!isNumber.test(inputValue) && inputValue !== '') {
-      setError('숫자(소수점 포함)만 입력 가능합니다.');
+    if (!isNumber && inputValue !== '') {
+      setError('숫자(소수점 *포함*)만 입력 가능합니다.');
     } else {
       setError(null);
       setValue(inputValue);
@@ -260,7 +260,7 @@ function UserInfo({ userId }) {
             <Form.Group as={Row}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>egg_alt</span>
-                <span style={{verticalAlign: "middle"}}> 육류 섭취량</span>
+                <span style={{verticalAlign: "middle"}}> 육류 선호 여부</span>
               </Form.Label>
               <Col sm="9" className="mt-2">
                 <Form.Check
@@ -289,7 +289,7 @@ function UserInfo({ userId }) {
             <Form.Group as={Row}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>recommend</span>
-                <span style={{verticalAlign: "middle"}}> 맛 선호도</span>
+                <span style={{verticalAlign: "middle"}}> 선호하는 맛</span>
               </Form.Label>
               <Col sm="9">
                 <Form.Control value={tastePreference || ''} onChange={(e) => setTastePreference(e.target.value)} />
@@ -316,23 +316,18 @@ function UserInfo({ userId }) {
                 <Form.Control value={preferenceTypeFood || ''} onChange={(e) => setPreferenceTypeFood(e.target.value)} />
               </Col>
             </Form.Group>
-            
-            <Row className="align-items-center">
-              <Col>
-                <div>
-                </div>
-              </Col>
-              <Col xs="auto" className="ml-auto">
-                <Button variant="primary" size="sm" type="submit" style={{fontWeight: "bold"}}>
+            <Stack direction="horizontal">
+              <ButtonGroup className="pt-2 ms-auto">
+                <Button variant="primary" type="submit" style={{fontWeight: "bold"}}>
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>edit</span>
                   <span style={{verticalAlign: "middle"}}> 정보 수정</span>
                 </Button>
-                <Button variant="danger" size="sm" onClick={deleteClick} style={{fontWeight: "bold"}}>
+                <Button variant="danger" onClick={deleteClick} style={{fontWeight: "bold"}}>
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>delete</span>
                   <span style={{verticalAlign: "middle"}}> 회원 탈퇴</span>
                 </Button>
-              </Col>
-            </Row>
+              </ButtonGroup>
+            </Stack>
           </Form>
         </Col>
       </Row>

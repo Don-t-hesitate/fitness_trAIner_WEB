@@ -83,13 +83,13 @@ function SideBar() {
           </Accordion.Header>
           <Accordion.Body>
             <Nav className="flex-column">
-              <LinkContainer to="/ai/workout/train">
+              <LinkContainer to="/aiservice/workout/train">
                 <Nav.Link className="sub-menu">
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
                   <span style={{verticalAlign: "middle"}}> AI 학습</span>
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/ai/workout">
+              <LinkContainer to="/aiservice/workout">
                 <Nav.Link className="sub-menu">
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>smart_toy</span>
                   <span style={{verticalAlign: "middle"}}> AI 모델 목록</span>
@@ -109,13 +109,13 @@ function SideBar() {
           </Accordion.Header>
           <Accordion.Body>
             <Nav className="flex-column">
-              <LinkContainer to="/ai/food/train">
+              <LinkContainer to="/aiservice/food/train">
                 <Nav.Link className="sub-menu">
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>auto_awesome</span>
                   <span style={{verticalAlign: "middle"}}> AI 학습</span>
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/ai/food">
+              <LinkContainer to="/aiservice/food">
                 <Nav.Link className="sub-menu">
                   <span className="material-symbols-outlined" style={{verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>smart_toy</span>
                   <span style={{verticalAlign: "middle"}}> AI 모델 관리</span>

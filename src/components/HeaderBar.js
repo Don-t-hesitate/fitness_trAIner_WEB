@@ -19,7 +19,7 @@ const HeaderBar = () => {
           관리자 페이지
         </Navbar.Brand>
         {/* 로그아웃 버튼 */}
-        <Button style={{margin: "10px"}} onClick={() => {logout(); navigate('/');}}>
+        <Button style={{margin: "10px"}} onClick={() => {logout(); navigate('/login');}}>
           <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>logout</span>
           <span style={{verticalAlign: "middle", fontWeight: "bold"}}> 로그아웃</span>
           

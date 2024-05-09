@@ -87,7 +87,11 @@ function PreferenceManage() {
           </Table>
           <Pagination>
             {pageNumbers.map((number) => (
-              <Pagination.Item key={number} onClick={() => handlePageClick(number)}>
+              <Pagination.Item 
+                key={number} 
+                active={number === currentPage}
+                onClick={() => handlePageClick(number)}
+              >
                 {number}
               </Pagination.Item>
             ))}

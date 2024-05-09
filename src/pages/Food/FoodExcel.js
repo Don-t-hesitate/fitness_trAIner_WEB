@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import DataGrid, { textEditor } from "react-data-grid";
 import { read, utils, write } from "xlsx";
 import { Button, ButtonGroup, Stack } from 'react-bootstrap';
@@ -72,7 +73,7 @@ export default function FoodExcel() {
 
   // 컴포넌트가 마운트될 때 한 번만 실행
   useEffect(() => { (async () => {
-    const res = await fetch("http://localhost:8080/admin/excel");
+    const res = await fetch(/*process.env.REACT_APP_API_URL*/"http://ceprj.gachon.ac.kr:60008" + "/admin/excel");
     const ab = await res.arrayBuffer(); // ArrayBuffer로 변환
 
     await handleAB(ab);
@@ -86,28 +87,63 @@ export default function FoodExcel() {
   }
 
   // 엑셀 파일을 서버에 반영하는 함수
-  async function saveFile() { try {
-    workBook[current] = utils.aoa_to_sheet(arrayify(rows));
+  async function saveFile() { 
+    try {
+      workBook[current] = utils.aoa_to_sheet(arrayify(rows));
     
-    const wb = utils.book_new();
-    sheets.forEach((n) => { utils.book_append_sheet(wb, workBook[n], n); });
-    
-    // writeFile(wb, "final_food_db.xlsx");
-    
-    /* Export to XLSX */
-    const data = write(wb, {bookType: 'xlsx', type: 'array'});
+      const wb = utils.book_new();
+      sheets.forEach((n) => { utils.book_append_sheet(wb, workBook[n], n); });
+      
+      // writeFile(wb, "final_food_db.xlsx");
+      
+      /* XLSX로 변환 */
+      const data = write(wb, {bookType: 'xlsx', type: 'array'});
 
-    /* Make FormData */
-    const fdata = new FormData();
-    fdata.append('file', new File([data], 'sheetjs.xlsx'));
+      console.log('excel data: ', data);
+      console.log('rows: ', rows);
+      // console.log('workbook: ', workBook['final_food_db'].S2);
+      const startingWithS = Object.fromEntries(
+        Object.entries(workBook['final_food_db'])
+          .filter(([key, value]) => key.startsWith('S49'))
+      );
+      const startingWithR = Object.fromEntries(
+        Object.entries(workBook['final_food_db'])
+          .filter(([key, value]) => key.startsWith('R49'))
+      );
+      const startingWithQ = Object.fromEntries(
+        Object.entries(workBook['final_food_db'])
+          .filter(([key, value]) => key.startsWith('Q49'))
+      );
+      const startingWithP = Object.fromEntries(
+        Object.entries(workBook['final_food_db'])
+          .filter(([key, value]) => key.startsWith('P49'))
+      );
+      
+      console.log('workbook with keys and values starting with "P": ', startingWithP);
+      console.log('workbook with keys and values starting with "Q": ', startingWithQ);
+      console.log('workbook with keys and values starting with "R": ', startingWithR)
+      console.log('workbook with keys and values starting with "S": ', startingWithS);
 
-    (async() => {
-      /* send data using fetch */
-      const res = await fetch("http://localhost:8080/admin/excel", { method: "POST", body: fdata });
-      const txt = await res.text();
-      console.log(txt);
-    })();
-  } catch (e) { console.error(e); } }
+      /* FormData 생성 */
+      const fdata = new FormData();
+      fdata.append('file', new File([data], 'sheetjs.xlsx'));
+
+      const header = process.env.REACT_APP_API_URL;
+      // const header = 'http://ceprj.gachon.ac.kr:60008';
+      (async() => {
+        /* 데이터 전송 */
+        // const res = await fetch(header + "/admin/excel", { method: "POST", body: fdata });
+        const response = await axios.post(header + "/admin/excel", fdata, { headers: { 'Content-Type': 'multipart/form-data' } });
+        // const txt = await res.text();
+        const size = response.data.result.size / (1024 ** 2);
+        console.log("res: ", response);
+        alert(response.data.message + '\n파일 크기: ' + size.toFixed(2) + 'MB');
+      })();
+    } catch (error) { 
+      console.error('error?: ', error);
+      alert('Error saving file:', error.data.message);
+    } 
+  };
 
   // 행 추가 함수
   function addRow() {
@@ -117,17 +153,24 @@ export default function FoodExcel() {
   return (
     <>
       {sheets.length > 0 && ( <>
+        <div><span style={{color: 'crimson', fontWeight: 'bold'}}>행 삭제</span>는 해당 행의 셀 <span style={{color: 'goldenrod', fontStyle: 'italic', textDecoration: 'underline'}}>더블클릭</span>, 
+        <span style={{color: 'blue', fontWeight: 'bold'}}> 행 추가</span>는 <span style={{color: '#6c757d', fontStyle: 'italic', textDecoration: 'underline'}}>버튼</span>으로 수행</div>
         <p>드롭다운을 사용하여 워크시트 전환하기:&nbsp;
           <select onChange={async (e) => selectSheet(sheets[+(e.target.value)])}>
             {sheets.map((sheet, idx) => (<option key={sheet} value={idx}>{sheet}</option>))}
           </select>
-          <br></br>열 삭제는 해당 열의 셀 더블클릭, 열 추가는 아래 Add Row 버튼
         </p>
         <Stack direction="horizontal">
           <div className="flex-cont"><b>현재 시트: {current}</b></div>
-          <ButtonGroup className='ms-auto'>
-            <Button variant="secondary" onClick={addRow}>행 추가</Button>
-            <Button onClick={() => saveFile()}>업데이트</Button>
+          <ButtonGroup className='ms-auto mb-1 mt-2' >
+            <Button variant="secondary" onClick={addRow}>
+              <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>add</span>
+              <span style={{verticalAlign: "middle", fontWeight: 'bold'}}> 행 추가</span>
+            </Button>
+            <Button onClick={() => saveFile()}>
+              <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>save</span>
+              <span style={{verticalAlign: "middle", fontWeight: 'bold'}}> 저장</span>
+            </Button>
           </ButtonGroup>
         </Stack>
         <DataGrid 
@@ -135,7 +178,7 @@ export default function FoodExcel() {
         rows={rows}
         onRowsChange={setRows}
         onRowDoubleClick={(row) => {
-          console.log('this is row: ' + row);
+          console.log('deleted row:\n' + row);
           deleteRow(row);
         }}
         defaultColumnOptions={{resizable: true, minWidth: 110, maxWidth:210}}

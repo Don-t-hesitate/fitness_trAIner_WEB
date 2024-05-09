@@ -196,7 +196,7 @@ const routes = createBrowserRouter([
   
   // 식단 추천 AI 관리 페이지 (인증된 사용자만 접근 가능)
   {
-    path: '/ai/food',
+    path: '/aiservice/food',
     element: (
       <PrivateRoute
       element={() => (
@@ -218,7 +218,7 @@ const routes = createBrowserRouter([
   },
   // 식단 추천 AI 학습 페이지 (인증된 사용자만 접근 가능)
   {
-    path: '/ai/food/train',
+    path: '/aiservice/food/train',
     element: (
       <PrivateRoute
       element={() => (
@@ -239,13 +239,13 @@ const routes = createBrowserRouter([
     ),
   },
   // 식단 추천 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
-  { path: '/ai/food/:foodAiId', element:  <><Helmet><title>식단 추천 AI 상세보기</title></Helmet><GenericWrapper mainComponent={FoodAiInfo} paramKeys={["foodAiId"]} /></> },
+  { path: '/aiservice/food/:foodAiId', element:  <><Helmet><title>식단 추천 AI 상세보기</title></Helmet><GenericWrapper mainComponent={FoodAiInfo} paramKeys={["foodAiId"]} /></> },
 
   // 운동 자세 AI 관리 페이지 (GenericWrapper 컴포넌트 사용, parentId 파라미터 옵션)
-  { path: '/ai/workout/:parentId?', element: <><Helmet><title>운동 자세 AI 관리</title></Helmet><GenericWrapper mainComponent={WorkoutAiManage} paramKeys={["parentId"]} /></> },
+  { path: '/aiservice/workout/:parentId?', element: <><Helmet><title>운동 자세 AI 관리</title></Helmet><GenericWrapper mainComponent={WorkoutAiManage} paramKeys={["parentId"]} /></> },
   // 운동 자세 AI 학습 페이지 (인증된 사용자만 접근 가능)
   {
-    path: '/ai/workout/train',
+    path: '/aiservice/workout/train',
     element: (
       <PrivateRoute
         element={() => (
@@ -266,7 +266,7 @@ const routes = createBrowserRouter([
     ),
   },
   // 운동 자세 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용, parentId와 subId 파라미터)
-  { path: '/ai/workout/:parentId/:subId', element: <><Helmet><title>운동 자세 AI 상세보기</title></Helmet><GenericWrapper mainComponent={WorkoutAiInfo} paramKeys={['parentId', 'subId']} /></> }
+  { path: '/aiservice/workout/:parentId/:subId', element: <><Helmet><title>운동 자세 AI 상세보기</title></Helmet><GenericWrapper mainComponent={WorkoutAiInfo} paramKeys={['parentId', 'subId']} /></> }
 ]);
 
 export default routes;

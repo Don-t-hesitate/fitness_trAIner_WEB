@@ -58,7 +58,7 @@ function UserInfo({ userId }) {
     try {
       // PUT 요청을 보내 회원 정보 업데이트
       const response = await axios.put(process.env.REACT_APP_API_URL + `/admin/${userId}`, {
-        userId: userData.userId,
+        userId: userId,
         nickname,
         height,
         weight,
@@ -90,10 +90,10 @@ function UserInfo({ userId }) {
     const fetchUserData = async () => {
       try {
         // 컴포넌트 마운트 및 userId 변경 시 실행되는 hook
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/admin/users`);
+        const response = await axios.get(process.env.REACT_APP_API_URL + `/users/${userId}`);
 
-        let data = response.data.result.userList;
-        data = data.find((user) => user.userId === Number(userId));
+        let data = response.data.result;
+        // data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트
         console.log("data: " + JSON.stringify(data));
         if (data) {
@@ -160,7 +160,7 @@ function UserInfo({ userId }) {
                 <span style={{verticalAlign: "middle"}}> 회원 식별 번호</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={userData.userId} disabled />
+                <Form.Control value={userId} disabled />
               </Col>
             </Form.Group>
 
@@ -252,7 +252,7 @@ function UserInfo({ userId }) {
                 <span style={{verticalAlign: "middle"}}> 매운맛 선호도</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={spicyPreference || ''} onChange={(e) => handleChange(e, setSpicyPreference, setSpicyPreferenceError)} isInvalid={!!spicyPreferenceError} />
+                <Form.Control value={spicyPreference} onChange={(e) => handleChange(e, setSpicyPreference, setSpicyPreferenceError)} isInvalid={!!spicyPreferenceError} />
                 <Form.Control.Feedback type="invalid">{spicyPreferenceError}</Form.Control.Feedback>
               </Col>
             </Form.Group>
@@ -302,7 +302,7 @@ function UserInfo({ userId }) {
                 <span style={{verticalAlign: "middle"}}> 활동량</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control value={activityLevel || ''} onChange={(e) => handleChange(e, setActivityLevel, setActivityLevelError)} isInvalid={!!activityLevelError} />
+                <Form.Control value={activityLevel} onChange={(e) => handleChange(e, setActivityLevel, setActivityLevelError)} isInvalid={!!activityLevelError} />
                 <Form.Control.Feedback type="invalid">{activityLevelError}</Form.Control.Feedback>
               </Col>
             </Form.Group>

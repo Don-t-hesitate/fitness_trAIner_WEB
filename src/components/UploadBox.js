@@ -55,8 +55,10 @@ const UploadBox = ({ onFileUpload }) => {
     const file = event.target.files[0];
     console.log("file: ", file);
     if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
       setFileInfo(file);
-      onFileUpload(file); // 파일 정보를 부모 컴포넌트로 전달
+      onFileUpload(formData); // 파일 정보를 부모 컴포넌트로 전달
     }
   };
   

@@ -8,7 +8,7 @@ function ExerciseAdd() {
   const [exerciseName, setExerciseName] = useState(''); // 운동 이름을 저장할 상태
   const [perKcal, setPerKcal] = useState(''); // 운동 소모 칼로리를 저장할 상태
   const [exerciseType, setExerciseType] = useState(''); // 운동 타입을 저장할 상태
-  const [uploadFile, setUploadFile] = useState(null); // 운동 영상 URL을 저장할 상태
+  const [formData, setFormData] = useState(null); // 운동 영상 URL을 저장할 상태
   
   // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
   const [error, setError] = useState(null);
@@ -16,6 +16,11 @@ function ExerciseAdd() {
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
   
+  // 파일 업로드 함수
+  const handleFileUpload = (data) => {
+    setFormData(data);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,21 +36,25 @@ function ExerciseAdd() {
       // response 객체와 response.data 객체가 존재하는지 확인
       if (response && response.data) {
         if (response.data.success) {
-          if (uploadFile) {
-            console.log("uploadFile: ", uploadFile);
-            const videoResponse = await axios.post(process.env.REACT_APP_API_URL + `/exercises/video/${exerciseName}`, uploadFile, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            });
+          if (formData) {
+            console.log("uploadFile: ", formData.get('file'));
+            const videoResponse = await axios.post(
+              process.env.REACT_APP_API_URL + `/exercises/video/${exerciseName}`,
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
             console.log("Video upload response: ", videoResponse);
             // 비디오 업로드 성공 시 추가 작업 수행 (예: 비디오 URL 저장)
           }
-          console.log("response: ", response);
-          alert("추가 성공: ", response.data.message);
+          console.log("?response: ", response);
+          alert("운동 추가 성공: ", response.data.message);
           navigate('/exercise');
         } else {
-          alert('운동 정보 추가 실패: ' + response.data.message);
+          alert('운동 추가 실패: ' + response.data.message);
         }
       } else {
         // response 객체나 response.data 객체가 없는 경우 처리
@@ -77,8 +86,8 @@ function ExerciseAdd() {
           <h2>운동 카테고리 추가</h2>
           <div style={{ height: '300px', marginBottom: '20px' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              {/* <Button variant="secondary" onClick={handleVideoUpload}>업로드하기</Button> */}
-              <UploadBox onFileUpload={setUploadFile} />
+              
+              <UploadBox onFileUpload={handleFileUpload} />
             </div>
           </div>
           <Form onSubmit={handleSubmit}>

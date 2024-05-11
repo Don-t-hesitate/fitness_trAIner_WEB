@@ -10,6 +10,7 @@
     "bootstrap": "^5.3.3",
     "canvas-datagrid": "^0.4.7",
     "http-proxy-middleware": "^2.0.6",
+    "jszip": "^3.10.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-chartjs-2": "^5.2.0",

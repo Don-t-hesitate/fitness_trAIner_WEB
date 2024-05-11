@@ -11,7 +11,7 @@ import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 import MainPage from './pages/MainPage';
 import { LoginPage, Dashboard } from './pages/Admin';
 import { UserInfo, UserManage } from './pages/User';
-import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, } from './pages/Exercise';
+import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, ExercisePoseType, } from './pages/Exercise';
 import { FoodManage, PreferenceManage, PreferenceInfo } from './pages/Food';
 import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
 
@@ -119,18 +119,18 @@ const routes = createBrowserRouter([
   // 운동 카테고리 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
   { path: '/exercise/:exerId', element:  <><Helmet><title>운동 카테고리 상세보기</title></Helmet><GenericWrapper mainComponent={ExerciseInfo} paramKeys={["exerId"]}  /></> },
 
-  // 운동 자세 데이터 관리 페이지 (인증된 사용자만 접근 가능)
+  // 운동 자세 데이터의 자세별 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise/pose',
     element: (
       <PrivateRoute
         element={() => (
           <>
-            <Helmet><title>운동 자세 데이터 관리</title></Helmet>
+            <Helmet><title>운동 자세 데이터</title></Helmet>
             <HeaderBar />
             <Row className="g-0">
               <Col md={9}>
-                <ExercisePoseManage />
+                <ExercisePoseType />
               </Col>
               <Col md={3}>
                 <SideBar />
@@ -141,6 +141,8 @@ const routes = createBrowserRouter([
       />
     ),
   },
+  // 운동 자세 데이터 관리 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/exercise/pose/:poseTypeName', element: <><Helmet><title>운동 자세 데이터 관리</title></Helmet><GenericWrapper mainComponent={ExercisePoseManage} paramKeys={["poseTypeName"]} /></> },
   // 운동 자세 데이터 추가 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/exercise/pose/add',
@@ -164,7 +166,7 @@ const routes = createBrowserRouter([
     ),
   },
   // 운동 자세 데이터 상세보기 페이지 (GenericWrapper 컴포넌트 사용)  
-  { path: '/exercise/pose/:exerId', element: <><Helmet><title>운동 자세 데이터 상세보기</title></Helmet><GenericWrapper mainComponent={ExercisePoseInfo} paramKeys={["exerId"]} /></> },
+  { path: '/exercise/pose/:poseTypeName/:exerciseName', element: <><Helmet><title>운동 자세 데이터 상세보기</title></Helmet><GenericWrapper mainComponent={ExercisePoseInfo} paramKeys={["poseTypeName", "exerciseName"]} /></> },
 
   // 식품 데이터 관리 페이지 (인증된 사용자만 접근 가능)
   {

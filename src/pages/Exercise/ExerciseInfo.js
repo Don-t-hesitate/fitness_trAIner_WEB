@@ -12,6 +12,7 @@ function ExerciseInfo({ exerId }) {
   const [exerciseType, setExerciseType] = useState(''); // 운동 타입을 저장할 상태
   const [formData, setFormData] = useState(null); // 운동 영상 URL을 저장할 상태
 
+  // 운동 영상 존재 여부에 따라 <div> 안의 컴포넌트를 조건부 렌더링하기 위한 상태
   const [videoUrl, setVideoUrl] = useState(null);
   const [showUploadBox, setShowUploadBox] = useState(false);
 
@@ -190,13 +191,13 @@ function ExerciseInfo({ exerId }) {
     <Container className="mt-3">
       <Row>
         <Col>
-          <div style={{ height: '300px'}}>
+          <div style={{ height: '300px', position: 'relative'}}>
             {videoUrl && <Button variant="danger" onClick={videoPurge} style={{fontWeight: "bold"}}>
               <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>movie_off</span>
               <span style={{verticalAlign: "middle"}}> 영상 삭제</span>
               </Button>}
             {videoUrl && <video src={videoUrl} controls style={{ width: '100%', height: '100%', paddingBottom: '50px' }} />}
-            {showUploadBox && <UploadBox onFileUpload={handleFileUpload} />}
+            {showUploadBox && <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}><UploadBox onFileUpload={handleFileUpload} extension={'mp4'} /></div>}
           </div>
           <Form onSubmit={handleSubmit}>
             <Form.Group as={Row}>

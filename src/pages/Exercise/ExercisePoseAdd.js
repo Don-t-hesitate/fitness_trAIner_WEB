@@ -103,7 +103,7 @@ function ExercisePoseAdd() {
               <Col sm="9">
                 <Form.Select onChange={(e) => setExerciseCategory(e.target.value)}>
                   <option value="Bodyweight">맨몸 운동</option>
-                  <option value="Dumbbell&Barbell">덤벨&바벨 운동</option>
+                  <option value="Dumbbell&barbell">덤벨&바벨 운동</option>
                   <option value="Machine">기구 운동</option>
                 </Form.Select>
               </Col>

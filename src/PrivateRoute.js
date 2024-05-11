@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import LoadingModal from './components/LoadingModal';
 
 const PrivateRoute = ({ element: Element, ...rest }) => {
   // AuthContext에서 user 상태 가져오기
@@ -8,7 +9,7 @@ const PrivateRoute = ({ element: Element, ...rest }) => {
 
   // user 상태가 undefined인 경우 (로딩 중일 때) 로딩 메시지 출력
   if (user === undefined) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   // user 상태가 truthy이고 username이 있을 경우 (인증된 경우)

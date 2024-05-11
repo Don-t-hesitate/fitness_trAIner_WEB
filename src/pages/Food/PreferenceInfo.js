@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import LoadingModal from "../../components/LoadingModal";
 
 function PreferenceInfo({ userId }) {
   const [preferenceData, setPreferenceData] = useState(null); // 선호도 데이터를 저장할 상태
@@ -64,7 +65,7 @@ function PreferenceInfo({ userId }) {
 
   // preferenceData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!preferenceData) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   // 숫자만 입력 가능하도록 하는 함수

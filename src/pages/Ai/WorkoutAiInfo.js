@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import LoadingModal from "../../components/LoadingModal";
 
 
 
@@ -43,7 +44,7 @@ function WorkoutAiInfo({ parentId, subId }) {
   }, []);
 
   if (!aiData || !aiData2) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   return (

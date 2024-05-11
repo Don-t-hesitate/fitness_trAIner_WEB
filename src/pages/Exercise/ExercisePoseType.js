@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, ListGroup } from 'react-bootstrap';
+import { Button, Container, ListGroup, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const ExercisePoseType = () => {
@@ -27,7 +27,8 @@ const ExercisePoseType = () => {
   return (
     <Container>
       <h2 className='mb-0'>운동 자세 데이터</h2>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+      <Stack direction="vertical" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <p style={{ position: 'relative', textAlign: 'center', fontSize: 'large', paddingBottom: '5%', fontWeight: 'bold', fontSize: 'x-large' }}>운동 자세 데이터를 확인하려면 아래 카테고리를 클릭하세요.</p>
         <ListGroup style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '60vw' }}>
           <ListGroup.Item
             action
@@ -75,7 +76,14 @@ const ExercisePoseType = () => {
             <span style={{ color: 'white', display: 'block', textAlign: 'center', fontSize: 'x-large' }}>기구 운동</span>
           </ListGroup.Item>
         </ListGroup>
-      </div>
+        <Stack direction="horizontal" style={{marginTop: '3%'}}>
+          <div></div>
+          <Button variant="primary" className='ms-auto' onClick={() => navigate('/exercise/pose/add')}>
+            <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>add</span>
+            <span style={{verticalAlign: "middle", fontWeight: "bold"}}> 추가</span>
+          </Button>
+        </Stack>
+      </Stack>
     </Container>
   );
 };

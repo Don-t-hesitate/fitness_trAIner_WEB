@@ -84,9 +84,8 @@ function ExerciseAdd() {
       <Row>
         <Col>
           <h2>운동 카테고리 추가</h2>
-          <div style={{ height: '300px', marginBottom: '20px' }}>
-            <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              
+          <div style={{ height: '300px', marginBottom: '20px', position: 'relative' }}>
+            <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
               <UploadBox onFileUpload={handleFileUpload} />
             </div>
           </div>

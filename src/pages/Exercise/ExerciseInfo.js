@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Container, Row, Col, Form, Button, ButtonGroup, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import UploadBox from "../../components/UploadBox";
+import LoadingModal from "../../components/LoadingModal";
 
 function ExerciseInfo({ exerId }) {
   const [exerciseData, setExerciseData] = useState(null); // 운동 데이터를 저장할 상태
@@ -171,7 +172,7 @@ function ExerciseInfo({ exerId }) {
 
   // exerciseData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!exerciseData) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   // 숫자만 입력 가능하도록 하는 함수

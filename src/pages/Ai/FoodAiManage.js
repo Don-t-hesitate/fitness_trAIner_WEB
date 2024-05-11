@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../../components/LoadingModal';
 
 function FoodAiManage() {
   const [aiData, setAiData] = useState(null);
@@ -21,7 +22,7 @@ function FoodAiManage() {
   }, []);
 
   if (!aiData) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   const handleRowClick = (aiId) => {

@@ -3,9 +3,10 @@ import axios from 'axios';
 import { Container, Row, Col, Table, Button, Pagination, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import JSZip from 'jszip';
+import LoadingModal from '../../components/LoadingModal';
 
 function ExercisePoseManage({ poseTypeName }) {
-  const [files, setFiles] = useState([]); // 서버에서 받아오는 파일을 저장할 상태
+  const [files, setFiles] = useState(''); // 서버에서 받아오는 파일을 저장할 상태
   const [exerciseNameList, setExerciseNameList] = useState([]); // 운동 이름을 저장할 상태
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,13 +18,12 @@ function ExercisePoseManage({ poseTypeName }) {
   useEffect(() => {
     const settingRealPoseTypeName = async () => {
       try {
-        if (poseTypeName === 'bodyweight') {
-          setRealPoseTypeName('Bodyweight');
-        } else if (poseTypeName === 'dumbbell-barbell') {
+        if (poseTypeName === 'dumbbell-barbell') {
           setRealPoseTypeName('Dumbbell-barbell');
-        } else if (poseTypeName === 'machine') {
-          setRealPoseTypeName('Machine');
+        } else {
+          setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
         }
+        console.log('realPoseTypeName: ', realPoseTypeName);
       } catch (error) {
         console.error('Error setting realPoseTypeName:', error);
       }
@@ -56,7 +56,10 @@ function ExercisePoseManage({ poseTypeName }) {
           })));
   
           console.log('?fileContents: ', fileContents); 
-          setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
+          setTimeout(() => {
+            setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
+          }
+          , 50);
         } catch (e) {
           console.error('Error reading ZIP file:', e);
         }
@@ -89,7 +92,7 @@ function ExercisePoseManage({ poseTypeName }) {
   }, [files]);
 
   if (!files) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   const handleRowClick = (exerciseId) => {

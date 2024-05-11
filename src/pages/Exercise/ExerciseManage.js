@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Table, Button, Pagination, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import LoadingModal from '../../components/LoadingModal';
 
 function ExerciseManage() {
   // 운동 데이터를 저장할 상태
@@ -26,7 +27,7 @@ function ExerciseManage() {
   }, []);
 
   if (!exerciseData) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   const handleRowClick = (exerciseId) => {

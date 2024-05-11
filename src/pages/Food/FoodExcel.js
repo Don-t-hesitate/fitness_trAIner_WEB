@@ -3,8 +3,8 @@ import axios from "axios";
 import DataGrid, { textEditor } from "react-data-grid";
 import { read, utils, write } from "xlsx";
 import { Button, ButtonGroup, Stack } from 'react-bootstrap';
-
 import 'react-data-grid/lib/styles.css';
+import LoadingModal from "../../components/LoadingModal";
 
 function arrayify(rows) {
   return rows.map(row => {
@@ -83,7 +83,7 @@ export default function FoodExcel() {
 
   // 엑셀 파일이 로딩 중인 경우 로딩 메시지 표시
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   // 엑셀 파일을 서버에 반영하는 함수

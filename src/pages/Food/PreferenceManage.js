@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, Table, Pagination } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../components/LoadingModal";
 
 function PreferenceManage() {
   // 선호도 데이터를 저장할 상태
@@ -33,7 +34,7 @@ function PreferenceManage() {
 
   // preferenceData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!preferenceData) {
-    return <div>Loading...</div>;
+    return <LoadingModal />;
   }
 
   const handleRowClick = (userId) => {

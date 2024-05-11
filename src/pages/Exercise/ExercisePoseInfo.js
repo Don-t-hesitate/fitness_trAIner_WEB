@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import JSZip, { file } from 'jszip';
+import LoadingModal from "../../components/LoadingModal";
 
 function ExerciseInfo({ poseTypeName, exerciseName }) {
   const [files, setFiles] = useState([]); // 서버에서 받아오는 파일을 저장할 상태
@@ -118,7 +119,9 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
   
 
   if (!jpegFormData || !jsonFormData) {
-    return <div>Loading...</div>;
+    return (
+      <LoadingModal />
+    );
   }
 
   return (

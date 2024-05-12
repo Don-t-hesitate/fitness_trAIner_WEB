@@ -6,7 +6,7 @@ import JSZip from 'jszip';
 import LoadingModal from '../../components/LoadingModal';
 
 function ExercisePoseManage({ poseTypeName }) {
-  const [files, setFiles] = useState(''); // 서버에서 받아오는 파일을 저장할 상태
+  // const [files, setFiles] = useState(''); // 서버에서 받아오는 파일을 저장할 상태
   const [exerciseNameList, setExerciseNameList] = useState([]); // 운동 이름을 저장할 상태
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,12 +18,8 @@ function ExercisePoseManage({ poseTypeName }) {
   useEffect(() => {
     const settingRealPoseTypeName = async () => {
       try {
-        if (poseTypeName === 'dumbbell-barbell') {
-          setRealPoseTypeName('Dumbbell-barbell');
-        } else {
-          setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
-        }
-        console.log('realPoseTypeName: ', realPoseTypeName);
+        setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
+        console.log(realPoseTypeName);
       } catch (error) {
         console.error('Error setting realPoseTypeName:', error);
       }
@@ -34,35 +30,10 @@ function ExercisePoseManage({ poseTypeName }) {
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
-        console.log('realPoseTypeName: ', realPoseTypeName);
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/pose/${realPoseTypeName}`, { responseType: 'blob' });
+        console.log('realPoseTypeName:', + realPoseTypeName);
+        const response = await axios.get('http://localhost:8080' + `/ai/pose/${String(realPoseTypeName)}`);
         console.log('response: ', response);
-        try {
-          const zip = new JSZip();
-          const zipData = await zip.loadAsync(response.data);
-          console.log('zipData: ', zipData);
-          const fileList = [];
-
-          zip.forEach((relativePath, zipEntry) => {
-            if (!zipEntry.dir) {
-              const isImage = zipEntry.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i);
-              fileList.push({ name: relativePath, content: zipEntry.async(isImage ? 'base64' : 'text') });
-            }
-          });
-          const fileContents = await Promise.all(fileList.map(async (file) => ({
-            name: file.name,
-            content: await file.content,
-            isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
-          })));
-  
-          console.log('?fileContents: ', fileContents); 
-          setTimeout(() => {
-            setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
-          }
-          , 50);
-        } catch (e) {
-          console.error('Error reading ZIP file:', e);
-        }
+        setExerciseNameList(response.data.result);
       } catch (error) {
         console.error('Error fetching exercise data:', error);
       }
@@ -71,27 +42,7 @@ function ExercisePoseManage({ poseTypeName }) {
     fetchPoseData();
   }, [poseTypeName, realPoseTypeName]);
 
-  useEffect(() => {
-    const settingFiles = async () => {
-      try {
-        console.log('files: ', files);
-        let newExerciseNameList = [...exerciseNameList];
-        files.forEach(file => {
-          if (!newExerciseNameList.includes(file.name.split('/')[1])) {
-            newExerciseNameList.push(file.name.split('/')[1]);
-          }
-        });
-        setExerciseNameList(newExerciseNameList);
-        // setExerciseNameList([...exerciseNameList].sort());
-        console.log('exerciseNameList: ', exerciseNameList);
-      } catch (error) {
-        console.error('Error setting files:', error);
-      }
-    }
-    settingFiles();
-  }, [files]);
-
-  if (!files) {
+  if (!exerciseNameList) {
     return <LoadingModal />;
   }
 
@@ -121,13 +72,14 @@ function ExercisePoseManage({ poseTypeName }) {
     <Container>
       <Row>
         <Col>
-          <h2>운동 자세 데이터 관리 -
+          <h2>운동 자세 데이터 관리 - <strong>
             {
               poseTypeName === 'bodyweight' ? ' 맨몸 운동' :
               poseTypeName === 'dumbbell-barbell' ? ' 덤벨/바벨 운동' :
               poseTypeName === 'machine' ? ' 기구 운동' :
               ''
             }
+            </strong>
           </h2>
           <Table striped bordered hover>
             <thead>
@@ -136,12 +88,15 @@ function ExercisePoseManage({ poseTypeName }) {
               </tr>
             </thead>
             <tbody>
+              {console.log('?exerciseNameList: ', exerciseNameList)}
               {
-                currentExercises.map((exercise, index) => (
-                  <tr key={exercise} onClick={() => handleRowClick(exercise)}>
-                    <td>{exercise}</td>
-                  </tr>
-                ))
+                exerciseNameList.length > 0 ? currentExercises.map((exerciseName, index) => {
+                  return (
+                    <tr key={index} onClick={() => handleRowClick(exerciseName)}>
+                      <td>{exerciseName}</td>
+                    </tr>
+                  );
+                }) : (<tr><td>운동 자세 데이터가 없습니다.</td></tr>)
               }
             </tbody>
           </Table>

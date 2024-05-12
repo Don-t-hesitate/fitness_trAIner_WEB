@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import JSZip, { file } from 'jszip';
 import LoadingModal from "../../components/LoadingModal";
@@ -42,7 +42,7 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/pose/${poseTypeName}`, { responseType: 'blob' });
+        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/pose/${poseTypeName}/${exerciseName}`, { responseType: 'blob' });
         try {
           const zip = new JSZip();
           const zipData = await zip.loadAsync(response.data);
@@ -55,25 +55,21 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
               fileList.push({ name: relativePath, content: zipEntry.async(isImage ? 'base64' : 'text') });
             }
           });
-          // const fileContents = await Promise.all(fileList.map(async (file) => ({
-          //   name: file.name,
-          //   content: await file.content,
-          //   isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
-          // })));
+
           const fileContents = await Promise.all(fileList.map(async (file) => {
-          if (file.name.split('/')[1] === exerciseName) {
+          if (file.name.split('/')[0] === exerciseName) {
             return {
-            name: file.name.split('/')[2],
+            name: file.name.split('/')[1],
             content: await file.content,
             isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
             };
           } else {
             return null;
           }
-          }));
+        }));
   
-          console.log('?fileContents: ', fileContents); 
-          setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
+        console.log('?fileContents: ', fileContents); 
+        setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
         } catch (e) {
           console.error('Error reading ZIP file:', e);
         }
@@ -94,8 +90,8 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
             setJsonFormData(file);
             console.log('json: ', file);
           } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
-            // setJpegFormData(prev => [...prev, { name: file.name, content: file.content}]);
             setJpegFormData(prev => {
+              // 유일한 이름만 저장
               if (!prev.some(existingFile => existingFile.name === file.name)) {
                 return [...prev, { name: file.name, content: file.content }];
               }
@@ -141,7 +137,6 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
           <div style={{ height: '300px', marginBottom: '20px', position: 'relative' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column'}}>
               {jsonFormData && (
-                // <pre style={{maxWidth: 'auto'}}>{JSON.stringify(JSON.parse(jsonFormData.content), null, 2)}</pre>
                 <Form>
                   <Form.Group controlId="jsonContent">
                     <Form.Control as="textarea" rows={12} value={json} onChange={(e) => setJson(e.target.value)} />

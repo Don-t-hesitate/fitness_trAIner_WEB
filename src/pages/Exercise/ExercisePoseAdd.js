@@ -24,7 +24,6 @@ function ExercisePoseAdd() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('onclick');
     
     jpegFormData.append('parentPath', exerciseCategory);
     jpegFormData.append('uploadPath', encodeURIComponent(exerciseName));
@@ -70,7 +69,7 @@ function ExercisePoseAdd() {
         alert('json 업로드 실패: ', jsonRes.data.message);
         console.log('jsonRes error: ', jsonRes);
       }
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error('error: ', error.responser);
       alert('Error adding exercise pose data:', error.response.data.message);

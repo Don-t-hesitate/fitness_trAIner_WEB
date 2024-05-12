@@ -73,7 +73,7 @@ export default function FoodExcel() {
 
   // 컴포넌트가 마운트될 때 한 번만 실행
   useEffect(() => { (async () => {
-    const res = await fetch(/*process.env.REACT_APP_API_URL*/"http://ceprj.gachon.ac.kr:60008" + "/admin/excel");
+    const res = await fetch(process.env.REACT_APP_API_URL + "/admin/excel");
     const ab = await res.arrayBuffer(); // ArrayBuffer로 변환
 
     await handleAB(ab);
@@ -89,19 +89,19 @@ export default function FoodExcel() {
   // 엑셀 파일을 서버에 반영하는 함수
   async function saveFile() { 
     try {
-      workBook[current] = utils.aoa_to_sheet(arrayify(rows));
+      workBook[current] = utils.aoa_to_sheet(arrayify(rows)); // 현재 시트의 행을 엑셀 워크북에 반영
     
+      // sheets 배열에 있는 시트들을 엑셀 워크북에 추가
       const wb = utils.book_new();
       sheets.forEach((n) => { utils.book_append_sheet(wb, workBook[n], n); });
-      
-      // writeFile(wb, "final_food_db.xlsx");
-      
+            
       /* XLSX로 변환 */
       const data = write(wb, {bookType: 'xlsx', type: 'array'});
 
       console.log('excel data: ', data);
       console.log('rows: ', rows);
-      // console.log('workbook: ', workBook['final_food_db'].S2);
+
+      // 디버깅용
       const startingWithS = Object.fromEntries(
         Object.entries(workBook['final_food_db'])
           .filter(([key, value]) => key.startsWith('S49'))
@@ -129,14 +129,11 @@ export default function FoodExcel() {
       fdata.append('file', new File([data], 'sheetjs.xlsx'));
 
       const header = process.env.REACT_APP_API_URL;
-      // const header = 'http://ceprj.gachon.ac.kr:60008';
       (async() => {
         /* 데이터 전송 */
-        // const res = await fetch(header + "/admin/excel", { method: "POST", body: fdata });
         const response = await axios.post(header + "/admin/excel", fdata, { headers: { 'Content-Type': 'multipart/form-data' } });
-        // const txt = await res.text();
-        const size = response.data.result.size / (1024 ** 2);
-        console.log("res: ", response);
+        const size = response.data.result.size / (1024 ** 2); // MB 단위로 변환
+        
         alert(response.data.message + '\n파일 크기: ' + size.toFixed(2) + 'MB');
       })();
     } catch (error) { 
@@ -183,10 +180,6 @@ export default function FoodExcel() {
         }}
         defaultColumnOptions={{resizable: true, minWidth: 110, maxWidth:210}}
         style={{height: 590}}/>
-        {/* <p>수정된 데이터로 새 파일을 생성하려면 아래 버튼 중 하나를 클릭하세요.</p> */}
-        {/* <div className="flex-cont">{["xlsx", "xlsb", "xls"].map((ext) => (
-          <button key={ext} onClick={() => saveFile(ext)}>export [.{ext}]</button>
-        ))}</div> */}
       </> )}
     </>
   );

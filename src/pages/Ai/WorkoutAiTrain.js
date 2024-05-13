@@ -1,20 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Container, Row, Col, Form, Button, Stack } from "react-bootstrap";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 const ProgressWindow = ({ progressMessages }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [progressMessages]);
+  
   return (
     <div
+      ref={containerRef}
       style={{
         backgroundColor: "#282c34",
         color: "#abb2bf",
         width: "100%",
+        height: "100%",
         padding: "1rem",
         borderRadius: "0.5rem",
-        height: "300px",
         overflowY: "auto",
-        autoscroll: "true",
         fontFamily: "monospace",
         whiteSpace: "pre-wrap",
       }}
@@ -136,7 +144,7 @@ function WorkoutAiTrain() {
       <Row>
         <Col>
           <h2>운동 자세 분석 AI 학습</h2>
-          <div style={{ height: '300px', marginBottom: '20px', position: 'relative' }}>
+          <div style={{ height: '60vh', marginBottom: '20px', position: 'relative' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
               <ProgressWindow progressMessages={progressMessages} />
             </div>

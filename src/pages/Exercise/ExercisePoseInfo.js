@@ -27,7 +27,7 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(process.env.REACT_APP_API_URL + `/ai/pose/${poseTypeName}/${exerciseName}`);
+      const response = await axios.delete(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${poseTypeName}/${exerciseName}`);
       if (response.data.success) {
         alert('삭제 성공');
         navigate('/exercise/pose');
@@ -42,7 +42,7 @@ function ExerciseInfo({ poseTypeName, exerciseName }) {
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/pose/${poseTypeName}/${exerciseName}`, { responseType: 'blob' });
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${poseTypeName}/${exerciseName}`, { responseType: 'blob' });
         try {
           const zip = new JSZip();
           const zipData = await zip.loadAsync(response.data);

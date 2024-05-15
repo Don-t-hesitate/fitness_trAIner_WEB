@@ -60,7 +60,7 @@ function WorkoutAiTrain() {
 
   const connectSocket = () => {
     try {
-      const sckt = new SockJS(`http://localhost:8080/ai/workout/train`);
+      const sckt = new SockJS(`${process.env.REACT_APP_API_URL_BLD}/ai/workout/train`);
       setSocket(sckt);
       console.log("!소켓 준비");
       console.log("formInput: ", formInput);

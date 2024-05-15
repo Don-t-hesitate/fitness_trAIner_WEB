@@ -30,7 +30,7 @@ function WorkoutAiInfo({ parentId, subId }) {
       if (inuse) {
         dir = "Inuse&";
       }
-      const response = await axios.delete(process.env.REACT_APP_API_URL + `/ai/exercise/${parentId}/${dir + aiData.modelFile}`);
+      const response = await axios.delete(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${parentId}/${dir + aiData.modelFile}`);
       if (response.data.success) {
         alert('삭제 성공');
         navigate('/aiservice/workout');
@@ -46,7 +46,7 @@ function WorkoutAiInfo({ parentId, subId }) {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(process.env.REACT_APP_API_URL + `/ai/exercise/${parentId}/${subId}`);
+      const response = await axios.put(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${parentId}/${subId}`);
       if (response.data.success) {
         alert('업데이트 성공');
         navigate('/aiservice/workout');
@@ -63,7 +63,7 @@ function WorkoutAiInfo({ parentId, subId }) {
   useEffect(() => {
     const fetchAiData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/exercise/${parentId}/${subId}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${parentId}/${subId}`);
         setAiData(response.data.result);
         console.log("inuse: ", response.data.result.Inuse);
         setInuse(response.data.result.Inuse);

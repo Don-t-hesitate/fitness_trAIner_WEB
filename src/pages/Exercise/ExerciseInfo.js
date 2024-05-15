@@ -37,7 +37,7 @@ function ExerciseInfo({ exerId }) {
     const check = window.confirm("정말 영상을 삭제하시겠습니까?");
     if (check) {
       try {
-        const response = await axios.delete(process.env.REACT_APP_API_URL + `/exercises/video/${exerciseData.exerciseName}`);
+        const response = await axios.delete(process.env.REACT_APP_API_URL_BLD + `/exercises/video/${exerciseData.exerciseName}`);
         if (response.data.success) {
           alert("영상 삭제 성공");
           setVideoUrl(null);
@@ -57,7 +57,7 @@ function ExerciseInfo({ exerId }) {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete(process.env.REACT_APP_API_URL + `/exercises/${exerciseData.exerciseName}`);
+      const response = await axios.delete(process.env.REACT_APP_API_URL_BLD + `/exercises/${exerciseData.exerciseName}`);
       if (response.data.success) {
         alert(response.data.result + ': 성공적으로 삭제됨');
         navigate('/exercise');
@@ -80,7 +80,7 @@ function ExerciseInfo({ exerId }) {
     
   //   try {
   //     // PUT 요청을 보내 운동 정보 업데이트
-  //     const response = await axios.put(process.env.REACT_APP_API_URL + `/exercises`, {
+  //     const response = await axios.put(process.env.REACT_APP_API_URL_BLD + `/exercises`, {
   //       exerciseName: exerciseData.exerciseName,
   //       newExerciseName: exerciseName,
   //       newExerciseType: exerciseType,
@@ -93,7 +93,7 @@ function ExerciseInfo({ exerId }) {
   //         if (formData) {
   //           console.log("?uploadFile: ", formData.get('file'));
   //           const videoResponse = await axios.post(
-  //             process.env.REACT_APP_API_URL + `/exercises/video/${exerciseName}`,
+  //             process.env.REACT_APP_API_URL_BLD + `/exercises/video/${exerciseName}`,
   //             formData,
   //             {
   //               headers: {
@@ -127,7 +127,7 @@ function ExerciseInfo({ exerId }) {
       if (formData) {
         console.log("?uploadFile: ", formData.get('file'));
         const response = await axios.post(
-          process.env.REACT_APP_API_URL + `/exercises/video/${exerciseName}`,
+          process.env.REACT_APP_API_URL_BLD + `/exercises/video/${exerciseName}`,
           formData,
           {
             headers: {
@@ -153,7 +153,7 @@ function ExerciseInfo({ exerId }) {
   useEffect(() => {
     const fetchExerciseData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/exercises`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/exercises`);
         
         let data = response.data.result.exerciseList;
         data = data.find((item) => item.exerciseId === Number(exerId));
@@ -170,7 +170,7 @@ function ExerciseInfo({ exerId }) {
           const fetchVideoUrl = async () => {
             try {
               console.log('data.exerciseName:', data.exerciseName);
-              const videoResponse = await axios.get(process.env.REACT_APP_API_URL + `/exercises/video/stream/${data.exerciseName}`, {
+              const videoResponse = await axios.get(process.env.REACT_APP_API_URL_BLD + `/exercises/video/stream/${data.exerciseName}`, {
                 responseType: 'blob',
               });
               console.log('videRes:', videoResponse);

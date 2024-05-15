@@ -16,7 +16,7 @@ const WorkoutAi = () => {
   useEffect(() => {
     const fetchExerciseList = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + '/ai/exercise/list');
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + '/ai/exercise/list');
         setExerciseList(response.data.result);
         console.log('response: ', response.data.result);
       } catch (error) {

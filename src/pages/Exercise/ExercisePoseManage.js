@@ -31,7 +31,7 @@ function ExercisePoseManage({ poseTypeName }) {
     const fetchPoseData = async () => {
       try {
         console.log('realPoseTypeName:', + realPoseTypeName);
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/pose/${realPoseTypeName}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${realPoseTypeName}`);
         console.log('response: ', response);
         setExerciseNameList(response.data.result);
       } catch (error) {

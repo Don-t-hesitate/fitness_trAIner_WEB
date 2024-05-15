@@ -19,7 +19,7 @@ function PreferenceInfo({ userId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(process.env.REACT_APP_API_URL + `/admin/food/preferences/${userId}`, {
+      const response = await axios.put(process.env.REACT_APP_API_URL_BLD + `/admin/food/preferences/${userId}`, {
         userId: preferenceData.userId,
         nickname: preferenceData.nickname,
         spicyPreference,

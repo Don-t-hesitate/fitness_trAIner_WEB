@@ -18,7 +18,7 @@ function UserManage() {
     const fetchUserData = async () => {
       try {
         console.log('fetchUserData');
-        const response = await axios.get(process.env.REACT_APP_API_URL + '/admin/users'); // 서버에서 회원 데이터를 가져옴
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + '/admin/users'); // 서버에서 회원 데이터를 가져옴
         setUserData(response.data.result.userList); // 회원 데이터를 상태에 저장
         if (response.data.success) {
           console.log(response.data.message);

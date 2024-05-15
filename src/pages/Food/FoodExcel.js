@@ -73,7 +73,7 @@ export default function FoodExcel() {
 
   // 컴포넌트가 마운트될 때 한 번만 실행
   useEffect(() => { (async () => {
-    const res = await fetch(process.env.REACT_APP_API_URL + "/admin/excel");
+    const res = await fetch(process.env.REACT_APP_API_URL_BLD + "/admin/excel");
     const ab = await res.arrayBuffer(); // ArrayBuffer로 변환
 
     await handleAB(ab);
@@ -128,7 +128,7 @@ export default function FoodExcel() {
       const fdata = new FormData();
       fdata.append('file', new File([data], 'sheetjs.xlsx'));
 
-      const header = process.env.REACT_APP_API_URL;
+      const header = process.env.REACT_APP_API_URL_BLD;
       (async() => {
         /* 데이터 전송 */
         const response = await axios.post(header + "/admin/excel", fdata, { headers: { 'Content-Type': 'multipart/form-data' } });

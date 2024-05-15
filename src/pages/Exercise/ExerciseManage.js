@@ -16,7 +16,7 @@ function ExerciseManage() {
   useEffect(() => {
     const fetchExerciseData = async () => {
       try {
-      const response = await axios.get(process.env.REACT_APP_API_URL + '/exercises');
+      const response = await axios.get(process.env.REACT_APP_API_URL_BLD + '/exercises');
       setExerciseData(response.data.result.exerciseList);
       } catch (error) {
       console.error('Error fetching exercise data:', error);

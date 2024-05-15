@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Table, Button, Pagination, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import JSZip from 'jszip';
 import LoadingModal from '../../components/LoadingModal';
 
 function ExercisePoseManage({ poseTypeName }) {
@@ -11,27 +10,27 @@ function ExercisePoseManage({ poseTypeName }) {
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
   const [currentPage, setCurrentPage] = useState(1);
   const [exercisesPerPage] = useState(12);
-  const [realPoseTypeName, setRealPoseTypeName] = useState('');
+  // const [realPoseTypeName, setRealPoseTypeName] = useState('');
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const settingRealPoseTypeName = async () => {
-      try {
-        setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
-        console.log(realPoseTypeName);
-      } catch (error) {
-        console.error('Error setting realPoseTypeName:', error);
-      }
-    }
-    settingRealPoseTypeName();
-  }, [poseTypeName]);
+  // useEffect(() => {
+  //   const settingRealPoseTypeName = async () => {
+  //     try {
+  //       // 첫 글자만 대문자로 변환
+  //       setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
+  //       console.log(realPoseTypeName);
+  //     } catch (error) {
+  //       console.error('Error setting realPoseTypeName:', error);
+  //     }
+  //   }
+  //   settingRealPoseTypeName();
+  // }, [poseTypeName]);
 
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
-        console.log('realPoseTypeName:', + realPoseTypeName);
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${realPoseTypeName}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose`);
         console.log('response: ', response);
         setExerciseNameList(response.data.result);
       } catch (error) {
@@ -40,15 +39,15 @@ function ExercisePoseManage({ poseTypeName }) {
     };
   
     fetchPoseData();
-  }, [poseTypeName, realPoseTypeName]);
+  }, []);
 
   if (!exerciseNameList) {
     return <LoadingModal />;
   }
 
-  const handleRowClick = (exerciseId) => {
+  const handleRowClick = (exerciseName) => {
     // 운동 ID를 파라미터로 전달하여 운동 정보 페이지로 이동
-    navigate(`/exercise/pose/${poseTypeName}/${exerciseId}`);
+    navigate(`/exercise/pose/${exerciseName}`);
   };
 
   // 현재 페이지에 해당하는 운동 목록 계산
@@ -72,15 +71,7 @@ function ExercisePoseManage({ poseTypeName }) {
     <Container>
       <Row>
         <Col>
-          <h2>운동 자세 데이터 관리 - <strong>
-            {
-              poseTypeName === 'bodyweight' ? ' 맨몸 운동' :
-              poseTypeName === 'dumbbell-barbell' ? ' 덤벨/바벨 운동' :
-              poseTypeName === 'machine' ? ' 기구 운동' :
-              ''
-            }
-            </strong>
-          </h2>
+          <h2>운동 자세 데이터 관리</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -88,7 +79,6 @@ function ExercisePoseManage({ poseTypeName }) {
               </tr>
             </thead>
             <tbody>
-              {console.log('?exerciseNameList: ', exerciseNameList)}
               {
                 exerciseNameList.length > 0 ? currentExercises.map((exerciseName, index) => {
                   return (

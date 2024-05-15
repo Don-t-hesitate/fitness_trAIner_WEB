@@ -116,10 +116,10 @@ function WorkoutAiTrain() {
             const requestData = {
               pythonFilePath: filePath,
               exerciseName: exercise,
-              params: params,
+              // params: params,
             };
             console.log("requestData: ", requestData);
-            console.log("type: ", typeof params);
+            // console.log("type: ", typeof params);
             stompClient.send("/app/start", {}, JSON.stringify(requestData));
           }
         });

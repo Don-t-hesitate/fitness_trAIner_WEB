@@ -21,7 +21,7 @@ function WorkoutAiVersion(props) {
     const fetchVerData = async () => {
       try {
         console.log('?props: ', props);
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/ai/exercise/${props.exerciseName}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${props.exerciseName}`);
 
         setAiVerData(response.data.result);
         setKeys(extractKeys(response.data.result));
@@ -91,7 +91,7 @@ function WorkoutAiVersion(props) {
   const handleApply = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(process.env.REACT_APP_API_URL + `/ai/exercise/apply/${props.exerciseName}/${selectedVersion}`);
+      const response = await axios.post(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/apply/${props.exerciseName}/${selectedVersion}`);
       if (response.data.success) {
         alert('적용 성공');
         navigate('/aiservice/workout');

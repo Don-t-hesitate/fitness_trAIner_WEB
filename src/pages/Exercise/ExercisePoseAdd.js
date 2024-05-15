@@ -37,7 +37,7 @@ function ExercisePoseAdd() {
     };
     try {
       const imgRes = await axios.post(
-        process.env.REACT_APP_API_URL + '/ai/pose', 
+        process.env.REACT_APP_API_URL_BLD + '/ai/pose', 
         jpegFormData,
         {
           headers: {
@@ -54,7 +54,7 @@ function ExercisePoseAdd() {
       }
 
       const jsonRes = await axios.post(
-        process.env.REACT_APP_API_URL + '/ai/pose',
+        process.env.REACT_APP_API_URL_BLD + '/ai/pose',
         jsonFormData,
         {
           headers: {

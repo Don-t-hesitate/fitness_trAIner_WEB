@@ -58,7 +58,7 @@ function UserInfo({ userId }) {
     console.log('gender: ' + gender, '\ngender type: ' + typeof(gender));
     try {
       // PUT 요청을 보내 회원 정보 업데이트
-      const response = await axios.put(process.env.REACT_APP_API_URL + `/admin/${userId}`, {
+      const response = await axios.put(process.env.REACT_APP_API_URL_BLD + `/admin/${userId}`, {
         userId: userId,
         nickname,
         height,

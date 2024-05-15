@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useEffect } from 'react';
 import { AuthContext } from '../../AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,17 +16,23 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  useEffect(() => {
+    console.log("env: " + process.env.REACT_APP_API_URL_BLD);
+  }, [usernameRef]);
+
   // 로그인 폼 제출 시 실행되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      console.log('env: ' + process.env.REACT_APP_API_URL);
+      console.log('!env: ' + process.env.REACT_APP_API_URL_BLD);
       const username = usernameRef.current.value;
       const password = passwordRef.current.value;
       // 서버에 로그인 요청 전송
       const response = await axios.post(
-        process.env.REACT_APP_API_URL + '/admin/login',
+        process.env.REACT_APP_API_URL_BLD +
+        // 'http://ceprj.gachon.ac.kr:60008' +
+         '/admin/login',
         { username, password },
         { withCredentials: true }
       );
@@ -41,7 +47,7 @@ function LoginPage() {
     } catch (error) {
       // 로그인 요청 실패 시 에러 처리
       console.error('Login failed:', error);
-      alert('Login failed: ' + error.response.data.message);
+      // alert('Login failed: ' + error.response.data.message);
     }
   };
 

@@ -40,11 +40,12 @@ const ProgressWindow = ({ progressMessages }) => {
 };
 
 function WorkoutAiTrain() {
-  const [formInput, setFormInput] = useState(`--learning_rate 0.001 --batch_size 32 --num_epochs 100 --output_file model_params.json`); // 하이퍼 파라미터를 담을 상태
-  const [exercise, setExercise] = useState('Deadlift'); // 운동 이름을 담을 상태
+  // const [formInput, setFormInput] = useState(`--learning_rate 0.001 --batch_size 32 --num_epochs 100 --output_file model_params.json`); // 하이퍼 파라미터를 담을 상태
+  const [formInput, setFormInput] = useState(``); // 하이퍼 파라미터를 담을 상태
+  const [exercise, setExercise] = useState('push_up'); // 운동 이름을 담을 상태
   const [version, setVersion] = useState(1); // 버전 정보를 담을 상태
   const [params, setParams] = useState({}); // 전송용 최종 파라미터를 담을 상태
-  const [filePath, setFilePath] = useState("D:/Develop/ai/temp.py"); // 파일 경로를 담을 상태
+  const [filePath, setFilePath] = useState("/home/t24108/"); // 파일 경로를 담을 상태
   // WebSocket 통신을 위한 상태
   const [send, setSend] = useState(false);
   const [socket, setSocket] = useState(null);

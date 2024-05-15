@@ -42,7 +42,10 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${exerciseName}/${dataType}/${fileName}`, { responseType: 'blob' });
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL_BLD +
+          // '/api' +
+          `/ai/pose/${exerciseName}/${dataType}/${fileName}`, { responseType: 'blob' });
         try {
           const zip = new JSZip();
           const zipData = await zip.loadAsync(response.data);
@@ -57,19 +60,28 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
           });
 
           const fileContents = await Promise.all(fileList.map(async (file) => {
-            console.log('!file.name.split(\): ', file.name.split('\\'));
+            console.log('!file.name.split(\\): ', file.name.split('\\'));
+            console.log('file.name.split(/): ', file.name.split('/'));
             const splitName = file.name.split('\\');
-            console.log('!splitName: ', splitName);
-            if (file.name.split('\\').indexOf(dataType)) {
+            if (splitName.length > 1 && file.name.split('\\').indexOf(dataType)) {
+              console.log('!splitName: ', splitName);
               return {
               name: splitName[splitName.indexOf(dataType) + 1],
               content: await file.content,
               isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
               };
+            } else if (file.name.split('/').length && file.name.split('/').indexOf(dataType)) {
+              console.log('!splitName: ', file.name.split('/'));
+              return {
+                name: file.name.split('/')[file.name.split('/').indexOf(dataType) + 1],
+                content: await file.content,
+                isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
+              };
             } else {
+              console.log('!splitName: ', file.name.split('/'));
               return null;
             }
-        }));
+          }));
   
         console.log('!fileContents: ', fileContents); 
         setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
@@ -91,6 +103,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
         filteredFiles.forEach(file => {
           console.log('!file: ', file);
           if (file.name.endsWith('.json')) {
+            console.log('setting json: ', file);
             setJsonFormData(file);
             console.log('json: ', file);
           // } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
@@ -106,8 +119,6 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
             console.error('Unknown file type:', file);
           }
         });
-        console.log('!jsonFormData: ', jsonFormData);
-        setJson(JSON.stringify(JSON.parse(jsonFormData.content), null, 2));
       } catch (error) {
         console.error('Error setting files:', error);
       }
@@ -116,6 +127,12 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
     console.log('files: ', files);
   }, [files]);
 
+  useEffect(() => {
+    if (jsonFormData) {
+      console.log('!jsonFormData: ', jsonFormData);
+      setJson(JSON.stringify(JSON.parse(jsonFormData.content), null, 2));
+    }
+  }, [jsonFormData]);
   
 
   if (!json) {

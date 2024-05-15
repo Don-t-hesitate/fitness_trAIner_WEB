@@ -28,8 +28,11 @@ const ProgressWindow = ({ progressMessages }) => {
       }}
     >
       {progressMessages.map((message, index) => (
-        <div key={index} style={{ marginBottom: "0.5rem" }}>
-          {message}
+        <div>
+          <span style={{color: 'green'}}>{'['+ index + ']:'}</span>
+          <span key={index} style={{ marginBottom: "0.5rem" }}>
+            {' ' + message}
+          </span>
         </div>
       ))}
     </div>
@@ -37,12 +40,16 @@ const ProgressWindow = ({ progressMessages }) => {
 };
 
 function WorkoutAiTrain() {
-  const [formInput, setFormInput] = useState('');
-  const [params, setParams] = useState({});
-  const [filePath, setFilePath] = useState("");
+  const [formInput, setFormInput] = useState(`--learning_rate 0.001 --batch_size 32 --num_epochs 100 --output_file model_params.json`); // 하이퍼 파라미터를 담을 상태
+  const [exercise, setExercise] = useState('Deadlift'); // 운동 이름을 담을 상태
+  const [version, setVersion] = useState(1); // 버전 정보를 담을 상태
+  const [params, setParams] = useState({}); // 전송용 최종 파라미터를 담을 상태
+  const [filePath, setFilePath] = useState("D:/Develop/ai/temp.py"); // 파일 경로를 담을 상태
+  // WebSocket 통신을 위한 상태
   const [send, setSend] = useState(false);
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
+  // 파이썬 파일의 학습 진행 상태를 담을 상태
   const [progressMessages, setProgressMessages] = useState([]);
 
   useEffect(() => {
@@ -53,7 +60,7 @@ function WorkoutAiTrain() {
 
   const connectSocket = () => {
     try {
-      const sckt = new SockJS(`http://localhost:8080/ai/exercise/train`);
+      const sckt = new SockJS(`http://localhost:8080/ai/workout/train`);
       setSocket(sckt);
       console.log("!소켓 준비");
       console.log("formInput: ", formInput);
@@ -64,9 +71,12 @@ function WorkoutAiTrain() {
           try {
             const jsonString = `{${inputValue.replace(/("([^"]+)")\s*:/g, '$1:')}}`;
             const parsedParams = JSON.parse(jsonString);
+            console.log("!parsedParams: ", parsedParams);
             setParams(parsedParams);
           } catch (error) {
             console.error('Invalid input:', error);
+            setParams(inputValue + " --version " + version);
+            console.log("!!params: ", params);
           }
         } else {
           setParams({});
@@ -105,6 +115,7 @@ function WorkoutAiTrain() {
             
             const requestData = {
               pythonFilePath: filePath,
+              exerciseName: exercise,
               params: params,
             };
             console.log("requestData: ", requestData);
@@ -144,7 +155,7 @@ function WorkoutAiTrain() {
       <Row>
         <Col>
           <h2>운동 자세 분석 AI 학습</h2>
-          <div style={{ height: '60vh', marginBottom: '20px', position: 'relative' }}>
+          <div style={{ height: '50vh', marginBottom: '20px', position: 'relative' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
               <ProgressWindow progressMessages={progressMessages} />
             </div>
@@ -152,11 +163,20 @@ function WorkoutAiTrain() {
           <Form>
             <Form.Group as={Row}>
               <Form.Label column sm="3">
+                <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>exercise</span>
+                <span style={{ verticalAlign: "middle" }}> 운동 이름</span>
+              </Form.Label>
+              <Col sm="9">
+                <Form.Control value={exercise} onChange={(e) => setExercise(e.target.value)} />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+              <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>folder</span>
                 <span style={{ verticalAlign: "middle" }}> Python 파일 경로</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control onChange={(e) => setFilePath(e.target.value)} />
+                <Form.Control value={filePath} onChange={(e) => setFilePath(e.target.value)} />
               </Col>
             </Form.Group>
             <Form.Group as={Row}>
@@ -165,7 +185,16 @@ function WorkoutAiTrain() {
                 <span style={{ verticalAlign: "middle" }}> 하이퍼 파라미터</span>
               </Form.Label>
               <Col sm="9">
-                <Form.Control onChange={(e) => setFormInput(e.target.value)} />
+                <Form.Control placeholder={"예시: " + formInput} onChange={(e) => setFormInput(e.target.value)} />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row}>
+              <Form.Label column sm="3">
+                <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>format_list_numbered</span>
+                <span style={{ verticalAlign: "middle" }}> 버전</span>
+              </Form.Label>
+              <Col sm="9">
+                <Form.Control value={version} onChange={(e) => setVersion(e.target.value)} />
               </Col>
             </Form.Group>
           </Form>

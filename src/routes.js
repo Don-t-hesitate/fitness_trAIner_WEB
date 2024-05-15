@@ -13,7 +13,7 @@ import { LoginPage, Dashboard } from './pages/Admin';
 import { UserInfo, UserManage } from './pages/User';
 import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, ExercisePoseType, } from './pages/Exercise';
 import { FoodManage, PreferenceManage, PreferenceInfo } from './pages/Food';
-import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
+import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAi, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
 
 // 브라우저 라우터 생성 및 라우트 정의
 const routes = createBrowserRouter([
@@ -243,8 +243,12 @@ const routes = createBrowserRouter([
   // 식단 추천 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
   { path: '/aiservice/food/:foodAiId', element:  <><Helmet><title>식단 추천 AI 상세보기</title></Helmet><GenericWrapper mainComponent={FoodAiInfo} paramKeys={["foodAiId"]} /></> },
 
+  // 운동 자세 AI 종류 고르기 페이지 (GenericWrapper 컴포넌트 사용)
+  { path: '/aiservice/workout', element: <><Helmet><title>운동 자세 AI 종류 고르기</title></Helmet><GenericWrapper mainComponent={WorkoutAi} /></> },
   // 운동 자세 AI 관리 페이지 (GenericWrapper 컴포넌트 사용, parentId 파라미터 옵션)
-  { path: '/aiservice/workout/:parentId?', element: <><Helmet><title>운동 자세 AI 관리</title></Helmet><GenericWrapper mainComponent={WorkoutAiManage} paramKeys={["parentId"]} /></> },
+  { path: '/aiservice/workout/:exerciseName?', element: <><Helmet><title>운동 자세 AI 관리</title></Helmet><GenericWrapper mainComponent={WorkoutAiManage} paramKeys={["exerciseName"]} /></> },
+  // 운동 자세 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용, parentId와 subId 파라미터)
+  { path: '/aiservice/workout/:parentId/:subId', element: <><Helmet><title>운동 자세 AI 상세보기</title></Helmet><GenericWrapper mainComponent={WorkoutAiInfo} paramKeys={['parentId', 'subId']} /></> },
   // 운동 자세 AI 학습 페이지 (인증된 사용자만 접근 가능)
   {
     path: '/aiservice/workout/train',
@@ -266,9 +270,7 @@ const routes = createBrowserRouter([
         )}
       />
     ),
-  },
-  // 운동 자세 AI 상세보기 페이지 (GenericWrapper 컴포넌트 사용, parentId와 subId 파라미터)
-  { path: '/aiservice/workout/:parentId/:subId', element: <><Helmet><title>운동 자세 AI 상세보기</title></Helmet><GenericWrapper mainComponent={WorkoutAiInfo} paramKeys={['parentId', 'subId']} /></> }
+  }
 ]);
 
 export default routes;

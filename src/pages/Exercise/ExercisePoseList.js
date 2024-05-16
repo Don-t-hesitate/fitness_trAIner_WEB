@@ -5,22 +5,26 @@ import { useNavigate } from 'react-router-dom';
 import LoadingModal from "../../components/LoadingModal";
 
 // 디렉토리에 파일이 없을 때 보여줄 모달창 컴포넌트
-function NoDataModal(params) {
+function NoDataModal() {
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
 
   return (
-    <Modal.Dialog>
-      <Modal.Header closeButton>
-        <Modal.Title>데이터 없음</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p>해당 디렉토리에 파일이 존재하지 않습니다.</p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={() => navigate(`/exercise/pose/${params.exerciseName}/${params.dataType}`)}>뒤로 가기</Button>
-      </Modal.Footer>
-    </Modal.Dialog>
+    <div>
+      <Modal show={true} centered>
+        <Modal.Dialog>
+          <Modal.Header>
+            <Modal.Title>데이터 없음</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>해당 디렉토리에 파일이 존재하지 않습니다.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => navigate(-1)}>뒤로 가기</Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </Modal>
+    </div>
   );
 }
 
@@ -37,10 +41,14 @@ function ExercisePoseNameList(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${props.exerciseName}`);
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL_BLD 
+          // '/api'
+          + `/ai/pose/${props.exerciseName}`);
         setExerciseData(response.data.result);
       } catch (error) {
         console.error(error);
+        setExerciseData(['no data']);
       }
     };
 
@@ -67,41 +75,48 @@ function ExercisePoseNameList(props) {
     pageNumbers.push(i);
   }
   
-  if (!exerciseData) {
+  if (!currentExercises) {
     return <LoadingModal />;
   }
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h3>{props.exerciseName} 자세 데이터 타입</h3>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>데이터 타입</th>
-                {/* Add more table headers if needed */}
-              </tr>
-            </thead>
-            <tbody>
-              {currentExercises.map((exercise, index) => (
-                <tr key={index} onClick={() => handleRowClick(exercise)}>
-                  <td>{exercise}</td>
-                </tr>
+      {/* 운동 데이터가 존재하면 테이블로 보여주고, 아니면 NoDataModal 컴포넌트를 보여줌 */}
+      {exerciseData[0] !== 'no data' ?
+        <>
+          <Row>
+            <Col>
+              <h3>{props.exerciseName} 자세 데이터 타입</h3>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>데이터 타입</th>
+                    {/* Add more table headers if needed */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentExercises.map((exercise, index) => (
+                    <tr key={index} onClick={() => handleRowClick(exercise)}>
+                      <td>{exercise}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+          <Stack direction="horizontal" spacing={2} style={{ justifyContent: 'center' }}>
+            <Pagination>
+              {pageNumbers.map((number) => (
+                <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageClick(number)}>
+                  {number}
+                </Pagination.Item>
               ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-      <Stack direction="horizontal" spacing={2} style={{ justifyContent: 'center' }}>
-        <Pagination>
-          {pageNumbers.map((number) => (
-            <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageClick(number)}>
-              {number}
-            </Pagination.Item>
-          ))}
-        </Pagination>
-      </Stack>
+            </Pagination>
+          </Stack>
+        </>
+        :
+        <NoDataModal/>
+      }
     </Container>
   );
 };
@@ -119,7 +134,10 @@ function ExercisePoseDataList(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${props.exerciseName}/${props.dataType}`);
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL_BLD
+          // '/api'
+          + `/ai/pose/${props.exerciseName}/${props.dataType}`);
         setExerciseData(response.data.result);
       } catch (error) {
         console.error(error);
@@ -129,17 +147,6 @@ function ExercisePoseDataList(props) {
 
     fetchData();
   }, []);
-
-  // 데이터가 없을 경우 모달창 띄우기
-  useEffect(() => {
-    if (exerciseData.length === 1 && exerciseData[0] === 'no data') {
-      return (
-        <NoDataModal params={props} />
-      );
-    } else {
-      return null;
-    }
-  }, [exerciseData]);
 
   const handleRowClick = (fileName) => {
     navigate(`/exercise/pose/${props.exerciseName}/${props.dataType}/${fileName}`);
@@ -160,7 +167,6 @@ function ExercisePoseDataList(props) {
   for (let i = 1; i <= Math.ceil(exerciseData.length / exercisesPerPage); i++) {
     pageNumbers.push(i);
   }
-
   
   // 화면 크기 계산 로직
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -195,82 +201,85 @@ function ExercisePoseDataList(props) {
   // 페이지 번호 범위 계산
   const pageNumberRange = getPageNumberRange(currentPage, maxPage, windowWidth);
   
-  if (!exerciseData) {
+  if (!currentExercises) {
     return <LoadingModal />;
   }
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h3>{props.exerciseName} 자세 데이터 목록</h3>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>데이터 타입</th>
-                {/* Add more table headers if needed */}
-              </tr>
-            </thead>
-            <tbody>
-              {currentExercises.map((exercise, index) => (
-                <tr key={index} onClick={() => handleRowClick(exercise)}>
-                  <td>{exercise}</td>
-                </tr>
+      {/* 운동 데이터가 존재하면 테이블로 보여주고, 아니면 NoDataModal 컴포넌트를 보여줌 */}
+      {exerciseData[0] !== 'no data' ?
+        <>
+          <Row>
+            <Col>
+              <h3>{props.exerciseName} 자세 데이터 목록</h3>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>데이터 타입</th>
+                    {/* Add more table headers if needed */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentExercises.map((exercise, index) => (
+                    <tr key={index} onClick={() => handleRowClick(exercise)}>
+                      <td>{exercise}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+          <Stack direction="horizontal" spacing={2} style={{ justifyContent: 'center' }}>
+            <Pagination>
+              {/* 첫 번째 페이지로 이동 버튼 */}
+              <Pagination.First onClick={() => handlePageClick(1)} />
+
+              {/* 이전 페이지로 이동 버튼 */}
+              <Pagination.Prev
+                onClick={() => handlePageClick(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+
+              {/* 처음 페이지 번호 표시 */}
+              {currentPage > 4 && (
+                <>
+                  <Pagination.Ellipsis disabled />
+                </>
+              )}
+
+              {/* 현재 페이지와 가까운 번호들만 표시 */}
+              {pageNumberRange.map((number) => (
+                <Pagination.Item
+                  key={number}
+                  active={number === currentPage}
+                  onClick={() => handlePageClick(number)}
+                >
+                  {number}
+                </Pagination.Item>
               ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-        <Stack direction="horizontal" spacing={2} style={{ justifyContent: 'center' }}>
-          <Pagination>
-            {/* 첫 번째 페이지로 이동 버튼 */}
-            <Pagination.First onClick={() => handlePageClick(1)} />
 
-            {/* 이전 페이지로 이동 버튼 */}
-            <Pagination.Prev
-              onClick={() => handlePageClick(currentPage - 1)}
-              disabled={currentPage === 1}
-            />
-            
-            {/* <Pagination.Item key={1} active={currentPage === 1} onClick={() => handlePageClick(1)} >1</Pagination.Item> */}
+              {/* 마지막 페이지 번호 표시 */}
+              {currentPage <= maxPage - 3 && (
+                <>
+                  <Pagination.Ellipsis disabled />
+                </>
+              )}
 
-            {/* 처음 페이지 번호 표시 */}
-            {currentPage > 4 && (
-              <>
-                <Pagination.Ellipsis disabled />
-              </>
-            )}
+              {/* 다음 페이지로 이동 버튼 */}
+              <Pagination.Next
+                onClick={() => handlePageClick(currentPage + 1)}
+                disabled={currentPage === maxPage}
+              />
 
-            {/* 현재 페이지와 가까운 번호들만 표시 */}
-            {pageNumberRange.map((number) => (
-              <Pagination.Item
-                key={number}
-                active={number === currentPage}
-                onClick={() => handlePageClick(number)}
-              >
-                {number}
-              </Pagination.Item>
-            ))}
-
-            {/* 마지막 페이지 번호 표시 */}
-            {currentPage <= maxPage - 3 && (
-              <>
-                <Pagination.Ellipsis disabled />
-              </>
-            )}
-
-            {/* <Pagination.Item key={maxPage} active={currentPage === maxPage} onClick={() => handlePageClick(maxPage)} >{maxPage}</Pagination.Item> */}
-
-            {/* 다음 페이지로 이동 버튼 */}
-            <Pagination.Next
-              onClick={() => handlePageClick(currentPage + 1)}
-              disabled={currentPage === maxPage}
-            />
-
-            {/* 마지막 페이지로 이동 버튼 */}
-            <Pagination.Last onClick={() => handlePageClick(maxPage)} disabled={currentPage === maxPage} />
-          </Pagination>
-        </Stack>
+              {/* 마지막 페이지로 이동 버튼 */}
+              <Pagination.Last onClick={() => handlePageClick(maxPage)} disabled={currentPage === maxPage} />
+            </Pagination>
+          </Stack>
+        </>
+        : 
+        <NoDataModal />
+      }
     </Container>
   );
 }

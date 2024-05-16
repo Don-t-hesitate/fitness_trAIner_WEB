@@ -1,9 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Row, Col, Table, Button, Pagination, Stack } from "react-bootstrap";
+import { Container, Row, Col, Table, Pagination, Stack, Modal, Button } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import LoadingModal from "../../components/LoadingModal";
 
+// 디렉토리에 파일이 없을 때 보여줄 모달창 컴포넌트
+function NoDataModal(params) {
+  // 페이지 이동을 위한 useNavigate 함수 가져오기
+  const navigate = useNavigate();
+
+  return (
+    <Modal.Dialog>
+      <Modal.Header closeButton>
+        <Modal.Title>데이터 없음</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>해당 디렉토리에 파일이 존재하지 않습니다.</p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => navigate(`/exercise/pose/${params.exerciseName}/${params.dataType}`)}>뒤로 가기</Button>
+      </Modal.Footer>
+    </Modal.Dialog>
+  );
+}
+
+// 운동 자세 데이터의 운동 이름 목록을 보여주는 컴포넌트
 function ExercisePoseNameList(props) {
   const [exerciseData, setExerciseData] = useState([]); // 운동 데이터를 저장할 상태
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
@@ -85,6 +106,7 @@ function ExercisePoseNameList(props) {
   );
 };
 
+// 특정 운동 자세 데이터 목록을 보여주는 컴포넌트
 function ExercisePoseDataList(props) {
   const [exerciseData, setExerciseData] = useState([]); // 운동 데이터를 저장할 상태
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
@@ -101,11 +123,23 @@ function ExercisePoseDataList(props) {
         setExerciseData(response.data.result);
       } catch (error) {
         console.error(error);
+        setExerciseData(['no data']);
       }
     };
 
     fetchData();
   }, []);
+
+  // 데이터가 없을 경우 모달창 띄우기
+  useEffect(() => {
+    if (exerciseData.length === 1 && exerciseData[0] === 'no data') {
+      return (
+        <NoDataModal params={props} />
+      );
+    } else {
+      return null;
+    }
+  }, [exerciseData]);
 
   const handleRowClick = (fileName) => {
     navigate(`/exercise/pose/${props.exerciseName}/${props.dataType}/${fileName}`);
@@ -130,7 +164,6 @@ function ExercisePoseDataList(props) {
   
   // 화면 크기 계산 로직
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);

@@ -11,7 +11,7 @@ import GenericWrapper from './GenericWrapper'; // 제네릭 래퍼 컴포넌트
 import MainPage from './pages/MainPage';
 import { LoginPage, Dashboard } from './pages/Admin';
 import { UserInfo, UserManage } from './pages/User';
-import { ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo, ExerciseManage, ExerciseAdd, ExerciseInfo, ExercisePoseType, ExercisePoseList, } from './pages/Exercise';
+import { ExerciseManage, ExerciseAdd, ExerciseInfo, ExercisePoseList, ExercisePoseManage, ExercisePoseAdd, ExercisePoseInfo } from './pages/Exercise';
 import { FoodManage, PreferenceManage, PreferenceInfo } from './pages/Food';
 import { FoodAiManage, FoodAiTrain, FoodAiInfo, WorkoutAi, WorkoutAiManage, WorkoutAiTrain, WorkoutAiInfo } from './pages/Ai';
 

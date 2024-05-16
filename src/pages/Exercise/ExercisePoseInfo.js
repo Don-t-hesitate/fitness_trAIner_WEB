@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,8 @@ import LoadingModal from "../../components/LoadingModal";
 function ExerciseInfo({ exerciseName, dataType, fileName }) {
   const [files, setFiles] = useState([]); // 서버에서 받아오는 파일을 저장할 상태
   // const [jpegFormData, setJpegFormData] = useState([]); // jpeg 파일을 저장할 상태
-  const [jsonFormData, setJsonFormData] = useState(null); // json 파일을 저장할 상태
+  // const [jsonFormData, setJsonFormData] = useState(null); // json 파일을 저장할 상태
+  const jsonFormData = useRef(null); // json 파일을 저장할 상태
   const [json, setJson] = useState(null); // json 수정을 위한 상태
 
   // 페이지 이동을 위한 useNavigate 함수 가져오기
@@ -104,7 +105,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
           console.log('!file: ', file);
           if (file.name.endsWith('.json')) {
             console.log('setting json: ', file);
-            setJsonFormData(file);
+            jsonFormData.current = file;
             console.log('json: ', file);
           // } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
           //   setJpegFormData(prev => {
@@ -115,6 +116,8 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
           //     return prev;
           //   });
           //   console.log('img: ', file);
+            console.log('!jsonFormData.current: ', jsonFormData.current);
+            setJson(JSON.stringify(JSON.parse(jsonFormData.current.content), null, 2));
           } else {
             console.error('Unknown file type:', file);
           }
@@ -126,15 +129,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
     settingFiles();
     console.log('files: ', files);
   }, [files]);
-
-  useEffect(() => {
-    if (jsonFormData) {
-      console.log('!jsonFormData: ', jsonFormData);
-      setJson(JSON.stringify(JSON.parse(jsonFormData.content), null, 2));
-    }
-  }, [jsonFormData]);
   
-
   if (!json) {
     return (
       <LoadingModal />
@@ -156,7 +151,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
           </div> */}
           <div style={{ height: '70vh', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ border: '1px solid #ccc', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              {jsonFormData && (
+              {jsonFormData.current && (
                 <Form style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                   <Form.Group controlId="jsonContent" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <Form.Control as="textarea" style={{ flex: 1, resize: 'none', backgroundColor: 'lightgrey' }} value={json} onChange={(e) => setJson(e.target.value)}  />

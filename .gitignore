@@ -13,6 +13,7 @@
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -27,3 +28,10 @@ yarn-error.log*
 build1/
 workoutAI.code-workspace - 바로 가기.lnk
 webpack.config.js
+src/pages/ZipViewer.js
+src/pages/Exercise/VideoTest.js
+src/pages/Ai/WebSocket.js
+src/pages/ModalSample.js
+src/setupProxy.js
+src/components/legacySideBar.js
+src/pages/Temporary.js

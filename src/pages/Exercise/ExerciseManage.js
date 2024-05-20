@@ -27,7 +27,7 @@ function ExerciseManage() {
   }, []);
 
   if (!exerciseData) {
-    return <LoadingModal />;
+    return <LoadingModal data={exerciseData} />;
   }
 
   const handleRowClick = (exerciseId) => {
@@ -55,7 +55,7 @@ function ExerciseManage() {
     <Container>
       <Row>
         <Col>
-          <h2>운동 카테고리 관리</h2>
+          <h2 style={{marginBottom: '24px', fontWeight: '800'}}>운동 카테고리 관리</h2>
           <Table striped bordered hover>
             <thead>
               <tr>

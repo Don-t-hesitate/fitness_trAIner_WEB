@@ -9,7 +9,7 @@ const PrivateRoute = ({ element: Element, ...rest }) => {
 
   // user 상태가 undefined인 경우 (로딩 중일 때) 로딩 메시지 출력
   if (user === undefined) {
-    return <LoadingModal />;
+    return <LoadingModal data={user} />;
   }
 
   // user 상태가 truthy이고 username이 있을 경우 (인증된 경우)

@@ -83,14 +83,14 @@ function ExerciseAdd() {
     <Container>
       <Row>
         <Col>
-          <h2>운동 카테고리 추가</h2>
+          <h2 style={{fontWeight: '800'}}>운동 카테고리 추가</h2>
           <div style={{ height: '300px', marginBottom: '20px', position: 'relative' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
               <UploadBox onFileUpload={handleFileUpload} />
             </div>
           </div>
           <Form onSubmit={handleSubmit}>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>exercise</span>
                 <span style={{ verticalAlign: "middle" }}> 운동 이름</span>
@@ -99,7 +99,7 @@ function ExerciseAdd() {
                 <Form.Control onChange={(e) => setExerciseName(e.target.value)} />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
                 <span style={{ verticalAlign: "middle" }}> 소모 칼로리</span>
@@ -109,7 +109,7 @@ function ExerciseAdd() {
                 <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>category</span>
                 <span style={{ verticalAlign: "middle" }}> 운동 타입</span>

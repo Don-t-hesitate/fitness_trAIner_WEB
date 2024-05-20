@@ -65,7 +65,7 @@ function PreferenceInfo({ userId }) {
 
   // preferenceData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!preferenceData) {
-    return <LoadingModal />;
+    return <LoadingModal data={preferenceData} />;
   }
 
   // 숫자만 입력 가능하도록 하는 함수

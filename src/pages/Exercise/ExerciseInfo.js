@@ -199,7 +199,7 @@ function ExerciseInfo({ exerId }) {
 
   // exerciseData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!exerciseData) {
-    return <LoadingModal />;
+    return <LoadingModal data={exerciseData} />;
   }
 
   // 숫자만 입력 가능하도록 하는 함수
@@ -232,7 +232,7 @@ function ExerciseInfo({ exerId }) {
             </Button>}
           </div>
           <Form>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px', marginTop: '16px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>format_list_numbered</span>
                 <span style={{verticalAlign: "middle"}}> 번호</span>
@@ -241,7 +241,7 @@ function ExerciseInfo({ exerId }) {
                 <Form.Control value={exerciseId} disabled/>
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>exercise</span>
                 <span style={{verticalAlign: "middle"}}> 운동 이름</span>
@@ -250,7 +250,7 @@ function ExerciseInfo({ exerId }) {
                 <Form.Control value={exerciseName || ''} disabled />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
                 <span style={{verticalAlign: "middle"}}> 소모 칼로리</span>
@@ -260,7 +260,7 @@ function ExerciseInfo({ exerId }) {
                 {/* <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback> */}
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>category</span>
                 <span style={{verticalAlign: "middle"}}> 운동 타입</span>

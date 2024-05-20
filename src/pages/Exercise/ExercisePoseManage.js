@@ -42,7 +42,7 @@ function ExercisePoseManage({ poseTypeName }) {
   }, []);
 
   if (!exerciseNameList) {
-    return <LoadingModal />;
+    return <LoadingModal data={exerciseNameList} />;
   }
 
   const handleRowClick = (exerciseName) => {
@@ -71,11 +71,11 @@ function ExercisePoseManage({ poseTypeName }) {
     <Container>
       <Row>
         <Col>
-          <h2>운동 자세 데이터 관리</h2>
+          <h2 style={{fontWeight: '800', marginBottom: '24px'}}>운동 자세 데이터 관리</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>운동 이름</th>
+                <th style={{fontWeight: '600'}}>운동 이름</th>
               </tr>
             </thead>
             <tbody>

@@ -43,7 +43,7 @@ function ExercisePoseNameList(props) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD 
-          // '/api'
+          // + '/api'
           + `/ai/pose/${props.exerciseName}`);
         setExerciseData(response.data.result);
       } catch (error) {
@@ -76,7 +76,7 @@ function ExercisePoseNameList(props) {
   }
   
   if (!currentExercises) {
-    return <LoadingModal />;
+    return <LoadingModal data={currentExercises} />;
   }
 
   return (
@@ -136,7 +136,7 @@ function ExercisePoseDataList(props) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD
-          // '/api'
+          // + '/api'
           + `/ai/pose/${props.exerciseName}/${props.dataType}`);
         setExerciseData(response.data.result);
       } catch (error) {
@@ -202,7 +202,7 @@ function ExercisePoseDataList(props) {
   const pageNumberRange = getPageNumberRange(currentPage, maxPage, windowWidth);
   
   if (!currentExercises) {
-    return <LoadingModal />;
+    return <LoadingModal data={currentExercises} />;
   }
 
   return (

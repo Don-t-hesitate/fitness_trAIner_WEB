@@ -131,7 +131,7 @@ function WorkoutAiTrain() {
               params: params,
             };
             console.log("requestData: ", requestData);
-            // console.log("type: ", typeof params);
+            console.log("type: ", typeof params);
             stompClient.send("/app/start", {}, JSON.stringify(requestData));
           }
         });

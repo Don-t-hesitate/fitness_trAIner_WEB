@@ -45,7 +45,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-          // '/api' +
+          //'/api' +
           `/ai/pose/${exerciseName}/${dataType}/${fileName}`, { responseType: 'blob' });
         try {
           const zip = new JSZip();
@@ -132,7 +132,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
   
   if (!json) {
     return (
-      <LoadingModal />
+      <LoadingModal data={json} />
     );
   }
 

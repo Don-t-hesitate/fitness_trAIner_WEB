@@ -1,7 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import HeaderBar from './components/HeaderBar';
+import { CssVarsProvider } from '@mui/joy/styles';
+import CssBaseline from '@mui/joy/CssBaseline';
+import Box from '@mui/joy/Box';
+import Header from './components/Header';
 import SideBar from './components/SideBar';
 import PrivateRoute from './PrivateRoute';
 
@@ -20,20 +23,30 @@ const GenericWrapper = ({ mainComponent: MainComponent, paramKeys = [] }) => {
   return (
     <PrivateRoute
       element={() => (
-        <>
-          {/* 상단 바 컴포넌트 */}
-          <HeaderBar />
-          <Row className="g-0">
-            {/* 메인 컴포넌트 */}
-            <Col md={9}>
+        <CssVarsProvider disableTransitionOnChange>
+          <CssBaseline />
+          <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+            <Header />
+            <SideBar />
+            <Box
+              component="main"
+              className="MainContent"
+              sx={{
+                pt: { xs: 'calc(12px + var(--Header-height))', md: 3 },
+                pb: { xs: 2, sm: 2, md: 3 },
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                minWidth: 0,
+                height: '100dvh',
+                gap: 1,
+                overflow: 'auto',
+              }}
+            >
               <MainComponent {...mainComponentProps} />
-            </Col>
-            {/* 사이드바 컴포넌트 */}
-            <Col md={3}>
-              <SideBar />
-            </Col>
-          </Row>
-        </>
+            </Box>
+          </Box>
+        </CssVarsProvider>
       )}
     />
   );

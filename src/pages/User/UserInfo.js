@@ -64,7 +64,7 @@ function UserInfo({ userId }) {
         height,
         weight,
         age,
-        gender,
+        gender: gender,
         spicyPreference,
         meatConsumption,
         tastePreference,
@@ -91,12 +91,13 @@ function UserInfo({ userId }) {
     const fetchUserData = async () => {
       try {
         // 컴포넌트 마운트 및 userId 변경 시 실행되는 hook
-        const response = await axios.get(process.env.REACT_APP_API_URL + `/users/${userId}`);
+        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/users/${userId}`);
 
         let data = response.data.result;
         // data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트
         console.log("data: " + JSON.stringify(data));
+        console.log("!daata: ", data);
         if (data) {
           // 각 필드 상태 업데이트
           setUsername(data.username);
@@ -122,7 +123,7 @@ function UserInfo({ userId }) {
 
   // userData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!userData) { 
-    return <LoadingModal />;
+    return <LoadingModal data={userData} />;
   }
 
   // 숫자만 입력 가능하도록 하는 함수
@@ -155,7 +156,7 @@ function UserInfo({ userId }) {
       <Row>
         <Col>
           <Form onSubmit={handleSubmit}>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>format_list_numbered</span>
                 <span style={{verticalAlign: "middle"}}> 회원 식별 번호</span>
@@ -165,7 +166,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>signature</span>
                 <span style={{verticalAlign: "middle"}}> 회원 ID</span>
@@ -175,7 +176,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>star</span>
                 <span style={{verticalAlign: "middle"}}> 회원 별명</span>
@@ -185,7 +186,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>update</span>
                 <span style={{verticalAlign: "middle"}}> 회원 나이</span>
@@ -196,7 +197,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
             
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>straighten</span>
                 <span style={{verticalAlign: "middle"}}> 회원 키</span>
@@ -207,7 +208,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>scale</span>
                 <span style={{verticalAlign: "middle"}}> 회원 몸무게</span>
@@ -218,7 +219,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>wc</span>
                 <span style={{verticalAlign: "middle"}}> 회원 성별</span>
@@ -247,7 +248,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>onsen</span>
                 <span style={{verticalAlign: "middle"}}> 매운맛 선호도</span>
@@ -258,7 +259,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
             
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>egg_alt</span>
                 <span style={{verticalAlign: "middle"}}> 육류 선호 여부</span>
@@ -287,7 +288,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
             
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>recommend</span>
                 <span style={{verticalAlign: "middle"}}> 선호하는 맛</span>
@@ -297,7 +298,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>directions_run</span>
                 <span style={{verticalAlign: "middle"}}> 활동량</span>
@@ -308,7 +309,7 @@ function UserInfo({ userId }) {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>menu_book</span>
                 <span style={{verticalAlign: "middle"}}> 선호 음식 종류</span>

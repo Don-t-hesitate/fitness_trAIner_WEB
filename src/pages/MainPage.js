@@ -24,7 +24,7 @@ function NavBar() {
         padding: '0 20px'
       }}>
         <div style={{flex: 1, textAlign: 'center'}}>
-          <h1 style={{color: 'white', margin: 0, marginLeft: '60px'}}>trAIner fitness</h1>
+          <h1 style={{color: 'white', margin: 0, marginLeft: '60px'}}>trAIner</h1>
         </div>
         <div style={{marginLeft: 'auto'}}>
           <Link to={'/login'}>

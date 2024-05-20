@@ -34,7 +34,7 @@ function UserManage() {
 
   // userData가 null인 경우 (데이터 로딩 중) 로딩 메시지 표시
   if (!userData) {
-    return <LoadingModal />;
+    return <LoadingModal data={userData} />;
   }
 
   const handleRowClick = (userId) => {
@@ -62,13 +62,13 @@ function UserManage() {
     <Container>
       <Row>
         <Col>
-          <h2>회원 관리</h2>
+          <h2 style={{marginBottom: '24px', fontWeight: '800'}}>회원 관리</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
                 <th>식별 번호</th>
-                <th>회원 ID</th>
                 <th>회원 닉네임</th>
+                <th>회원 ID</th>
               </tr>
             </thead>
             <tbody>
@@ -77,8 +77,8 @@ function UserManage() {
                   <tr key={user.userId} onClick={() => handleRowClick(user.userId)}>
                     {/* 각 행을 클릭하면 handleRowClick 함수가 실행되어 회원 정보 페이지로 이동 */}
                     <td>{user.userId}</td>
-                    <td>{user.username}</td>
                     <td>{user.nickname}</td>
+                    <td>{user.username}</td>
                   </tr>
                 ))}
             </tbody>

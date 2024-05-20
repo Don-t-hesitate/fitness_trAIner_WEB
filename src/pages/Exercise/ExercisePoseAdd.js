@@ -95,7 +95,7 @@ function ExercisePoseAdd() {
             </div>
           </div>
           <Form onSubmit={handleSubmit}>
-            {/* <Form.Group as={Row}>
+            {/* <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>category</span>
                 <span style={{verticalAlign: "middle"}}> 운동 타입</span>
@@ -108,7 +108,7 @@ function ExercisePoseAdd() {
                 </Form.Select>
               </Col>
             </Form.Group> */}
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>exercise</span>
                 <span style={{verticalAlign: "middle"}}> 운동 이름</span>
@@ -118,7 +118,7 @@ function ExercisePoseAdd() {
               </Col>
             </Form.Group>
             {/* 데이터 타입 */}
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>data_object</span>
                 <span style={{verticalAlign: "middle"}}> 데이터 타입</span>

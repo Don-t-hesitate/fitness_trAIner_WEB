@@ -29,8 +29,11 @@ const ProgressWindow = ({ progressMessages }) => {
     >
       {progressMessages.map((message, index) => (
         <div>
-          <span style={{color: 'green'}}>{'['+ index + ']:'}</span>
-          <span key={index} style={{ marginBottom: "0.5rem" }}>
+          {index === 0
+            ? <span style={{ color: 'springgreen' }}>{'입력된 명령: '}</span>
+            : <span style={{ color: 'springgreen' }}>{'['+ index + ']:'}</span>
+          }
+          <span key={index} style={{ marginBottom: "0.5rem", color: 'lightgray' }}>
             {' ' + message}
           </span>
         </div>
@@ -51,7 +54,11 @@ function WorkoutAiTrain() {
   const [socket, setSocket] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   // 파이썬 파일의 학습 진행 상태를 담을 상태
-  const [progressMessages, setProgressMessages] = useState([]);
+  const [progressMessages, setProgressMessages] = useState(["python " + filePath]);
+
+  useEffect(() => {
+    setProgressMessages(["python " + filePath]);
+  }, [filePath, params, exercise, version]);
 
   useEffect(() => {
     if (socket !== null) {
@@ -63,7 +70,7 @@ function WorkoutAiTrain() {
     try {
       const sckt = new SockJS(`${process.env.REACT_APP_API_URL_BLD}/ai/workout/train`);
       setSocket(sckt);
-      console.log("!소켓 준비");
+      console.log("소켓 준비");
       console.log("formInput: ", formInput);
       const convertToObject = () => {
         const inputValue = formInput.trim();
@@ -106,6 +113,10 @@ function WorkoutAiTrain() {
               disconnectSocket();
             } else {
               console.log("message.body: ", message.body);
+              if (progressMessages.indexOf("콘솔창") !== -1) {
+                console.log("콘솔창 삭제");
+                setProgressMessages([]);
+              }
               setProgressMessages((prevMessages) => [...prevMessages, message.body]);
             }
           });
@@ -117,10 +128,10 @@ function WorkoutAiTrain() {
             const requestData = {
               pythonFilePath: filePath,
               exerciseName: exercise,
-              // params: params,
+              params: params,
             };
             console.log("requestData: ", requestData);
-            // console.log("type: ", typeof params);
+            console.log("type: ", typeof params);
             stompClient.send("/app/start", {}, JSON.stringify(requestData));
           }
         });
@@ -155,14 +166,21 @@ function WorkoutAiTrain() {
     <Container>
       <Row>
         <Col>
-          <h2>운동 자세 분석 AI 학습</h2>
-          <div style={{ height: '50vh', marginBottom: '20px', position: 'relative' }}>
+          <h2 style={{fontWeight: '800'}}>운동 자세 분석 AI 학습</h2>
+          <Stack direction="horizontal">
+            <h3 style={{color: 'dimgrey'}}>콘솔창</h3>
+            <Button variant="secondary" className="ms-auto" onClick={(e) => {
+              e.preventDefault();
+              setProgressMessages(["python " + filePath]);
+            }}>콘솔 지우기</Button>
+          </Stack>
+          <div style={{ height: '45vh', position: 'relative' }} className="mb-3">
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
               <ProgressWindow progressMessages={progressMessages} />
             </div>
           </div>
           <Form>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>exercise</span>
                 <span style={{ verticalAlign: "middle" }}> 운동 이름</span>
@@ -171,7 +189,7 @@ function WorkoutAiTrain() {
                 <Form.Control value={exercise} onChange={(e) => setExercise(e.target.value)} />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>folder</span>
                 <span style={{ verticalAlign: "middle" }}> Python 파일 경로</span>
@@ -180,7 +198,7 @@ function WorkoutAiTrain() {
                 <Form.Control value={filePath} onChange={(e) => setFilePath(e.target.value)} />
               </Col>
             </Form.Group>
-            <Form.Group as={Row}>
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
               <Form.Label column sm="3">
                 <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontVariationSettings: "'FILL' 1" }}>code</span>
                 <span style={{ verticalAlign: "middle" }}> 하이퍼 파라미터</span>

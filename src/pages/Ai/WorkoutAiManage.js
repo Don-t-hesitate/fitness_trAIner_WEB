@@ -80,7 +80,7 @@ function WorkoutAiVersion(props) {
   
 
   if (!aiVerData) {
-    return <LoadingModal />;
+    return <LoadingModal data={aiVerData} />;
   }
 
   const handleRowClick = (aiVer) => {
@@ -119,8 +119,12 @@ function WorkoutAiVersion(props) {
     pageNumbers.push(i);
   }
 
-  if(!currentModels || !keys || !values) {
-    return <LoadingModal />;
+  if (!currentModels) {
+    return <LoadingModal data={currentModels} />;
+  } else if (!keys) {
+    return <LoadingModal data={keys} />;
+  } else if (!values) {
+    return <LoadingModal data={values} />;
   }
   
   const handleRadioChange = (version) => {

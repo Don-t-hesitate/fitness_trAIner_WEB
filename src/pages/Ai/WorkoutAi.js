@@ -28,7 +28,7 @@ const WorkoutAi = () => {
   }, []);
 
   if (!exerciseList) {
-    return <LoadingModal />;
+    return <LoadingModal data={exerciseList} />;
   }
 
   const handleRowClick = (exerciseName) => {

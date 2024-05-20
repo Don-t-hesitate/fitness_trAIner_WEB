@@ -3,6 +3,9 @@ import axios from 'axios';
 import { Container, Row, Col, Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import FoodExcel from './FoodExcel';
+import { Box, Breadcrumbs, Link, Typography } from '@mui/joy';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 function FoodManage() {
   const [foodData, setFoodData] = useState(null);
@@ -31,10 +34,30 @@ function FoodManage() {
   // };
 
   return (
-    <Container>
+    <>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon fontSize="sm" />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href="/dashboard"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Typography color="primary" fontWeight={500} fontSize={12}>
+            음식 관리
+          </Typography>
+        </Breadcrumbs>
+      </Box>
       <Row>
         <Col>
-          <h2>음식 관리</h2>
+          <h2 style={{fontWeight: '800', marginBottom: '24px'}}>음식 관리</h2>
           {/* <Table striped bordered hover>
             <thead>
               <tr>
@@ -89,22 +112,22 @@ function FoodManage() {
               ))}
             </tbody> */}
           {/* </Table> */}
-          <FoodExcel />
+          <FoodExcel apiDestination={"/admin/food/info/food_db_result_final.xlsx"} />
         </Col>
+        {/* <Row className="align-items-center">
+          <Col>
+            <div>
+              <span style={{color: 'blue', fontWeight: 'bold', textDecoration: "underline"}}>1</span> <span> 2 3 4 5</span>
+            </div>
+          </Col>
+          <Col xs="auto" className="ml-auto">
+            <Button variant="primary" size="sm" href='/food/add'>
+              추가
+            </Button>
+          </Col>
+        </Row> */}
       </Row>
-      {/* <Row className="align-items-center">
-        <Col>
-          <div>
-            <span style={{color: 'blue', fontWeight: 'bold', textDecoration: "underline"}}>1</span> <span> 2 3 4 5</span>
-          </div>
-        </Col>
-        <Col xs="auto" className="ml-auto">
-          <Button variant="primary" size="sm" href='/food/add'>
-            추가
-          </Button>
-        </Col>
-      </Row> */}
-    </Container>
+    </>
   );
 }
 

@@ -28,7 +28,7 @@ const getRowsCols = (data, sheetName) => ({
   ],
 });
 
-export default function FoodExcel() {
+export default function FoodExcel({ apiDestination }) {
   const [rows, setRows] = useState([]); // 엑셀 행을 저장할 상태
   const [columns, setColumns] = useState([]); // 엑셀 열을 저장할 상태
   const [workBook, setWorkBook] = useState({}); // 엑셀 워크북을 저장할 상태
@@ -36,7 +36,7 @@ export default function FoodExcel() {
   const [current, setCurrent] = useState(""); // 현재 선택된 시트 이름을 저장할 상태
   const [deletedRows, setDeletedRows] = useState([]); // 삭제된 행을 저장할 상태
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 특정 행을 삭제하는 함수
   const deleteRow = (rowToDelete) => {
@@ -73,7 +73,11 @@ export default function FoodExcel() {
 
   // 컴포넌트가 마운트될 때 한 번만 실행
   useEffect(() => { (async () => {
-    const res = await fetch(process.env.REACT_APP_API_URL_BLD + "/admin/excel");
+    const res = await fetch(process.env.REACT_APP_API_URL_BLD + apiDestination);
+    if (!res.ok) {
+      alert('Failed to fetch the file');
+      return setIsLoading(true);
+    }
     const ab = await res.arrayBuffer(); // ArrayBuffer로 변환
 
     await handleAB(ab);
@@ -83,7 +87,7 @@ export default function FoodExcel() {
 
   // 엑셀 파일이 로딩 중인 경우 로딩 메시지 표시
   if (isLoading) {
-    return <LoadingModal />;
+    return <LoadingModal data={!isLoading} />;
   }
 
   // 엑셀 파일을 서버에 반영하는 함수
@@ -101,28 +105,28 @@ export default function FoodExcel() {
       console.log('excel data: ', data);
       console.log('rows: ', rows);
 
-      // 디버깅용
-      const startingWithS = Object.fromEntries(
-        Object.entries(workBook['final_food_db'])
-          .filter(([key, value]) => key.startsWith('S49'))
-      );
-      const startingWithR = Object.fromEntries(
-        Object.entries(workBook['final_food_db'])
-          .filter(([key, value]) => key.startsWith('R49'))
-      );
-      const startingWithQ = Object.fromEntries(
-        Object.entries(workBook['final_food_db'])
-          .filter(([key, value]) => key.startsWith('Q49'))
-      );
-      const startingWithP = Object.fromEntries(
-        Object.entries(workBook['final_food_db'])
-          .filter(([key, value]) => key.startsWith('P49'))
-      );
+      // // 디버깅용
+      // const startingWithS = Object.fromEntries(
+      //   Object.entries(workBook['final_food_db'])
+      //     .filter(([key, value]) => key.startsWith('S49'))
+      // );
+      // const startingWithR = Object.fromEntries(
+      //   Object.entries(workBook['final_food_db'])
+      //     .filter(([key, value]) => key.startsWith('R49'))
+      // );
+      // const startingWithQ = Object.fromEntries(
+      //   Object.entries(workBook['final_food_db'])
+      //     .filter(([key, value]) => key.startsWith('Q49'))
+      // );
+      // const startingWithP = Object.fromEntries(
+      //   Object.entries(workBook['final_food_db'])
+      //     .filter(([key, value]) => key.startsWith('P49'))
+      // );
       
-      console.log('workbook with keys and values starting with "P": ', startingWithP);
-      console.log('workbook with keys and values starting with "Q": ', startingWithQ);
-      console.log('workbook with keys and values starting with "R": ', startingWithR)
-      console.log('workbook with keys and values starting with "S": ', startingWithS);
+      // console.log('workbook with keys and values starting with "P": ', startingWithP);
+      // console.log('workbook with keys and values starting with "Q": ', startingWithQ);
+      // console.log('workbook with keys and values starting with "R": ', startingWithR)
+      // console.log('workbook with keys and values starting with "S": ', startingWithS);
 
       /* FormData 생성 */
       const fdata = new FormData();
@@ -131,14 +135,15 @@ export default function FoodExcel() {
       const header = process.env.REACT_APP_API_URL_BLD;
       (async() => {
         /* 데이터 전송 */
-        const response = await axios.post(header + "/admin/excel", fdata, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const response = await axios.post(header + apiDestination, fdata, { headers: { 'Content-Type': 'multipart/form-data' } });
         const size = response.data.result.size / (1024 ** 2); // MB 단위로 변환
         
         alert(response.data.message + '\n파일 크기: ' + size.toFixed(2) + 'MB');
       })();
     } catch (error) { 
-      console.error('error?: ', error);
-      alert('Error saving file:', error.data.message);
+      console.log('error!: ', error);
+      console.error('error: ', error);
+      alert('Error saving file:', error);
     } 
   };
 
@@ -150,15 +155,15 @@ export default function FoodExcel() {
   return (
     <>
       {sheets.length > 0 && ( <>
-        <div><span style={{color: 'crimson', fontWeight: 'bold'}}>행 삭제</span>는 해당 행의 셀 <span style={{color: 'goldenrod', fontStyle: 'italic', textDecoration: 'underline'}}>더블클릭</span>, 
-        <span style={{color: 'blue', fontWeight: 'bold'}}> 행 추가</span>는 <span style={{color: '#6c757d', fontStyle: 'italic', textDecoration: 'underline'}}>버튼</span>으로 수행</div>
-        <p>드롭다운을 사용하여 워크시트 전환하기:&nbsp;
+        <div><span style={{color: '#6c998e', fontWeight: 'bold'}}>행 삭제</span>는 해당 행의 셀 <span style={{color: '#181e00', fontStyle: 'italic', textDecoration: 'underline', fontWeight: '600'}}>더블클릭</span>, 
+        <span style={{color: '#ab5e77', fontWeight: 'bold'}}> 행 추가</span>는 <span style={{color: '#9f9301', fontStyle: 'italic', textDecoration: 'underline', fontWeight: '600'}}>버튼</span>으로 수행</div>
+        <p style={{marginTop: '10px'}}>드롭다운을 사용하여 워크시트 전환하기:&nbsp;
           <select onChange={async (e) => selectSheet(sheets[+(e.target.value)])}>
             {sheets.map((sheet, idx) => (<option key={sheet} value={idx}>{sheet}</option>))}
           </select>
         </p>
         <Stack direction="horizontal">
-          <div className="flex-cont"><b>현재 시트: {current}</b></div>
+          <div className="flex-cont" style={{fontSize: '18px'}}><b>현재 시트: {current}</b></div>
           <ButtonGroup className='ms-auto mb-1 mt-2' >
             <Button variant="secondary" onClick={addRow}>
               <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>add</span>

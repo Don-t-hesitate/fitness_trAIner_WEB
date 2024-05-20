@@ -88,7 +88,7 @@ function WorkoutAiInfo({ parentId, subId }) {
 
   // 운동 AI 정보가 없는 경우 로딩 모달 표시
   if (!params) {
-    return <LoadingModal />;
+    return <LoadingModal data={params} />;
   }
 
   const returnDate = () => {

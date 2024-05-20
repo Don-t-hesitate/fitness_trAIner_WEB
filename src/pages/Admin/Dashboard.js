@@ -55,15 +55,15 @@ function Dashboard() {
     <Container fluid style={{ paddingLeft: '20px', paddingRight: '0px' }}>
       {/* 대시보드 제목 */}
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">대시보드</h1>
+        <h1 className="h2" style={{ fontWeight: '800' }}>대시보드</h1>
       </div>
 
-      <h4>서비스 현황</h4>
+      <h4 style={{ fontWeight: '700' }}>서비스 현황</h4>
       <Row>
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>오늘 가입자수</Card.Title>
+              <Card.Title style={{ fontWeight: '600' }}>오늘 가입자수</Card.Title>
               <Card.Text>132명</Card.Text>
             </Card.Body>
           </Card>
@@ -71,7 +71,7 @@ function Dashboard() {
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>전체 가입자수</Card.Title>
+              <Card.Title style={{ fontWeight: '600' }}>전체 가입자수</Card.Title>
               <Card.Text>8,120명</Card.Text>
             </Card.Body>
           </Card>
@@ -79,15 +79,15 @@ function Dashboard() {
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>이용률</Card.Title>
+              <Card.Title style={{ fontWeight: '600' }}>이용률</Card.Title>
               <Card.Text>78%</Card.Text>
             </Card.Body>
           </Card>
         </Col>
       </Row>
 
-      <h4>일일 사용자 접속 통계</h4>
-      <canvas ref={chartRef} />
+      <h4 style={{ fontWeight: '700', marginTop: '30px' }}>일일 사용자 접속 통계</h4>
+      <canvas ref={chartRef}/>
     </Container>
   );
 }

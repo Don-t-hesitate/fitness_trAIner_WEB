@@ -17,6 +17,7 @@ function UserInfo({ userId }) {
   const [tastePreference, setTastePreference] = useState(''); // 회원 맛 선호도를 저장할 상태
   const [activityLevel, setActivityLevel] = useState(''); // 회원 활동량을 저장할 상태
   const [preferenceTypeFood, setPreferenceTypeFood] = useState(''); // 회원 선호 음식 타입을 저장할 상태
+  const [preferenceFoods, setPreferenceFoods] = useState(''); // 회원 선호 음식을 저장할 상태
 
   // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
   const [ageError, setAgeError] = useState(null);
@@ -69,7 +70,8 @@ function UserInfo({ userId }) {
         meatConsumption,
         tastePreference,
         activityLevel,
-        preferenceTypeFood
+        preferenceTypeFood,
+        preferenceFoods
       });
 
       if (response.data.success) {
@@ -111,6 +113,7 @@ function UserInfo({ userId }) {
           setTastePreference(data.tastePreference);
           setActivityLevel(data.activityLevel);
           setPreferenceTypeFood(data.preferenceTypeFood);
+          setPreferenceFoods(data.preferenceFoods);
         }
       } catch (error) {
         // 에러 발생 시 에러 메시지 출력
@@ -318,6 +321,17 @@ function UserInfo({ userId }) {
                 <Form.Control value={preferenceTypeFood || ''} onChange={(e) => setPreferenceTypeFood(e.target.value)} />
               </Col>
             </Form.Group>
+
+            <Form.Group as={Row} style={{marginBottom: '10px'}}>
+              <Form.Label column sm="3">
+                <span className='material-symbols-outlined' style={{verticalAlign: "middle", marginRight: "5px", fontVariationSettings: "'FILL' 1"}}>restaurant</span>
+                <span style={{verticalAlign: "middle"}}> 선호 음식 이름</span>
+              </Form.Label>
+              <Col sm="9">
+                <Form.Control value={preferenceFoods || ''} onChange={(e) => setPreferenceFoods(e.target.value)} />
+              </Col>
+            </Form.Group>
+
             <Stack direction="horizontal">
               <ButtonGroup className="pt-2 ms-auto">
                 <Button variant="primary" type="submit" style={{fontWeight: "bold"}}>

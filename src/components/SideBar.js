@@ -381,7 +381,7 @@ export default function Sidebar() {
               </List>
             </Toggler>
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <ListItemButton component="a" href="/download">
               <HomeRoundedIcon />
               <ListItemContent>
@@ -390,35 +390,6 @@ export default function Sidebar() {
                 </Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem>
-
-          {/* <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <FoodBankIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm" fontFamily="Pretendard-Regular">음식 취향 분석 AI 관리</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton component="a" href="/aiservice/food/train" selected={foodAiLearn}>
-                    <AutoAwesomeIcon /> AI 학습
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton component="a" href="/aiservice/food" selected={foodAiModel}>
-                    <SmartToyIcon /> AI 모델 목록
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
           </ListItem> */}
         </List>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>

@@ -35,3 +35,5 @@ src/pages/ModalSample.js
 src/setupProxy.js
 src/components/legacySideBar.js
 src/pages/Temporary.js
+src/pages/Food/MuiExcel.js
+src/ExcelTest.js

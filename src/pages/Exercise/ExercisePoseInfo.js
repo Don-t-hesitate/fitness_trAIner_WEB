@@ -1,9 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from 'axios';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import JSZip, { file } from 'jszip';
+import axios from "axios";
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import JSZip, { file } from "jszip";
 import LoadingModal from "../../components/LoadingModal";
+import {
+  Box,
+  Breadcrumbs,
+  Link,
+  Typography,
+  Sheet,
+  Stack,
+  Table as MuiTable,
+  Button as MuiButton,
+} from "@mui/joy";
+import {
+  ChevronRightRounded as ChevronRightRoundedIcon,
+  HomeRounded as HomeRoundedIcon,
+} from "@mui/icons-material";
 
 function ExerciseInfo({ exerciseName, dataType, fileName }) {
   const [files, setFiles] = useState([]); // 서버에서 받아오는 파일을 저장할 상태
@@ -14,7 +28,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
 
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
-  
+
   // 삭제 버튼 클릭 시 실행되는 함수
   const deleteClick = (e) => {
     e.preventDefault();
@@ -24,73 +38,72 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
     }
   };
 
-  // 삭제 요청을 보내는 함수
-  const handleDelete = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.delete(process.env.REACT_APP_API_URL_BLD + `/ai/pose/${exerciseName}/${dataType}/${fileName}`);
-      if (response.data.success) {
-        alert('삭제 성공');
-        navigate('/exercise/pose');
-      } else {
-        alert('삭제 실패: ' + response.data.message);
-      }
-    } catch (error) {
-      console.error('Error deleting exercise data:', error.response.data.message);
-    }
-  };
-
   useEffect(() => {
     const fetchPoseData = async () => {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-          //'/api' +
-          `/ai/pose/${exerciseName}/${dataType}/${fileName}`, { responseType: 'blob' });
+            // "/api" +
+            `/ai/pose/${exerciseName}/${dataType}/${fileName}`,
+          { responseType: "blob" }
+        );
         try {
           const zip = new JSZip();
           const zipData = await zip.loadAsync(response.data);
-          console.log('zipData: ', zipData);
+          console.log("zipData: ", zipData);
           const fileList = [];
 
           zip.forEach((relativePath, zipEntry) => {
             if (!zipEntry.dir) {
               const isImage = zipEntry.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i);
-              fileList.push({ name: relativePath, content: zipEntry.async(isImage ? 'base64' : 'text') });
+              fileList.push({
+                name: relativePath,
+                content: zipEntry.async(isImage ? "base64" : "text"),
+              });
             }
           });
 
-          const fileContents = await Promise.all(fileList.map(async (file) => {
-            console.log('!file.name.split(\\): ', file.name.split('\\'));
-            console.log('file.name.split(/): ', file.name.split('/'));
-            const splitName = file.name.split('\\');
-            if (splitName.length > 1 && file.name.split('\\').indexOf(dataType)) {
-              console.log('!splitName: ', splitName);
-              return {
-              name: splitName[splitName.indexOf(dataType) + 1],
-              content: await file.content,
-              isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
-              };
-            } else if (file.name.split('/').length && file.name.split('/').indexOf(dataType)) {
-              console.log('!splitName: ', file.name.split('/'));
-              return {
-                name: file.name.split('/')[file.name.split('/').indexOf(dataType) + 1],
-                content: await file.content,
-                isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
-              };
-            } else {
-              console.log('!splitName: ', file.name.split('/'));
-              return null;
-            }
-          }));
-  
-        console.log('!fileContents: ', fileContents); 
-        setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
+          const fileContents = await Promise.all(
+            fileList.map(async (file) => {
+              console.log("!file.name.split(\\): ", file.name.split("\\"));
+              console.log("file.name.split(/): ", file.name.split("/"));
+              const splitName = file.name.split("\\");
+              if (
+                splitName.length > 1 &&
+                file.name.split("\\").indexOf(dataType)
+              ) {
+                console.log("!splitName: ", splitName);
+                return {
+                  name: splitName[splitName.indexOf(dataType) + 1],
+                  content: await file.content,
+                  isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
+                };
+              } else if (
+                file.name.split("/").length &&
+                file.name.split("/").indexOf(dataType)
+              ) {
+                console.log("!splitName: ", file.name.split("/"));
+                return {
+                  name: file.name.split("/")[
+                    file.name.split("/").indexOf(dataType) + 1
+                  ],
+                  content: await file.content,
+                  isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
+                };
+              } else {
+                console.log("!splitName: ", file.name.split("/"));
+                return null;
+              }
+            })
+          );
+
+          console.log("!fileContents: ", fileContents);
+          setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
         } catch (e) {
-          console.error('Error reading ZIP file:', e);
+          console.error("Error reading ZIP file:", e);
         }
       } catch (error) {
-        console.error('Error fetching exercise data:', error);
+        console.error("Error fetching exercise data:", error);
       }
     };
 
@@ -100,48 +113,121 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
   useEffect(() => {
     const settingFiles = async () => {
       try {
-        const filteredFiles = files.filter(file => file !== null);
-        filteredFiles.forEach(file => {
-          console.log('!file: ', file);
-          if (file.name.endsWith('.json')) {
-            console.log('setting json: ', file);
+        const filteredFiles = files.filter((file) => file !== null);
+        filteredFiles.forEach((file) => {
+          console.log("!file: ", file);
+          if (file.name.endsWith(".json")) {
+            console.log("setting json: ", file);
             jsonFormData.current = file;
-            console.log('json: ', file);
-          // } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
-          //   setJpegFormData(prev => {
-          //     // 유일한 이름만 저장
-          //     if (!prev.some(existingFile => existingFile.name === file.name)) {
-          //       return [...prev, { name: file.name, content: file.content }];
-          //     }
-          //     return prev;
-          //   });
-          //   console.log('img: ', file);
-            console.log('!jsonFormData.current: ', jsonFormData.current);
-            setJson(JSON.stringify(JSON.parse(jsonFormData.current.content), null, 2));
+            console.log("json: ", file);
+            // } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
+            //   setJpegFormData(prev => {
+            //     // 유일한 이름만 저장
+            //     if (!prev.some(existingFile => existingFile.name === file.name)) {
+            //       return [...prev, { name: file.name, content: file.content }];
+            //     }
+            //     return prev;
+            //   });
+            //   console.log('img: ', file);
+            console.log("!jsonFormData.current: ", jsonFormData.current);
+            setJson(
+              JSON.stringify(JSON.parse(jsonFormData.current.content), null, 2)
+            );
           } else {
-            console.error('Unknown file type:', file);
+            console.error("Unknown file type:", file);
           }
         });
       } catch (error) {
-        console.error('Error setting files:', error);
+        console.error("Error setting files:", error);
       }
-    }
+    };
     settingFiles();
-    console.log('files: ', files);
+    console.log("files: ", files);
   }, [files]);
-  
+
+  // 삭제 요청을 보내는 함수
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.delete(
+        process.env.REACT_APP_API_URL_BLD +
+          `/ai/pose/${exerciseName}/${dataType}/${fileName}`
+      );
+      if (response.data.success) {
+        alert("삭제 성공");
+        navigate("/exercise_pose");
+      } else {
+        alert("삭제 실패: " + response.data.message);
+      }
+    } catch (error) {
+      console.error(
+        "Error deleting exercise data:",
+        error.response.data.message
+      );
+    }
+  };
+
   if (!json) {
-    return (
-      <LoadingModal data={json} />
-    );
+    return <LoadingModal data={json} />;
   }
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h3>운동 자세 데이터 - <strong>{dataType}</strong></h3>
-          {/* <h3>jpg: </h3>
+    <>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon fontSize="sm" />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href="/dashboard"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Link
+            underline="hover" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href="/exercise_pose"
+            aria-label="Home"
+            fontSize={12}
+          >
+            운동 자세 데이터 관리
+          </Link>
+          <Link
+            underline="hover" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href={`/exercise_pose/${exerciseName}`}
+            aria-label="Home"
+            fontSize={12}
+          >
+            {exerciseName}
+          </Link>
+          <Link
+            underline="hover" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href={`/exercise_pose/${exerciseName}/${dataType}`}
+            aria-label="Home"
+            fontSize={12}
+          >
+            {dataType}
+          </Link>
+          <Typography color="primary" fontWeight={500} fontSize={12}>
+            {fileName}
+          </Typography>
+        </Breadcrumbs>
+      </Box>
+      <Typography level="h2" fontWeight={700} fontFamily="Pretendard-Regular">
+        운동 자세 데이터 -{" "}
+        <span style={{ color: "#0b6bcb", fontStyle: "italic" }}>
+          {fileName}
+        </span>
+      </Typography>
+
+      {/* <h3>jpg: </h3>
           <div style={{ height: '800px', marginBottom: '5px', position: 'relative' }}>
             <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto', overflowY: 'scroll', maxHeight: '80vh' }}>
               {jpegFormData.map((file) => (
@@ -149,32 +235,85 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
               ))}
             </div>
           </div> */}
-          <div style={{ height: '70vh', marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ border: '1px solid #ccc', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              {jsonFormData.current && (
-                <Form style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <Form.Group controlId="jsonContent" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <Form.Control as="textarea" style={{ flex: 1, resize: 'none', backgroundColor: 'lightgrey' }} value={json} onChange={(e) => setJson(e.target.value)}  />
-                  </Form.Group>
-                </Form>
-              )}
-            </div>
-          </div>
-        </Col>
-      </Row>
-      <Row className="align-items-center">
-        <Col>
-          <div>
-          </div>
-        </Col>
-        <Col xs="auto" className="ml-auto">
-          <Button variant="danger" onClick={deleteClick}>
-            <span className="material-symbols-outlined" style={{ verticalAlign: "middle"}}>delete</span>
-            <span style={{verticalAlign: "middle", fontWeight: "bold"}}> 삭제</span>
-          </Button>
-        </Col>
-      </Row>
-    </Container>
+      <div
+        style={{
+          height: "70vh",
+          marginBottom: "20px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            border: "1px solid #ccc",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          {jsonFormData.current && (
+            <Form
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
+              <Form.Group
+                controlId="jsonContent"
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                }}
+              >
+                <Form.Control
+                  as="textarea"
+                  style={{
+                    flex: 1,
+                    resize: "none",
+                    backgroundColor: "lightgrey",
+                  }}
+                  value={json}
+                  onChange={(e) => setJson(e.target.value)}
+                />
+              </Form.Group>
+            </Form>
+          )}
+        </div>
+      </div>
+      <Stack direction justifyContent="flex-end">
+        <MuiButton
+          color="danger"
+          onClick={deleteClick}
+          style={{ marginTop: "10px" }}
+          startDecorator={
+            <span
+              className="material-symbols-outlined"
+              style={{
+                verticalAlign: "middle",
+              }}
+            >
+              delete
+            </span>
+          }
+        >
+          <span
+            style={{
+              verticalAlign: "middle",
+              fontWeight: "bold",
+              fontSize: "16px",
+            }}
+          >
+            {" "}
+            삭제
+          </span>
+        </MuiButton>
+      </Stack>
+    </>
   );
 }
 

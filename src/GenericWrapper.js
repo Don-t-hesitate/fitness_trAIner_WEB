@@ -1,12 +1,12 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Row, Col } from 'react-bootstrap';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Header from './components/Header';
-import SideBar from './components/SideBar';
-import PrivateRoute from './PrivateRoute';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
+import { CssVarsProvider } from "@mui/joy/styles";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Box from "@mui/joy/Box";
+import Header from "./components/Header";
+import SideBar from "./components/SideBar";
+import PrivateRoute from "./PrivateRoute";
 
 const GenericWrapper = ({ mainComponent: MainComponent, paramKeys = [] }) => {
   // URL 파라미터 값 가져오기
@@ -25,22 +25,27 @@ const GenericWrapper = ({ mainComponent: MainComponent, paramKeys = [] }) => {
       element={() => (
         <CssVarsProvider disableTransitionOnChange>
           <CssBaseline />
-          <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+          <Box sx={{ display: "flex", minHeight: "100dvh" }}>
             <Header />
             <SideBar />
             <Box
               component="main"
               className="MainContent"
               sx={{
-                pt: { xs: 'calc(12px + var(--Header-height))', md: 3 },
+                px: { xs: 2, md: 6 },
+                pt: {
+                  xs: "calc(12px + var(--Header-height))",
+                  sm: "calc(12px + var(--Header-height))",
+                  md: 3,
+                },
                 pb: { xs: 2, sm: 2, md: 3 },
                 flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 minWidth: 0,
-                height: '100dvh',
+                height: "100dvh",
                 gap: 1,
-                overflow: 'auto',
+                overflow: "auto",
               }}
             >
               <MainComponent {...mainComponentProps} />

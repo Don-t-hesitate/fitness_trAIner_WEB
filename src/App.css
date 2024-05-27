@@ -37,3 +37,11 @@
     transform: rotate(360deg);
   }
 }
+
+.custom-grid {
+  background-color: blanchedalmond;
+}
+
+.custom-input::placeholder {
+  color: red;
+}

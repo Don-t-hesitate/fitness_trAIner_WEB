@@ -12,12 +12,40 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'GmarketSansMedium';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GmarketSansBold';
+  src: url('/public/fonts/GmarketSansBold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+md-icon {
+  color: #006A6A;
+  --md-icon-size: 48px;
+}
+.rounded {
+  --md-icon-font: 'Material Symbols Rounded';
+}
+.sharp {
+  --md-icon-font: 'Material Symbols Sharp';
+}
+md-icon[filled] {
+  font-variation-settings: 'FILL' 1;
+}
+
 body {
   margin: 0;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-  font-family: 'Freesentation-9Black';
+  font-family: 'GmarketSansMedium';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

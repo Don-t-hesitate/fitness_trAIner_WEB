@@ -1,100 +1,55 @@
-import React from 'react';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Input from '@mui/joy/Input';
-import Typography from '@mui/joy/Typography';
-import ArrowForward from '@mui/icons-material/ArrowForward';
-import Star from '@mui/icons-material/Star';
-import TwoSidedLayout from '../components/TwoSidedLayout';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React from "react";
+import Button from "@mui/joy/Button";
+import Link from "@mui/joy/Link";
+import Typography from "@mui/joy/Typography";
+import ArrowForward from "@mui/icons-material/ArrowForward";
+import TwoSidedLayout from "../components/TwoSidedLayout";
 
-export default function HeroLeft02() {
+export default function HeroLeft01() {
   return (
-    <TwoSidedLayout>
-      <Typography color="primary" fontSize="lg" fontWeight="lg">
-        The power to do more
+    <TwoSidedLayout reversed={true} photo="exercising.png">
+      <Typography
+        color="primary"
+        fontSize="lg"
+        fontWeight="lg"
+        fontFamily="GmarketSansBold"
+      >
+        운동 자세 확인
       </Typography>
       <Typography
         level="h1"
         fontWeight="xl"
         fontSize="clamp(1.875rem, 1.3636rem + 2.1818vw, 3rem)"
+        fontFamily="GmarketSansBold"
       >
-        A large headlinerer about our product features & services
+        당신의 운동자세를 <br></br>평가하세요
       </Typography>
-      <Typography fontSize="lg" textColor="text.secondary" lineHeight="lg">
-        A descriptive secondary text placeholder. Use it to explain your business
-        offer better.
+      <Typography
+        fontSize="lg"
+        textColor="text.secondary"
+        lineHeight="lg"
+        sx={{ marginTop: "10px" }}
+        fontFamily="GmarketSansMedium"
+      >
+        tr
+        <span style={{ color: "#219BCC", fontFamily: "GmarketSansMedium" }}>
+          AI
+        </span>
+        ner는 운동 자세를 세 단계로 평가하고 <br></br>개선 방안을 제시합니다.
       </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 2,
-          my: 2,
-          flexWrap: 'wrap',
-          '& > *': { flex: 'auto' },
-        }}
-      >
-        <Input size="lg" placeholder="Sign in with email" />
-        <Button size="lg" endDecorator={<ArrowForward fontSize="xl" />}>
-          Get Started
-        </Button>
-      </Box>
-      <Box
-        sx={(theme) => ({
-          display: 'flex',
-          textAlign: 'center',
-          alignSelf: 'stretch',
-          columnGap: 4.5,
-          '& > *': {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            flex: 1,
-          },
-          [theme.breakpoints.up(834)]: {
-            textAlign: 'left',
-            '& > *': {
-              flexDirection: 'row',
-              gap: 1.5,
-              justifyContent: 'initial',
-              flexWrap: 'nowrap',
-              flex: 'none',
-            },
-          },
-        })}
-      >
-        <div>
-          <Typography
-            fontSize="xl4"
-            fontWeight="lg"
-            endDecorator={<Star fontSize="xl4" sx={{ color: 'warning.300' }} />}
-          >
-            4.9
-          </Typography>
-          <Typography textColor="text.secondary">
-            Over <b>5k</b> positive <br /> customer reviews.
-          </Typography>
-        </div>
-        <div>
-          <Typography fontSize="xl4" fontWeight="lg">
-            2M
-          </Typography>
-          <Typography textColor="text.secondary">
-            Global <br /> Transactions.
-          </Typography>
-        </div>
-      </Box>
+      {/* <Button size="lg" endDecorator={<ArrowForward fontSize="xl" />}>
+        Get Started
+      </Button> */}
       <Typography
         level="body-xs"
         sx={{
-          position: 'absolute',
-          top: '2rem',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          position: "absolute",
+          top: "2rem",
+          left: "50%",
+          transform: "translateX(-50%)",
         }}
-      >
-      </Typography>
+      ></Typography>
     </TwoSidedLayout>
   );
 }

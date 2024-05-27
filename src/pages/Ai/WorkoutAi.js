@@ -1,8 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Container, Row, Col, Table, Button, Pagination, Stack } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import LoadingModal from '../../components/LoadingModal';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Button,
+  Pagination,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../components/LoadingModal";
+import {
+  Box,
+  Breadcrumbs,
+  Link,
+  Typography,
+  Sheet,
+  Stack,
+  Table as MuiTable,
+  Button as MuiButton,
+} from "@mui/joy";
+import {
+  ChevronRightRounded as ChevronRightRoundedIcon,
+  HomeRounded as HomeRoundedIcon,
+} from "@mui/icons-material";
+import {
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  experimental_extendTheme as extendMaterialTheme,
+  THEME_ID as MATERIAL_THEME_ID,
+  Pagination as MuiPagination,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
+import { blue } from "@mui/material/colors";
+const materialTheme = extendMaterialTheme();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: blue[300],
+      main: blue[500],
+      dark: blue[700],
+      darker: blue[900],
+    },
+  },
+});
 
 const WorkoutAi = () => {
   const [exerciseList, setExerciseList] = useState([]); // 운동 목록을 저장할 상태
@@ -16,9 +58,11 @@ const WorkoutAi = () => {
   useEffect(() => {
     const fetchExerciseList = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + '/ai/exercise/list');
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL_BLD + "/ai/exercise/list"
+        );
         setExerciseList(response.data.result);
-        console.log('response: ', response.data.result);
+        console.log("response: ", response.data.result);
       } catch (error) {
         console.error(error);
       }
@@ -39,7 +83,10 @@ const WorkoutAi = () => {
   // 현재 페이지에 해당하는 운동 목록 계산
   const indexOfLastExercise = currentPage * exercisesPerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
-  const currentExercises = exerciseList.slice(indexOfFirstExercise, indexOfLastExercise);
+  const currentExercises = exerciseList.slice(
+    indexOfFirstExercise,
+    indexOfLastExercise
+  );
 
   // 페이지 번호 클릭 시 실행되는 함수
   const handlePageClick = (pageNumber) => {
@@ -53,36 +100,99 @@ const WorkoutAi = () => {
   }
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h2>운동 자세 분석 AI</h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>운동 이름</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentExercises.map((exercise, index) => (
-                <tr key={index} onClick={() => handleRowClick(exercise)}>
-                  <td>{exercise}</td>
+    <>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon fontSize="sm" />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href="/dashboard"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Typography color="primary" fontWeight={500} fontSize={12}>
+            운동 자세 분석 AI 목록
+          </Typography>
+        </Breadcrumbs>
+      </Box>
+      <Typography level="h2" fontWeight={700} fontFamily="Pretendard-Regular">
+        운동 자세 분석 AI 목록
+      </Typography>
+      <div>
+        <Sheet
+          className="UserTableContainer"
+          variant="outlined"
+          sx={{
+            display: { xs: "initial", sm: "initial" },
+            width: "100%",
+            borderRadius: "sm",
+            borderColor: "#fff",
+            flexShrink: 1,
+            overflow: "auto",
+            minHeight: 0,
+            position: "relative",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderBottom: "1px solid var(--joy-palette-border)",
+              padding: "8px",
+            }}
+          >
+            <MuiTable
+              aria-labelledby="tableTitle"
+              stickyHeader
+              hoverRow
+              stripe="odd"
+              variant="soft"
+              sx={{
+                "--TableCell-headBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--Table-headerUnderlineThickness": "1px",
+                "--TableRow-hoverBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--TableRow-bodyBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--TableCell-paddingY": "4px",
+                "--TableCell-paddingX": "8px",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th>운동 이름</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Stack direction="horizontal" spacing={2}>
-            <Pagination>
-              {pageNumbers.map((number) => (
-                <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageClick(number)}>
-                  {number}
-                </Pagination.Item>
-              ))}
-            </Pagination>
-          </Stack>
-        </Col>
-      </Row>
-    </Container>
+              </thead>
+              <tbody>
+                {currentExercises.map((exercise, index) => (
+                  <tr key={index} onClick={() => handleRowClick(exercise)}>
+                    <td>{exercise}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </MuiTable>
+          </Box>
+        </Sheet>
+        <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+          <ThemeProvider theme={theme}>
+            <MuiPagination
+              count={Math.ceil(exerciseList.length / exercisesPerPage)}
+              page={currentPage}
+              onChange={(event, page) => handlePageClick(page)}
+              color="primary"
+              sx={{ display: "flex", justifyContent: "center" }}
+            />
+          </ThemeProvider>
+        </MaterialCssVarsProvider>
+      </div>
+    </>
   );
 };
 

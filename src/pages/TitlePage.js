@@ -1,25 +1,25 @@
-import React from 'react';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
-import Box from '@mui/joy/Box';
-import CssBaseline from '@mui/joy/CssBaseline';
-import IconButton from '@mui/joy/IconButton';
-import Button from '@mui/joy/Button';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { CssVarsProvider, useColorScheme } from "@mui/joy/styles";
+import Box from "@mui/joy/Box";
+import CssBaseline from "@mui/joy/CssBaseline";
+import IconButton from "@mui/joy/IconButton";
+import Button from "@mui/joy/Button";
+import { Link } from "react-router-dom";
 
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 
-import framesxTheme from './theme.js';
-import HeroLeft01 from '../blocks/HeroLeft01.js';
-import HeroLeft02 from '../blocks/HeroLeft02.js';
-import HeroLeft03 from '../blocks/HeroLeft03.js';
-import HeroLeft04 from '../blocks/HeroLeft04.js';
-import HeroLeft05 from '../blocks/HeroLeft05.js';
-import HeroLeft06 from '../blocks/HeroLeft06.js';
-import HeroLeft07 from '../blocks/HeroLeft07.js';
-import HeroLeft08 from '../blocks/HeroLeft08.js';
-import HeroLeft09 from '../blocks/HeroLeft09.js';
-import HeroLeft10 from '../blocks/HeroLeft10.js';
+import framesxTheme from "./theme.js";
+import HeroLeft01 from "../blocks/HeroLeft01.js";
+import HeroLeft02 from "../blocks/HeroLeft02.js";
+import HeroLeft03 from "../blocks/HeroLeft03.js";
+import HeroLeft04 from "../blocks/HeroLeft04.js";
+import HeroLeft05 from "../blocks/HeroLeft05.js";
+import HeroLeft06 from "../blocks/HeroLeft06.js";
+import HeroLeft07 from "../blocks/HeroLeft07.js";
+import HeroLeft08 from "../blocks/HeroLeft08.js";
+import HeroLeft09 from "../blocks/HeroLeft09.js";
+import HeroLeft10 from "../blocks/HeroLeft10.js";
 
 function ColorSchemeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -37,29 +37,29 @@ function ColorSchemeToggle() {
       variant="soft"
       color="neutral"
       onClick={() => {
-        if (mode === 'light') {
-          setMode('dark');
+        if (mode === "light") {
+          setMode("dark");
         } else {
-          setMode('light');
+          setMode("light");
         }
       }}
       sx={{
-        position: 'fixed',
+        position: "fixed",
         zIndex: 999,
-        top: '1rem',
-        right: '1rem',
-        borderRadius: '50%',
-        boxShadow: 'sm',
+        top: "1rem",
+        right: "1rem",
+        borderRadius: "50%",
+        boxShadow: "sm",
       }}
     >
-      {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+      {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
     </IconButton>
   );
 }
 
 function NavBar() {
   return (
-    <div >
+    <div style={{ fontFamily: "GmarketSansBold" }}>
       {/* <Container fluid style={{backgroundColor: '#1E3252', position: 'relative'}}>
         <div style={{width: '100%', maxWidth: '유지할 최대 너비값', margin: '0 auto', padding: '20px'}}>
           <Stack direction='horizontal'>
@@ -68,23 +68,46 @@ function NavBar() {
           </Stack>
         </div>
       </Container> */}
-      <div fluid style={{
-        position: 'fixed',
-        backgroundColor: '#1E3252',
-        display: 'flex',
-        alignItems: 'center',
-        height: '70px',
-        zIndex: 1000,
-        width: '100%',
-        padding: '0 20px'
-      }}>
-        <div style={{flex: 1, textAlign: 'center'}}>
-          <h1 style={{color: 'white', margin: 0, marginLeft: '60px'}}>tr<span style={{color: '#76D1FE'}}>AI</span>ner</h1>
+      <div
+        fluid
+        style={{
+          position: "fixed",
+          backgroundColor: "#1E3252",
+          display: "flex",
+          alignItems: "center",
+          height: "70px",
+          zIndex: 1000,
+          width: "100%",
+          padding: "0 20px",
+        }}
+      >
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <h1
+            style={{
+              color: "white",
+              margin: 0,
+              marginLeft: "60px",
+              fontFamily: "GmarketSansMedium",
+              fontWeight: "600",
+            }}
+          >
+            tr
+            <span
+              style={{
+                color: "#76D1FE",
+                fontFamily: "GmarketSansMedium",
+                fontWeight: "600",
+              }}
+            >
+              AI
+            </span>
+            ner
+          </h1>
         </div>
-        <div style={{marginLeft: 'auto'}}>
-          <Link to={'/login'}>
-            <Button variant='muted'>
-              <div style={{color: 'grey'}}>admin</div>
+        <div style={{ marginLeft: "auto" }}>
+          <Link to={"/login"}>
+            <Button variant="muted">
+              <div style={{ color: "grey" }}>admin</div>
             </Button>
           </Link>
         </div>
@@ -99,7 +122,6 @@ function NavBar() {
       </Container> */}
     </div>
   );
-
 }
 
 function TitlePage() {
@@ -111,24 +133,25 @@ function TitlePage() {
         {/* <ColorSchemeToggle /> */}
         <Box
           sx={{
-            height: '100vh',
-            overflowY: 'scroll',
-            scrollSnapType: 'y mandatory',
-            '& > div': {
-              scrollSnapAlign: 'start',
+            height: "100vh",
+            overflowY: "scroll",
+            scrollSnapType: "y mandatory",
+            "& > div": {
+              scrollSnapAlign: "start",
             },
+            fontFamily: "GmarketSansBold",
           }}
         >
           <HeroLeft01 />
-          {/* <HeroLeft02 />
-          <HeroLeft03 />
-          <HeroLeft04 />
-          <HeroLeft05 />
-          <HeroLeft06 />
-          <HeroLeft07 />
-          <HeroLeft08 />
-          <HeroLeft09 />
-          <HeroLeft10 /> */}
+          <HeroLeft02 />
+          {/* <HeroLeft03 /> */}
+          {/* <HeroLeft04 /> */}
+          {/* <HeroLeft05 /> */}
+          {/* <HeroLeft06 /> */}
+          {/* <HeroLeft07 /> */}
+          {/* <HeroLeft08 /> */}
+          {/* <HeroLeft09 /> */}
+          {/* <HeroLeft10 /> */}
         </Box>
       </CssVarsProvider>
     </>

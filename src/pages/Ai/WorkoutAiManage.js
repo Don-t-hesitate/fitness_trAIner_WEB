@@ -1,8 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Container, Row, Col, Table, Button, Form, Pagination, Stack } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import LoadingModal from '../../components/LoadingModal';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Button,
+  Form,
+  Pagination,
+} from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import LoadingModal from "../../components/LoadingModal";
+import {
+  Box,
+  Breadcrumbs,
+  Link,
+  Typography,
+  Sheet,
+  Stack,
+  Table as MuiTable,
+  Button as MuiButton,
+} from "@mui/joy";
+import {
+  ChevronRightRounded as ChevronRightRoundedIcon,
+  HomeRounded as HomeRoundedIcon,
+} from "@mui/icons-material";
+import {
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  experimental_extendTheme as extendMaterialTheme,
+  THEME_ID as MATERIAL_THEME_ID,
+  Pagination as MuiPagination,
+  createTheme,
+  ThemeProvider,
+} from "@mui/material";
+import { blue } from "@mui/material/colors";
+
+const materialTheme = extendMaterialTheme();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: blue[300],
+      main: blue[500],
+      dark: blue[700],
+      darker: blue[900],
+    },
+  },
+});
 
 function WorkoutAiVersion(props) {
   const [aiVerData, setAiVerData] = useState(null); // AI 모델 정보를 저장할 상태
@@ -13,46 +57,51 @@ function WorkoutAiVersion(props) {
   const [modelsPerPage] = useState(12);
   // 선택된 버전을 저장할 상태
   const [selectedVersion, setSelectedVersion] = useState(null);
-  
+
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchVerData = async () => {
       try {
-        console.log('?props: ', props);
-        const response = await axios.get(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${props.exerciseName}`);
+        console.log("?props: ", props);
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL_BLD +
+            // "/api" +
+            `/ai/exercise/${props.exerciseName}`
+        );
 
         setAiVerData(response.data.result);
         setKeys(extractKeys(response.data.result));
-        setValues(extractValues(response.data.result, extractKeys(response.data.result)));
-        console.log('!aiVerData: ', aiVerData);
+        setValues(
+          extractValues(response.data.result, extractKeys(response.data.result))
+        );
+        console.log("!aiVerData: ", aiVerData);
       } catch (error) {
         // alert('Error fetching data:', error.response.data.message);
-        if(error.response.data.code === 310) {
-          alert('AI 모델이 존재하지 않습니다.');
+        if (error.response.data.code === 310) {
+          alert("AI 모델이 존재하지 않습니다.");
           setAiVerData([]);
         }
-        console.error('Error fetching ver data:', error);
+        console.error("Error fetching ver data:", error);
       }
     };
-    
+
     fetchVerData();
   }, []);
 
   useEffect(() => {
     console.log("values: ", values);
     for (let i = 0; i < values.length; i++) {
-      console.log('values[i].version: ', values[i].version);
+      console.log("values[i].version: ", values[i].version);
       if (values[i].Inuse === "true") {
-        console.log('selectedVersion: ', values[i].version);
+        console.log("selectedVersion: ", values[i].version);
         setSelectedVersion(values[i].version);
         console.log("selectedVersion: ", selectedVersion);
       }
     }
   }, [values]);
 
-  
   // AI 모델 정보에서 키와 값 추출
   const extractKeys = (data) => {
     const keys = new Set();
@@ -60,7 +109,7 @@ function WorkoutAiVersion(props) {
       arr.forEach((str) => keys.add(str.split(": ")[0]))
     );
     return Array.from(keys);
-  }; 
+  };
   const extractValues = (data, keys) => {
     return Object.entries(data)
       .flatMap(([_, arr]) => {
@@ -77,7 +126,6 @@ function WorkoutAiVersion(props) {
         return versionA - versionB;
       });
   };
-  
 
   if (!aiVerData) {
     return <LoadingModal data={aiVerData} />;
@@ -91,15 +139,18 @@ function WorkoutAiVersion(props) {
   const handleApply = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(process.env.REACT_APP_API_URL_BLD + `/ai/exercise/apply/${props.exerciseName}/${selectedVersion}`);
+      const response = await axios.post(
+        process.env.REACT_APP_API_URL_BLD +
+          `/ai/exercise/apply/${props.exerciseName}/${selectedVersion}`
+      );
       if (response.data.success) {
-        alert('적용 성공');
-        navigate('/aiservice/workout');
+        alert("적용 성공");
+        navigate("/aiservice/workout");
       } else {
-        alert('적용 실패: ' + response.data.message);
+        alert("적용 실패: " + response.data.message);
       }
     } catch (error) {
-      console.error('!Error applying AI model:', error);
+      console.error("!Error applying AI model:", error);
     }
   };
 
@@ -126,75 +177,175 @@ function WorkoutAiVersion(props) {
   } else if (!values) {
     return <LoadingModal data={values} />;
   }
-  
+
   const handleRadioChange = (version) => {
     setSelectedVersion(version);
   };
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h2>{props.exerciseName + " 모델 관리"}</h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                {keys.map((key, index) => (
-                  <th key={index}>{key}</th>
-                ))}
-                <th>선택</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentModels.map(({ key, ...val })=>
-                console.log('!values.version: ', val.version, " type: ", typeof val.version)
-              )}
-              {currentModels.map(({ key, ...val }) => (
-                <tr
-                  key={val.version}
-                  onClick={() => handleRowClick(val.version)}
-                >
-                  {keys.map((k, index) => (
-                    <td key={`${key}-${index}`}>{val[k]}</td>
+    <>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon fontSize="sm" />}
+          sx={{ pl: 0 }}
+        >
+          <Link
+            underline="none" // hover는 마우스를 올렸을 때 밑줄이 생기는 것
+            color="neutral"
+            href="/dashboard"
+            aria-label="Home"
+          >
+            <HomeRoundedIcon />
+          </Link>
+          <Link
+            underline="hover"
+            color="neutral"
+            href="/aiservice/workout"
+            aria-label="AI 운동 자세 분석"
+            fontSize={12}
+          >
+            운동 자세 분석 AI 목록
+          </Link>
+          <Typography color="primary" fontWeight={500} fontSize={12}>
+            {props.exerciseName} 모델 관리
+          </Typography>
+        </Breadcrumbs>
+      </Box>
+      <Typography level="h2" fontWeight={700} fontFamily="Pretendard-Regular">
+        <span style={{ fontStyle: "italic" }}>{props.exerciseName}</span>{" "}
+        &nbsp;모델 관리
+      </Typography>
+      <div>
+        <Sheet
+          className="UserTableContainer"
+          variant="outlined"
+          sx={{
+            display: { xs: "initial", sm: "initial" },
+            width: "100%",
+            borderRadius: "sm",
+            borderColor: "#fff",
+            flexShrink: 1,
+            overflow: "auto",
+            minHeight: 0,
+            position: "relative",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderBottom: "1px solid var(--joy-palette-border)",
+              padding: "8px",
+            }}
+          >
+            <MuiTable
+              aria-labelledby="tableTitle"
+              stickyHeader
+              hoverRow
+              stripe="odd"
+              variant="soft"
+              sx={{
+                "--TableCell-headBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--Table-headerUnderlineThickness": "1px",
+                "--TableRow-hoverBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--TableRow-bodyBackground":
+                  "var(--joy-palette-primary-200, #C7DFF7)",
+                "--TableCell-paddingY": "4px",
+                "--TableCell-paddingX": "8px",
+              }}
+            >
+              <thead>
+                <tr>
+                  {keys.map((key, index) => (
+                    <th key={index}>{key}</th>
                   ))}
-                  <td>
-                    <Form.Check 
-                      type="radio" 
-                      checked={val.version === selectedVersion}
-                      onChange={() => handleRadioChange(val.version)}
-                      onClick={(e) => e.stopPropagation()} 
-                    />
-                  </td>
+                  <th>선택</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-      <Stack direction="horizontal">
-        <Pagination className='mt-3'>
-          {pageNumbers.map((number) => (
-            <Pagination.Item key={number} active={number === currentPage} onClick={() => handlePageClick(number)}>
-              {number}
-            </Pagination.Item>
-          ))}
-        </Pagination>
-        <Button variant="primary" className='ms-auto' onClick={handleApply} style={{fontWeight: 'bold'}} >
-          <span className="material-symbols-outlined" style={{ verticalAlign: "middle", fontVariationSettings: "'FILL' 1"}}>publish</span>
-          <span style={{verticalAlign: "middle"}}> 적용</span>
-        </Button>
-      </Stack>
-    </Container>
+              </thead>
+              <tbody>
+                {currentModels.map(({ key, ...val }) =>
+                  console.log(
+                    "!values.version: ",
+                    val.version,
+                    " type: ",
+                    typeof val.version
+                  )
+                )}
+                {currentModels.map(({ key, ...val }) => (
+                  <tr
+                    key={val.version}
+                    onClick={() => handleRowClick(val.version)}
+                  >
+                    {keys.map((k, index) => (
+                      <td key={`${key}-${index}`}>{val[k]}</td>
+                    ))}
+                    <td>
+                      <Form.Check
+                        type="radio"
+                        checked={val.version === selectedVersion}
+                        onChange={() => handleRadioChange(val.version)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </MuiTable>
+          </Box>
+        </Sheet>
+        <Stack direction justifyContent="flex-end">
+          <MuiButton
+            variant="solid"
+            color="primary"
+            onClick={handleApply}
+            startDecorator={
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  verticalAlign: "middle",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                publish
+              </span>
+            }
+          >
+            <span
+              style={{
+                verticalAlign: "middle",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              {" "}
+              적용
+            </span>
+          </MuiButton>
+        </Stack>
+        <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+          <ThemeProvider theme={theme}>
+            <MuiPagination
+              count={Math.ceil(values.length / modelsPerPage)}
+              page={currentPage}
+              onChange={(e, page) => handlePageClick(page)}
+              color="primary"
+              sx={{ display: "flex", justifyContent: "center", mt: 2 }}
+            />
+          </ThemeProvider>
+        </MaterialCssVarsProvider>
+      </div>
+    </>
   );
 }
 
 function WorkoutAiManage({ exerciseName }) {
   console.log("id: " + exerciseName);
 
-  return(
-    <WorkoutAiVersion exerciseName={ exerciseName }/>
-  );
-
+  return <WorkoutAiVersion exerciseName={exerciseName} />;
 }
 
 export default WorkoutAiManage;

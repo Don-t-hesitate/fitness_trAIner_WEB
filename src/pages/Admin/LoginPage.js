@@ -1,22 +1,22 @@
-import React, { useRef, useContext } from 'react';
-import { AuthContext } from '../../AuthContext';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { CssVarsProvider } from '@mui/joy/styles';
-import GlobalStyles from '@mui/joy/GlobalStyles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Typography from '@mui/joy/Typography';
-import Input from '@mui/joy/Input';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Stack from '@mui/joy/Stack';
-import Button from '@mui/joy/Button';
-import IconButton from '@mui/joy/IconButton';
-import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import PasswordIcon from '@mui/icons-material/Password';
-import styled from 'styled-components';
+import React, { useRef, useContext } from "react";
+import { AuthContext } from "../../AuthContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { CssVarsProvider } from "@mui/joy/styles";
+import GlobalStyles from "@mui/joy/GlobalStyles";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Box from "@mui/joy/Box";
+import Typography from "@mui/joy/Typography";
+import Input from "@mui/joy/Input";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Stack from "@mui/joy/Stack";
+import Button from "@mui/joy/Button";
+import IconButton from "@mui/joy/IconButton";
+import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import PasswordIcon from "@mui/icons-material/Password";
+import styled from "styled-components";
 
 function LoginPage() {
   const usernameRef = useRef(null);
@@ -60,9 +60,9 @@ function LoginPage() {
       <CssBaseline />
       <GlobalStyles
         styles={{
-          ':root': {
-            '--Form-maxWidth': '800px',
-            '--Transition-duration': '0.3s', // set to `none` to disable transition
+          ":root": {
+            "--Form-maxWidth": "800px",
+            "--Transition-duration": "0.3s", // set to `none` to disable transition
           },
         }}
       />
@@ -74,23 +74,23 @@ function LoginPage() {
           // width: '100%',
           // px: 2,
           // backgroundColor: 'background.body',
-          width: { xs: '100%', md: '50vw' },
-          transition: 'width var(--Transition-duration)',
-          transitionDelay: 'calc(var(--Transition-duration) + 0.1s)',
-          position: 'relative',
+          width: { xs: "100%", md: "50vw" },
+          transition: "width var(--Transition-duration)",
+          transitionDelay: "calc(var(--Transition-duration) + 0.1s)",
+          position: "relative",
           zIndex: 1,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          backdropFilter: 'blur(12px)',
-          backgroundColor: 'rgba(255 255 255 / 0.2)',
+          display: "flex",
+          justifyContent: "flex-end",
+          backdropFilter: "blur(12px)",
+          backgroundColor: "rgba(255 255 255 / 0.2)",
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100dvh',
-            width: '100%',
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100dvh",
+            width: "100%",
             px: 2,
           }}
         >
@@ -98,37 +98,45 @@ function LoginPage() {
             component="header"
             sx={{
               py: 3,
-              display: 'flex',
-              justifyContent: 'space-between',
+              display: "flex",
+              justifyContent: "space-between",
             }}
           >
-            <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-              <IconButton variant="soft" color="primary" size="sm">
+            <Box sx={{ gap: 2, display: "flex", alignItems: "center" }}>
+              <IconButton
+                variant="soft"
+                color="primary"
+                size="sm"
+                component="a"
+                href="/"
+              >
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">tr<span style={{color: '#219BCC'}}>AI</span>ner</Typography>
+              <Typography level="title-lg">
+                tr<span style={{ color: "#219BCC" }}>AI</span>ner
+              </Typography>
             </Box>
           </Box>
           <Box
             component="main"
             sx={{
-              my: 'auto',
+              my: "auto",
               py: 2,
               pb: 5,
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               gap: 2,
               width: 400,
-              maxWidth: '100%',
-              mx: 'auto',
-              borderRadius: 'sm',
-              '& form': {
-                display: 'flex',
-                flexDirection: 'column',
+              maxWidth: "100%",
+              mx: "auto",
+              borderRadius: "sm",
+              "& form": {
+                display: "flex",
+                flexDirection: "column",
                 gap: 2,
               },
               [`& .MuiFormLabel-asterisk`]: {
-                visibility: 'hidden',
+                visibility: "hidden",
               },
             }}
           >
@@ -142,12 +150,12 @@ function LoginPage() {
                 component="form"
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  
+
                   try {
                     const username = e.currentTarget.username.value;
                     const password = e.currentTarget.password.value;
                     const response = await axios.post(
-                      process.env.REACT_APP_API_URL_BLD + '/admin/login',
+                      process.env.REACT_APP_API_URL_BLD + "/admin/login",
                       { username, password },
                       { withCredentials: true }
                     );
@@ -155,38 +163,38 @@ function LoginPage() {
                     if (response.data.success) {
                       const user = JSON.parse(response.config.data);
                       login(user);
-                      navigate('/dashboard');
+                      navigate("/dashboard");
                     }
                   } catch (error) {
-                    console.log('error: ', error);
-                    console.error('Login failed:', error);
+                    console.log("error: ", error);
+                    console.error("Login failed:", error);
                   }
                 }}
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: "flex",
+                  flexDirection: "column",
                   gap: 2,
                   width: 400,
-                  maxWidth: '100%',
+                  maxWidth: "100%",
                 }}
               >
                 <FormControl required>
                   <Input
                     autoFocus
-                    name='username'
+                    name="username"
                     inputRef={usernameRef}
-                    placeholder='아이디'
-                    id='username'
+                    placeholder="아이디"
+                    id="username"
                     startDecorator={<AccountCircle />}
                   />
                 </FormControl>
                 <FormControl required>
-                  <Input 
-                    name='password'
+                  <Input
+                    name="password"
                     inputRef={passwordRef}
-                    placeholder='비밀번호'
-                    id='password'
-                    type='password'
+                    placeholder="비밀번호"
+                    id="password"
+                    type="password"
                     startDecorator={<PasswordIcon />}
                   />
                 </FormControl>
@@ -195,14 +203,14 @@ function LoginPage() {
                     <span
                       className="material-icons"
                       style={{
-                        verticalAlign: 'middle',
-                        marginRight: '5px',
+                        verticalAlign: "middle",
+                        marginRight: "5px",
                         fontVariationSettings: "'FILL' 1",
                       }}
                     >
                       login
                     </span>
-                    <span style={{ fontWeight: 'bold' }}> 로그인</span>
+                    <span style={{ fontWeight: "bold" }}> 로그인</span>
                   </Button>
                 </Stack>
               </Box>
@@ -213,19 +221,19 @@ function LoginPage() {
       </Box>
       <Box
         sx={{
-          height: '100%',
-          position: 'fixed',
+          height: "100%",
+          position: "fixed",
           right: 0,
           top: 0,
           bottom: 0,
-          left: { xs: 0, md: '50vw' },
+          left: { xs: 0, md: "50vw" },
           transition:
-            'background-image var(--Transition-duration), left var(--Transition-duration) !important',
-          transitionDelay: 'calc(var(--Transition-duration) + 0.1s)',
-          backgroundColor: 'background.level1',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+            "background-image var(--Transition-duration), left var(--Transition-duration) !important",
+          transitionDelay: "calc(var(--Transition-duration) + 0.1s)",
+          backgroundColor: "background.level1",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           backgroundImage:
             // 'url(https://images.unsplash.com/photo-1527181152855-fc03fc7949c8?auto=format&w=1000&dpr=2)',
             `url("${process.env.PUBLIC_URL}/fitness.jpg")`,

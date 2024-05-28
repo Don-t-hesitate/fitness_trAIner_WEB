@@ -29,6 +29,7 @@ import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import { SvgIcon } from "@mui/joy";
 import { LinkContainer } from "react-router-bootstrap";
 import { closeSidebar } from "./utils";
@@ -383,7 +384,7 @@ export default function Sidebar() {
           </ListItem>
           {/* <ListItem>
             <ListItemButton component="a" href="/download">
-              <HomeRoundedIcon />
+              <CloudDownloadIcon />
               <ListItemContent>
                 <Typography level="title-sm" fontFamily="Pretendard-Regular">
                   앱 다운로드

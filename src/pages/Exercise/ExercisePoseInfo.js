@@ -222,9 +222,7 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
       </Box>
       <Typography level="h2" fontWeight={700} fontFamily="Pretendard-Regular">
         운동 자세 데이터 -{" "}
-        <span style={{ color: "#0b6bcb", fontStyle: "italic" }}>
-          {fileName}
-        </span>
+        <span style={{ fontStyle: "italic" }}>{fileName}</span>
       </Typography>
 
       {/* <h3>jpg: </h3>

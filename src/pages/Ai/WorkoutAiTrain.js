@@ -85,7 +85,9 @@ function WorkoutAiTrain() {
   const [exercise, setExercise] = useState("push_up"); // 운동 이름을 담을 상태
   const [version, setVersion] = useState(1); // 버전 정보를 담을 상태
   const [params, setParams] = useState({}); // 전송용 최종 파라미터를 담을 상태
-  const [filePath, setFilePath] = useState("/home/t24108/"); // 파일 경로를 담을 상태
+  const [filePath, setFilePath] = useState(
+    `/home/t24108/v1.0src/ai/fitness/${exercise}/${exercise}_model_training.py`
+  ); // 파일 경로를 담을 상태
   // WebSocket 통신을 위한 상태
   const [send, setSend] = useState(false);
   const [socket, setSocket] = useState(null);
@@ -98,6 +100,12 @@ function WorkoutAiTrain() {
   useEffect(() => {
     setProgressMessages(["python " + filePath + " " + formInput]);
   }, [filePath, formInput, exercise, version]);
+
+  useEffect(() => {
+    setFilePath(
+      `/home/t24108/v1.0src/ai/fitness/${exercise}/${exercise}_model_training.py`
+    );
+  }, [exercise]);
 
   useEffect(() => {
     if (socket !== null) {
@@ -118,6 +126,7 @@ function WorkoutAiTrain() {
         console.log("!inputValue: ", inputValue);
         if (inputValue) {
           try {
+            // `inputValue`에서 큰따옴표로 둘러싸인 문자열 뒤에 오는 공백과 콜론을 찾아, 공백을 제거하고 콜론만 남김
             const jsonString = `{${inputValue.replace(
               /("([^"]+)")\s*:/g,
               "$1:"
@@ -127,10 +136,12 @@ function WorkoutAiTrain() {
             setParams(parsedParams);
           } catch (error) {
             console.error("Invalid input:", error);
-            setParams(inputValue + " --version " + version);
+            // setParams(inputValue + " --version " + version);
+            setParams(inputValue);
             console.log("!!params: ", params);
           }
         } else {
+          console.log("inputValue is empty");
           setParams({});
         }
       };
@@ -362,12 +373,15 @@ function WorkoutAiTrain() {
             </Form.Label>
             <Col sm="9">
               <Form.Control
-                placeholder={"예시: " + formInput}
+                placeholder={
+                  "예시: " +
+                  '\'{"learning_rate": 0.002,"batch_size": 32,"num_epochs": 100,"version": 1.2}\''
+                }
                 onChange={(e) => setFormInput(e.target.value)}
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row}>
+          {/* <Form.Group as={Row}>
             <Form.Label column sm="3">
               <span
                 className="material-symbols-outlined"
@@ -387,7 +401,7 @@ function WorkoutAiTrain() {
                 onChange={(e) => setVersion(e.target.value)}
               />
             </Col>
-          </Form.Group>
+          </Form.Group> */}
         </Form>
         <Stack direction justifyContent="flex-end" marginTop="15px">
           <MuiButton

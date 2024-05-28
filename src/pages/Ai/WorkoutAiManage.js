@@ -24,6 +24,7 @@ import {
 import {
   ChevronRightRounded as ChevronRightRoundedIcon,
   HomeRounded as HomeRoundedIcon,
+  CloudDownload as CloudDownloadIcon,
 } from "@mui/icons-material";
 import {
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
@@ -68,6 +69,7 @@ function WorkoutAiVersion(props) {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
             // "/api" +
+            // "http://ceprj.gachon.ac.kr:60008" +
             `/ai/exercise/${props.exerciseName}`
         );
 
@@ -136,21 +138,28 @@ function WorkoutAiVersion(props) {
     navigate(`/aiservice/workout/${props.exerciseName}/${aiVer}`);
   };
 
-  const handleApply = async (e) => {
+  const handleDownload = async (e, version) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         process.env.REACT_APP_API_URL_BLD +
-          `/ai/exercise/apply/${props.exerciseName}/${selectedVersion}`
+          `/ai/exercise/download/${props.exerciseName}/${version}`,
+        { responseType: "blob" }
       );
-      if (response.data.success) {
-        alert("적용 성공");
-        navigate("/aiservice/workout");
+      if (response.data) {
+        // 파일 저장 다이얼로그 띄우기
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${props.exerciseName}_model.zip`;
+        link.click();
       } else {
-        alert("적용 실패: " + response.data.message);
+        console.error("!Error downloading AI model:", response);
+        alert("받기 실패: " + response);
       }
     } catch (error) {
-      console.error("!Error applying AI model:", error);
+      console.error("!Error downloading AI model:", error);
+      alert("받기 작업 중 오류 발생");
     }
   };
 
@@ -260,10 +269,14 @@ function WorkoutAiVersion(props) {
             >
               <thead>
                 <tr>
-                  {keys.map((key, index) => (
-                    <th key={index}>{key}</th>
-                  ))}
-                  <th>선택</th>
+                  {keys.map((key, index) =>
+                    key === "File" || key === "Inuse" ? (
+                      <></>
+                    ) : (
+                      <th key={index}>{key}</th>
+                    )
+                  )}
+                  <th>다운로드</th>
                 </tr>
               </thead>
               <tbody>
@@ -276,56 +289,47 @@ function WorkoutAiVersion(props) {
                   )
                 )}
                 {currentModels.map(({ key, ...val }) => (
-                  <tr
-                    key={val.version}
-                    onClick={() => handleRowClick(val.version)}
-                  >
-                    {keys.map((k, index) => (
-                      <td key={`${key}-${index}`}>{val[k]}</td>
-                    ))}
-                    <td>
-                      <Form.Check
-                        type="radio"
-                        checked={val.version === selectedVersion}
-                        onChange={() => handleRadioChange(val.version)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </td>
-                  </tr>
+                  <>
+                    {/* Fi */}
+                    {console.log("val: ", val["accuracy"])}
+                    <tr
+                      key={val.version}
+                      onClick={() => handleRowClick(val.version)}
+                    >
+                      {keys.map((k, index) =>
+                        !String(val[k]).includes("json") &&
+                        String(val[k]).includes(".") &&
+                        String(val[k]).split(".")[1].length > 3 ? (
+                          <td key={`${key}-${index}`}>
+                            {Number(val[k]).toFixed(5)}
+                          </td>
+                        ) : k !== "File" && k != "Inuse" ? (
+                          <td key={`${key}-${index}`}>{val[k]}</td>
+                        ) : (
+                          <></>
+                        )
+                      )}
+                      <td>
+                        <MuiButton
+                          variant="solid"
+                          color="primary"
+                          size="md"
+                          sx={{ padding: 0, width: "100%" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(e, val.version);
+                          }}
+                        >
+                          <CloudDownloadIcon />
+                        </MuiButton>
+                      </td>
+                    </tr>
+                  </>
                 ))}
               </tbody>
             </MuiTable>
           </Box>
         </Sheet>
-        <Stack direction justifyContent="flex-end">
-          <MuiButton
-            variant="solid"
-            color="primary"
-            onClick={handleApply}
-            startDecorator={
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  verticalAlign: "middle",
-                  fontVariationSettings: "'FILL' 1",
-                }}
-              >
-                publish
-              </span>
-            }
-          >
-            <span
-              style={{
-                verticalAlign: "middle",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              {" "}
-              적용
-            </span>
-          </MuiButton>
-        </Stack>
         <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
           <ThemeProvider theme={theme}>
             <MuiPagination

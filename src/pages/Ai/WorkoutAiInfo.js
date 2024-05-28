@@ -17,6 +17,7 @@ import {
 import {
   ChevronRightRounded as ChevronRightRoundedIcon,
   HomeRounded as HomeRoundedIcon,
+  CloudDownload as CloudDownloadIcon,
 } from "@mui/icons-material";
 
 function WorkoutAiInfo({ parentId, subId }) {
@@ -34,6 +35,7 @@ function WorkoutAiInfo({ parentId, subId }) {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
             // "/api" +
+            // "http://ceprj.gachon.ac.kr:60008" +
             `/ai/exercise/${parentId}/${subId}`
         );
         setAiData(response.data.result);
@@ -110,6 +112,32 @@ function WorkoutAiInfo({ parentId, subId }) {
         error.response.data.message
       );
       alert("업데이트 실패: " + error.response.data.message);
+    }
+  };
+
+  const handleDownload = async (e, subId) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_API_URL_BLD +
+          `/ai/exercise/download/${parentId}/${subId}`,
+        { responseType: "blob" }
+      );
+      console.log("!response: ", response);
+      if (response.data) {
+        // 파일 저장 다이얼로그 띄우기
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${parentId}_model.zip`;
+        link.click();
+      } else {
+        console.error("Error downloading exercise model:", response);
+        alert("받기 실패: ", response);
+      }
+    } catch (error) {
+      console.error("Error downloading exercise model:", error);
+      alert("받기 작업 중 오류 발생");
     }
   };
 
@@ -220,10 +248,7 @@ function WorkoutAiInfo({ parentId, subId }) {
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={params.version}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.version} disabled />
             </Col>
           </Form.Group>
           <Form.Group as={Row}>
@@ -236,18 +261,15 @@ function WorkoutAiInfo({ parentId, subId }) {
                   fontVariationSettings: "'FILL' 1",
                 }}
               >
-                repeat
+                function
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
-                반복 횟수
+                loss
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={params.iteration}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.loss} disabled />
             </Col>
           </Form.Group>
           <Form.Group as={Row}>
@@ -260,18 +282,15 @@ function WorkoutAiInfo({ parentId, subId }) {
                   fontVariationSettings: "'FILL' 1",
                 }}
               >
-                layers
+                grading
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
-                depth
+                accuracy
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={params.depth}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.accuracy} disabled />
             </Col>
           </Form.Group>
           <Form.Group as={Row}>
@@ -292,10 +311,7 @@ function WorkoutAiInfo({ parentId, subId }) {
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={params.learning_rate}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.learning_rate} disabled />
             </Col>
           </Form.Group>
           <Form.Group as={Row}>
@@ -316,13 +332,10 @@ function WorkoutAiInfo({ parentId, subId }) {
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={params.num_epochs}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.num_epochs} disabled />
             </Col>
           </Form.Group>
-          <Form.Group as={Row}>
+          {/* <Form.Group as={Row}>
             <Form.Label column sm="3">
               <span
                 className="material-symbols-outlined"
@@ -345,7 +358,7 @@ function WorkoutAiInfo({ parentId, subId }) {
                 style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
             </Col>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group as={Row}>
             <Form.Label column sm="3">
               <span
@@ -364,21 +377,18 @@ function WorkoutAiInfo({ parentId, subId }) {
               </span>
             </Form.Label>
             <Col sm="9">
-              <Form.Control
-                value={"64"}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
+              <Form.Control value={params.batch_size} disabled />
             </Col>
           </Form.Group>
-          <Stack direction justifyContent="space-between">
+          <Stack direction justifyContent="space-between" position="relative">
             <div>
-              <Typography
+              {/* <Typography
                 variant="h6"
                 fontWeight={500}
                 style={{ fontFamily: "Pretendard-Regular", color: "#171a1c" }}
               >
                 사용 데이터셋: 001-1-1-01-A2
-              </Typography>
+              </Typography> */}
               <Typography
                 variant="h6"
                 fontWeight={500}
@@ -387,11 +397,18 @@ function WorkoutAiInfo({ parentId, subId }) {
                 업데이트 일시: {returnDate()}
               </Typography>
             </div>
-            <ButtonGroup sx={{ height: "36px" }}>
-              <MuiButton
+            <ButtonGroup
+              // buttonFlex="1 0 120px"
+              sx={{
+                height: "36px",
+                // minWidth: "240px",
+              }}
+            >
+              {/* <MuiButton
                 variant="solid"
                 color="primary"
                 onClick={handleUpdate}
+                sx={{ width: "250%" }}
                 startDecorator={
                   <span
                     className="material-symbols-outlined"
@@ -403,6 +420,20 @@ function WorkoutAiInfo({ parentId, subId }) {
               >
                 <span style={{ verticalAlign: "middle", fontWeight: "bold" }}>
                   업데이트
+                </span>
+              </MuiButton> */}
+              <MuiButton
+                variant="solid"
+                color="primary"
+                size="md"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownload(e, subId);
+                }}
+                startDecorator={<CloudDownloadIcon />}
+              >
+                <span style={{ verticalAlign: "middle", fontWeight: "bold" }}>
+                  내려받기
                 </span>
               </MuiButton>
               <MuiButton

@@ -172,7 +172,6 @@ function ExercisePoseNameList(props) {
               style={{
                 fontStyle: "italic",
                 fontFamily: "Pretendard-Regular",
-                color: "#0b6bcb",
               }}
             >
               {props.exerciseName}
@@ -437,7 +436,6 @@ function ExercisePoseDataList(props) {
               style={{
                 fontStyle: "italic",
                 fontFamily: "Pretendard-Regular",
-                color: "#0b6bcb",
               }}
             >
               {props.exerciseName}/{props.dataType}

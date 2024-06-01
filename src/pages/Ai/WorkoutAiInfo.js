@@ -261,11 +261,11 @@ function WorkoutAiInfo({ parentId, subId }) {
                   fontVariationSettings: "'FILL' 1",
                 }}
               >
-                function
+                error
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
-                loss
+                손실
               </span>
             </Form.Label>
             <Col sm="9">
@@ -286,7 +286,7 @@ function WorkoutAiInfo({ parentId, subId }) {
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
-                accuracy
+                정확도
               </span>
             </Form.Label>
             <Col sm="9">
@@ -303,11 +303,11 @@ function WorkoutAiInfo({ parentId, subId }) {
                   fontVariationSettings: "'FILL' 1",
                 }}
               >
-                pace
+                book_5
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
-                learning rate
+                학습률
               </span>
             </Form.Label>
             <Col sm="9">
@@ -324,7 +324,28 @@ function WorkoutAiInfo({ parentId, subId }) {
                   fontVariationSettings: "'FILL' 1",
                 }}
               >
-                settings
+                aspect_ratio
+              </span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                {" "}
+                배치 크기
+              </span>
+            </Form.Label>
+            <Col sm="9">
+              <Form.Control value={params.batch_size} disabled />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row}>
+            <Form.Label column sm="3">
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: "5px",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                repeat
               </span>
               <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 {" "}
@@ -359,27 +380,6 @@ function WorkoutAiInfo({ parentId, subId }) {
               />
             </Col>
           </Form.Group> */}
-          <Form.Group as={Row}>
-            <Form.Label column sm="3">
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  verticalAlign: "middle",
-                  marginRight: "5px",
-                  fontVariationSettings: "'FILL' 1",
-                }}
-              >
-                picture_in_picture
-              </span>
-              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
-                {" "}
-                batch size
-              </span>
-            </Form.Label>
-            <Col sm="9">
-              <Form.Control value={params.batch_size} disabled />
-            </Col>
-          </Form.Group>
           <Stack direction justifyContent="space-between" position="relative">
             <div>
               {/* <Typography

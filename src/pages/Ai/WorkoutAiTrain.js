@@ -83,8 +83,13 @@ function WorkoutAiTrain() {
   // const [formInput, setFormInput] = useState(`--learning_rate 0.001 --batch_size 32 --num_epochs 100 --output_file model_params.json`); // 하이퍼 파라미터를 담을 상태
   const [formInput, setFormInput] = useState(``); // 하이퍼 파라미터를 담을 상태
   const [exercise, setExercise] = useState("push_up"); // 운동 이름을 담을 상태
+  const [learningRate, setLearningRate] = useState(0.001); // 학습률을 담을 상태
+  const [batchSize, setBatchSize] = useState(32); // 배치 크기를 담을 상태
+  const [numEpochs, setNumEpochs] = useState(100); // 에포크 횟수를 담을 상태
   const [version, setVersion] = useState(1); // 버전 정보를 담을 상태
-  const [params, setParams] = useState({}); // 전송용 최종 파라미터를 담을 상태
+  const [params, setParams] = useState(
+    `{"learning_rate": ${learningRate},"batch_size": ${batchSize},"num_epochs": ${numEpochs},"version": ${version}}`
+  ); // 하이퍼 파라미터를 담을 상태
   const [filePath, setFilePath] = useState(
     `/home/t24108/v1.0src/ai/fitness/${exercise}/${exercise}_model_training.py`
   ); // 파일 경로를 담을 상태
@@ -98,8 +103,14 @@ function WorkoutAiTrain() {
   ]);
 
   useEffect(() => {
-    setProgressMessages(["python " + filePath + " " + formInput]);
-  }, [filePath, formInput, exercise, version]);
+    setParams(
+      `{"learning_rate":${learningRate},"batch_size":${batchSize},"num_epochs":${numEpochs},"version":${version}}`
+    );
+  }, [learningRate, batchSize, numEpochs, version]);
+
+  useEffect(() => {
+    setProgressMessages(["python " + filePath + " " + params]);
+  }, [filePath, exercise, version, params]);
 
   useEffect(() => {
     setFilePath(
@@ -120,32 +131,33 @@ function WorkoutAiTrain() {
       );
       setSocket(sckt);
       console.log("소켓 준비");
-      console.log("formInput: ", formInput);
-      const convertToObject = () => {
-        const inputValue = formInput.trim();
-        console.log("!inputValue: ", inputValue);
-        if (inputValue) {
-          try {
-            // `inputValue`에서 큰따옴표로 둘러싸인 문자열 뒤에 오는 공백과 콜론을 찾아, 공백을 제거하고 콜론만 남김
-            const jsonString = `{${inputValue.replace(
-              /("([^"]+)")\s*:/g,
-              "$1:"
-            )}}`;
-            const parsedParams = JSON.parse(jsonString);
-            console.log("!parsedParams: ", parsedParams);
-            setParams(parsedParams);
-          } catch (error) {
-            console.error("Invalid input:", error);
-            // setParams(inputValue + " --version " + version);
-            setParams(inputValue);
-            console.log("!!params: ", params);
-          }
-        } else {
-          console.log("inputValue is empty");
-          setParams({});
-        }
-      };
-      convertToObject();
+      console.log("params: ", params);
+      // console.log("formInput: ", formInput);
+      // const convertToObject = () => {
+      //   const inputValue = formInput.trim();
+      //   console.log("!inputValue: ", inputValue);
+      //   if (inputValue) {
+      //     try {
+      //       // `inputValue`에서 큰따옴표로 둘러싸인 문자열 뒤에 오는 공백과 콜론을 찾아, 공백을 제거하고 콜론만 남김
+      //       const jsonString = `{${inputValue.replace(
+      //         /("([^"]+)")\s*:/g,
+      //         "$1:"
+      //       )}}`;
+      //       const parsedParams = JSON.parse(jsonString);
+      //       console.log("!parsedParams: ", parsedParams);
+      //       setParams(parsedParams);
+      //     } catch (error) {
+      //       console.error("Invalid input:", error);
+      //       // setParams(inputValue + " --version " + version);
+      //       setParams(inputValue);
+      //       console.log("!!params: ", params);
+      //     }
+      //   } else {
+      //     console.log("inputValue is empty");
+      //     setParams({});
+      //   }
+      // };
+      // convertToObject();
     } catch (error) {
       alert("서버와 연결 중 오류가 발생했습니다.");
       console.error("Error while connecting to WebSocket: ", error);
@@ -253,7 +265,6 @@ function WorkoutAiTrain() {
           borderRadius: "sm",
           borderColor: "#fff",
           flexShrink: 1,
-          minHeight: 0,
           position: "relative",
         }}
       >
@@ -355,7 +366,7 @@ function WorkoutAiTrain() {
               />
             </Col>
           </Form.Group>
-          <Form.Group as={Row} style={{ marginBottom: "10px" }}>
+          {/* <Form.Group as={Row} style={{ marginBottom: "10px" }}>
             <Form.Label column sm="3">
               <span
                 className="material-symbols-outlined"
@@ -380,9 +391,9 @@ function WorkoutAiTrain() {
                 onChange={(e) => setFormInput(e.target.value)}
               />
             </Col>
-          </Form.Group>
-          {/* <Form.Group as={Row}>
-            <Form.Label column sm="3">
+          </Form.Group> */}
+          <Form.Group as={Row}>
+            <Form.Label column sm="3" style={{ marginBottom: "10px" }}>
               <span
                 className="material-symbols-outlined"
                 style={{
@@ -393,7 +404,7 @@ function WorkoutAiTrain() {
               >
                 format_list_numbered
               </span>
-              <span style={{ verticalAlign: "middle" }}> 버전</span>
+              <span style={{ verticalAlign: "middle" }}>&nbsp;버전</span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
@@ -401,7 +412,70 @@ function WorkoutAiTrain() {
                 onChange={(e) => setVersion(e.target.value)}
               />
             </Col>
-          </Form.Group> */}
+          </Form.Group>
+          <Form.Group as={Row} style={{ marginBottom: "10px" }}>
+            <Form.Label column sm="3">
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: "5px",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                book_5
+              </span>
+              <span style={{ verticalAlign: "middle" }}>&nbsp;학습률</span>
+            </Form.Label>
+            <Col sm="9">
+              <Form.Control
+                value={learningRate}
+                onChange={(e) => setLearningRate(e.target.value)}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row} style={{ marginBottom: "10px" }}>
+            <Form.Label column sm="3">
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: "5px",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                aspect_ratio
+              </span>
+              <span style={{ verticalAlign: "middle" }}>&nbsp;배치 크기</span>
+            </Form.Label>
+            <Col sm="9">
+              <Form.Control
+                value={batchSize}
+                onChange={(e) => setBatchSize(e.target.value)}
+              />
+            </Col>
+          </Form.Group>
+          <Form.Group as={Row}>
+            <Form.Label column sm="3">
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  verticalAlign: "middle",
+                  marginRight: "5px",
+                  fontVariationSettings: "'FILL' 1",
+                }}
+              >
+                repeat
+              </span>
+              <span style={{ verticalAlign: "middle" }}>&nbsp;에포크 수</span>
+            </Form.Label>
+            <Col sm="9">
+              <Form.Control
+                value={numEpochs}
+                onChange={(e) => setNumEpochs(e.target.value)}
+              />
+            </Col>
+          </Form.Group>
         </Form>
         <Stack direction justifyContent="flex-end" marginTop="15px">
           <MuiButton

@@ -87,10 +87,12 @@ function Dashboard() {
         sx={{
           display: { xs: "initial", sm: "initial" },
           width: "100%",
+          height: "60vh",
           borderRadius: "sm",
           borderColor: "#ffffff",
           flexShrink: 1,
           backgroundColor: "#ffffff",
+          position: "relative",
         }}
       >
         {/* 대시보드 제목 */}
@@ -163,7 +165,10 @@ function Dashboard() {
         <h4 style={{ fontWeight: "700", marginTop: "30px" }}>
           일일 사용자 접속 통계
         </h4>
-        <canvas ref={chartRef} style={{ height: "17%" }} />
+        <canvas
+          ref={chartRef}
+          style={{ position: "absolute", width: "100%", height: "80%" }}
+        />
       </Sheet>
     </>
   );

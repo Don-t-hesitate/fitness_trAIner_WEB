@@ -270,7 +270,7 @@ function WorkoutAiVersion(props) {
               <thead>
                 <tr>
                   {keys.map((key, index) =>
-                    key === "File" || key === "Inuse" ? (
+                    key === "File" || key === "Inuse" || key === "history" ? (
                       <></>
                     ) : (
                       <th key={index}>{key}</th>
@@ -303,7 +303,7 @@ function WorkoutAiVersion(props) {
                           <td key={`${key}-${index}`}>
                             {Number(val[k]).toFixed(5)}
                           </td>
-                        ) : k !== "File" && k != "Inuse" ? (
+                        ) : k !== "File" && k !== "Inuse" && k !== "history" ? (
                           <td key={`${key}-${index}`}>{val[k]}</td>
                         ) : (
                           <></>

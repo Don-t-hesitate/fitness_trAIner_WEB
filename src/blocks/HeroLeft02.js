@@ -15,7 +15,7 @@ export default function HeroLeft01() {
         fontWeight="lg"
         fontFamily="GmarketSansBold"
       >
-        운동 자세 확인
+        운동 자세 추적하기
       </Typography>
       <Typography
         level="h1"
@@ -23,7 +23,7 @@ export default function HeroLeft01() {
         fontSize="clamp(1.875rem, 1.3636rem + 2.1818vw, 3rem)"
         fontFamily="GmarketSansBold"
       >
-        당신의 운동자세를 <br></br>평가하세요
+        당신의 운동자세를 <br></br>추적해보세요
       </Typography>
       <Typography
         fontSize="lg"
@@ -36,7 +36,7 @@ export default function HeroLeft01() {
         <span style={{ color: "#219BCC", fontFamily: "GmarketSansMedium" }}>
           AI
         </span>
-        ner는 운동 자세를 세 단계로 평가하고 <br></br>개선 방안을 제시합니다.
+        ner는 운동 자세를 추적하여 평가 및 <br></br>개선 방안을 제시합니다.
       </Typography>
       {/* <Button size="lg" endDecorator={<ArrowForward fontSize="xl" />}>
         Get Started

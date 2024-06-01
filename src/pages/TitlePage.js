@@ -144,9 +144,9 @@ function TitlePage() {
         >
           <HeroLeft01 />
           <HeroLeft02 />
-          {/* <HeroLeft03 /> */}
-          {/* <HeroLeft04 /> */}
-          {/* <HeroLeft05 /> */}
+          <HeroLeft03 />
+          <HeroLeft04 />
+          <HeroLeft05 />
           {/* <HeroLeft06 /> */}
           {/* <HeroLeft07 /> */}
           {/* <HeroLeft08 /> */}

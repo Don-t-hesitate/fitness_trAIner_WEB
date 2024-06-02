@@ -117,13 +117,18 @@ function WorkoutAiInfo({ parentId, subId }) {
 
   const handleDownload = async (e, subId) => {
     e.preventDefault();
+    // 버전이 1.0이나 2.0 같은 형식이면 .0을 제거, 1.0.1 같은 형식이면 제거하지 않음
+    if (subId.split(".").length === 2 && subId.includes(".0")) {
+      subId = subId.split(".")[0];
+    } else {
+      console.log("subId: ", subId);
+    }
     try {
       const response = await axios.get(
         process.env.REACT_APP_API_URL_BLD +
           `/ai/exercise/download/${parentId}/${subId}`,
         { responseType: "blob" }
       );
-      console.log("!response: ", response);
       if (response.data) {
         // 파일 저장 다이얼로그 띄우기
         const url = window.URL.createObjectURL(response.data);
@@ -132,11 +137,11 @@ function WorkoutAiInfo({ parentId, subId }) {
         link.download = `${parentId}_model.zip`;
         link.click();
       } else {
-        console.error("Error downloading exercise model:", response);
+        console.error("Error downloading AI model:", response);
         alert("받기 실패: ", response);
       }
     } catch (error) {
-      console.error("Error downloading exercise model:", error);
+      console.error("Error downloading AI model:", error);
       alert("받기 작업 중 오류 발생");
     }
   };

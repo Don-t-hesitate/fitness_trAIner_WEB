@@ -140,6 +140,16 @@ function WorkoutAiVersion(props) {
 
   const handleDownload = async (e, version) => {
     e.preventDefault();
+    if (!version) {
+      alert("다운로드할 모델을 선택해주세요.");
+      return;
+    }
+    // 버전이 1.0이나 2.0 같은 형식이면 .0을 제거, 1.0.1 같은 형식이면 제거하지 않음
+    if (version.split(".").length === 2 && version.includes(".0")) {
+      version = version.split(".")[0];
+    } else {
+      console.log("version: ", version);
+    }
     try {
       const response = await axios.get(
         process.env.REACT_APP_API_URL_BLD +
@@ -154,7 +164,7 @@ function WorkoutAiVersion(props) {
         link.download = `${props.exerciseName}_model.zip`;
         link.click();
       } else {
-        console.error("!Error downloading AI model:", response);
+        console.error("Error downloading AI model:", response);
         alert("받기 실패: " + response);
       }
     } catch (error) {

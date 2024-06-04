@@ -90,6 +90,13 @@ function WorkoutAiTrain() {
   const [filePath, setFilePath] = useState(
     `/home/t24108/v1.0src/ai/fitness/${exercise}/${exercise}_model_training.py`
   ); // 파일 경로를 담을 상태
+
+  // 숫자만 입력할 수 있도록 하는 함수의 에러 메시지를 담을 상태
+  const [versionError, setVersionError] = useState(null);
+  const [learningRateError, setLearningRateError] = useState(null);
+  const [batchSizeError, setBatchSizeError] = useState(null);
+  const [numEpochsError, setNumEpochsError] = useState(null);
+
   // WebSocket 통신을 위한 상태
   const [send, setSend] = useState(false);
   const [socket, setSocket] = useState(null);
@@ -200,6 +207,31 @@ function WorkoutAiTrain() {
     }
   };
 
+  // 숫자만 입력할 수 있도록 하는 함수
+  const handleChange = (e, setValue, setError) => {
+    const inputValue = e.target.value;
+    const isNumber = /^\d+$/.test(inputValue);
+
+    if (!isNumber && inputValue !== "") {
+      setError("숫자(소수점 *제외*)만 입력 가능합니다.");
+    } else {
+      setError(null);
+      setValue(inputValue);
+    }
+  };
+
+  const handleRnumberChange = (e, setValue, setError) => {
+    const inputValue = e.target.value;
+    const isNumber = /^\d*\.?\d*$/.test(inputValue); // 실수(소수점 포함) 허용 정규식
+
+    if (!isNumber && inputValue !== "") {
+      setError("숫자(소수점 *포함*)만 입력 가능합니다.");
+    } else {
+      setError(null);
+      setValue(inputValue);
+    }
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -303,12 +335,15 @@ function WorkoutAiTrain() {
               >
                 exercise
               </span>
-              <span style={{ verticalAlign: "middle" }}>&nbsp;운동 이름</span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                &nbsp;운동 이름
+              </span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
                 value={exercise}
                 onChange={(e) => setExercise(e.target.value)}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
             </Col>
           </Form.Group>
@@ -324,7 +359,7 @@ function WorkoutAiTrain() {
               >
                 folder
               </span>
-              <span style={{ verticalAlign: "middle" }}>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
                 &nbsp;Python 파일 경로
               </span>
             </Form.Label>
@@ -332,6 +367,7 @@ function WorkoutAiTrain() {
               <Form.Control
                 value={filePath}
                 onChange={(e) => setFilePath(e.target.value)}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
             </Col>
           </Form.Group>
@@ -347,13 +383,22 @@ function WorkoutAiTrain() {
               >
                 format_list_numbered
               </span>
-              <span style={{ verticalAlign: "middle" }}>&nbsp;버전</span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                &nbsp;버전
+              </span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
                 value={version}
-                onChange={(e) => setVersion(e.target.value)}
+                onChange={(e) =>
+                  handleRnumberChange(e, setVersion, setVersionError)
+                }
+                isInvalid={!!versionError}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
+              <Form.Control.Feedback type="invalid">
+                {versionError}
+              </Form.Control.Feedback>
             </Col>
           </Form.Group>
           <Form.Group as={Row} style={{ marginBottom: "10px" }}>
@@ -368,13 +413,22 @@ function WorkoutAiTrain() {
               >
                 book_5
               </span>
-              <span style={{ verticalAlign: "middle" }}>&nbsp;학습률</span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                &nbsp;학습률
+              </span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
                 value={learningRate}
-                onChange={(e) => setLearningRate(e.target.value)}
+                onChange={(e) =>
+                  handleRnumberChange(e, setLearningRate, setLearningRateError)
+                }
+                isInvalid={!!learningRateError}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
+              <Form.Control.Feedback type="invalid">
+                {learningRateError}
+              </Form.Control.Feedback>
             </Col>
           </Form.Group>
           <Form.Group as={Row} style={{ marginBottom: "10px" }}>
@@ -389,13 +443,22 @@ function WorkoutAiTrain() {
               >
                 aspect_ratio
               </span>
-              <span style={{ verticalAlign: "middle" }}>&nbsp;배치 크기</span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                &nbsp;배치 크기
+              </span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
                 value={batchSize}
-                onChange={(e) => setBatchSize(e.target.value)}
+                onChange={(e) =>
+                  handleChange(e, setBatchSize, setBatchSizeError)
+                }
+                isInvalid={!!batchSizeError}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
+              <Form.Control.Feedback type="invalid">
+                {batchSizeError}
+              </Form.Control.Feedback>
             </Col>
           </Form.Group>
           <Form.Group as={Row}>
@@ -410,13 +473,22 @@ function WorkoutAiTrain() {
               >
                 repeat
               </span>
-              <span style={{ verticalAlign: "middle" }}>&nbsp;에포크 수</span>
+              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
+                &nbsp;에포크 수
+              </span>
             </Form.Label>
             <Col sm="9">
               <Form.Control
                 value={numEpochs}
-                onChange={(e) => setNumEpochs(e.target.value)}
+                onChange={(e) =>
+                  handleChange(e, setNumEpochs, setNumEpochsError)
+                }
+                isInvalid={!!numEpochsError}
+                style={{ backgroundColor: "#626b74", color: "#fff" }}
               />
+              <Form.Control.Feedback type="invalid">
+                {numEpochsError}
+              </Form.Control.Feedback>
             </Col>
           </Form.Group>
         </Form>

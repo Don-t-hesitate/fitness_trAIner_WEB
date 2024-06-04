@@ -99,7 +99,14 @@ const DownloadModal = () => {
                 }}
                 sx={{ cursor: "pointer" }}
               >
-                취소
+                <span
+                  style={{
+                    fontFamily: "Pretendard-Regular",
+                    fontSize: "large",
+                  }}
+                >
+                  취소
+                </span>
               </Button>
             </Stack>
           </Box>

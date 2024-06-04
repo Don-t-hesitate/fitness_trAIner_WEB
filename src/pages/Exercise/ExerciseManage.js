@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Row, Col, Table, Button, Pagination } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -85,12 +84,6 @@ function ExerciseManage() {
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  // 페이지네이션에 표시할 페이지 번호 계산
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(exerciseData.length / exercisesPerPage); i++) {
-    pageNumbers.push(i);
-  }
 
   return (
     <>
@@ -222,62 +215,6 @@ function ExerciseManage() {
           </ThemeProvider>
         </MaterialCssVarsProvider>
       </div>
-
-      {/* <Row>
-        <Col>
-          <h2 style={{ marginBottom: "24px", fontWeight: "800" }}>
-            운동 카테고리 관리
-          </h2>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>번호</th>
-                <th>운동 이름</th>
-                <th>소모 칼로리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentExercises.map((exercise, index) => (
-                <tr
-                  key={exercise.exerciseId}
-                  onClick={() => handleRowClick(exercise.exerciseId)}
-                >
-                  <td>{exercise.exerciseId}</td>
-                  <td>{exercise.exerciseName}</td>
-                  <td>{exercise.perKcal}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Stack direction="horizontal">
-            <Pagination className="mb-0">
-              {pageNumbers.map((number) => (
-                <Pagination.Item
-                  key={number}
-                  active={number === currentPage}
-                  onClick={() => handlePageClick(number)}
-                >
-                  {number}
-                </Pagination.Item>
-              ))}
-            </Pagination>
-            <Button
-              variant="primary"
-              className="ms-auto"
-              href="/exercise/add"
-              style={{ fontWeight: "bold" }}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={{ verticalAlign: "middle" }}
-              >
-                add
-              </span>
-              <span style={{ verticalAlign: "middle" }}> 추가</span>
-            </Button>
-          </Stack>
-        </Col>
-      </Row> */}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import UploadBox from "../../components/UploadBox";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Typography,
   Sheet,
   Stack,
-  Table as MuiTable,
   Button as MuiButton,
 } from "@mui/joy";
 import {
@@ -66,9 +65,7 @@ function ExerciseAdd() {
               }
             );
             console.log("Video upload response: ", videoResponse);
-            // 비디오 업로드 성공 시 추가 작업 수행 (예: 비디오 URL 저장)
           }
-          console.log("?response: ", response);
           alert("운동 추가 성공: ", response.data.message);
           navigate("/exercise");
         } else {

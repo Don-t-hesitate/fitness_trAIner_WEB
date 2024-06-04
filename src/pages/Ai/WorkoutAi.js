@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Button,
-  Pagination,
-} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -16,9 +8,7 @@ import {
   Link,
   Typography,
   Sheet,
-  Stack,
   Table as MuiTable,
-  Button as MuiButton,
 } from "@mui/joy";
 import {
   ChevronRightRounded as ChevronRightRoundedIcon,
@@ -62,7 +52,6 @@ const WorkoutAi = () => {
           process.env.REACT_APP_API_URL_BLD + "/ai/exercise/list"
         );
         setExerciseList(response.data.result);
-        console.log("response: ", response.data.result);
       } catch (error) {
         console.error(error);
       }

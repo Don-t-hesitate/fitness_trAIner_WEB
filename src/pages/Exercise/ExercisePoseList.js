@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Pagination,
-  Modal,
-  Button,
-} from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -17,9 +9,7 @@ import {
   Link,
   Typography,
   Sheet,
-  Stack,
   Table as MuiTable,
-  Button as MuiButton,
 } from "@mui/joy";
 import {
   ChevronRightRounded as ChevronRightRoundedIcon,
@@ -88,9 +78,7 @@ function ExercisePoseNameList(props) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_API_URL_BLD +
-            // "/api" +
-            `/ai/pose/${props.exerciseName}`
+          process.env.REACT_APP_API_URL_BLD + `/ai/pose/${props.exerciseName}`
         );
         setExerciseData(response.data.result);
       } catch (error) {
@@ -309,7 +297,6 @@ function ExercisePoseDataList(props) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-            // "/api" +
             `/ai/pose/${props.exerciseName}/${props.dataType}`
         );
         setExerciseData(response.data.result);

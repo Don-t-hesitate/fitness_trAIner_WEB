@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import JSZip, { file } from "jszip";
 import LoadingModal from "../../components/LoadingModal";
@@ -9,9 +9,7 @@ import {
   Breadcrumbs,
   Link,
   Typography,
-  Sheet,
   Stack,
-  Table as MuiTable,
   Button as MuiButton,
 } from "@mui/joy";
 import {
@@ -43,7 +41,6 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-            // "/api" +
             `/ai/pose/${exerciseName}/${dataType}/${fileName}`,
           { responseType: "blob" }
         );
@@ -65,14 +62,11 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
 
           const fileContents = await Promise.all(
             fileList.map(async (file) => {
-              console.log("!file.name.split(\\): ", file.name.split("\\"));
-              console.log("file.name.split(/): ", file.name.split("/"));
               const splitName = file.name.split("\\");
               if (
                 splitName.length > 1 &&
                 file.name.split("\\").indexOf(dataType)
               ) {
-                console.log("!splitName: ", splitName);
                 return {
                   name: splitName[splitName.indexOf(dataType) + 1],
                   content: await file.content,
@@ -82,7 +76,6 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
                 file.name.split("/").length &&
                 file.name.split("/").indexOf(dataType)
               ) {
-                console.log("!splitName: ", file.name.split("/"));
                 return {
                   name: file.name.split("/")[
                     file.name.split("/").indexOf(dataType) + 1
@@ -91,13 +84,11 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
                   isImage: file.name.match(/\.(jpg|jpeg|png|gif|bmp)$/i),
                 };
               } else {
-                console.log("!splitName: ", file.name.split("/"));
                 return null;
               }
             })
           );
 
-          console.log("!fileContents: ", fileContents);
           setFiles([...fileContents]); // 그냥 하면 얕은 복사(객체 참조)가 되므로 [...fileContents]로 깊은 복사
         } catch (e) {
           console.error("Error reading ZIP file:", e);
@@ -115,21 +106,8 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
       try {
         const filteredFiles = files.filter((file) => file !== null);
         filteredFiles.forEach((file) => {
-          console.log("!file: ", file);
           if (file.name.endsWith(".json")) {
-            console.log("setting json: ", file);
             jsonFormData.current = file;
-            console.log("json: ", file);
-            // } else if (file.name.endsWith('.jpg') || file.name.endsWith('.jpeg')) {
-            //   setJpegFormData(prev => {
-            //     // 유일한 이름만 저장
-            //     if (!prev.some(existingFile => existingFile.name === file.name)) {
-            //       return [...prev, { name: file.name, content: file.content }];
-            //     }
-            //     return prev;
-            //   });
-            //   console.log('img: ', file);
-            console.log("!jsonFormData.current: ", jsonFormData.current);
             setJson(
               JSON.stringify(JSON.parse(jsonFormData.current.content), null, 2)
             );
@@ -142,7 +120,6 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
       }
     };
     settingFiles();
-    console.log("files: ", files);
   }, [files]);
 
   // 삭제 요청을 보내는 함수
@@ -224,15 +201,6 @@ function ExerciseInfo({ exerciseName, dataType, fileName }) {
         운동 자세 데이터 -{" "}
         <span style={{ fontStyle: "italic" }}>{fileName}</span>
       </Typography>
-
-      {/* <h3>jpg: </h3>
-          <div style={{ height: '800px', marginBottom: '5px', position: 'relative' }}>
-            <div style={{ border: '1px solid #ccc', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto', overflowY: 'scroll', maxHeight: '80vh' }}>
-              {jpegFormData.map((file) => (
-                <img src={`data:image/${file.name.split('.').pop()};base64,${file.content}`} alt={file.name} style={{maxWidth: '100%'}} />
-              ))}
-            </div>
-          </div> */}
       <div
         style={{
           height: "70vh",

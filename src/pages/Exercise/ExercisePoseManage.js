@@ -47,28 +47,13 @@ const theme = createTheme({
   },
 });
 
-function ExercisePoseManage({ poseTypeName }) {
-  // const [files, setFiles] = useState(''); // 서버에서 받아오는 파일을 저장할 상태
+function ExercisePoseManage() {
   const [exerciseNameList, setExerciseNameList] = useState([]); // 운동 이름을 저장할 상태
   // 현재 페이지 번호를 저장할 상태 및 보여줄 운동 수를 저장할 상태
   const [currentPage, setCurrentPage] = useState(1);
   const [exercisesPerPage] = useState(12);
-  // const [realPoseTypeName, setRealPoseTypeName] = useState('');
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const settingRealPoseTypeName = async () => {
-  //     try {
-  //       // 첫 글자만 대문자로 변환
-  //       setRealPoseTypeName(poseTypeName.charAt(0).toUpperCase() + poseTypeName.slice(1));
-  //       console.log(realPoseTypeName);
-  //     } catch (error) {
-  //       console.error('Error setting realPoseTypeName:', error);
-  //     }
-  //   }
-  //   settingRealPoseTypeName();
-  // }, [poseTypeName]);
 
   useEffect(() => {
     const fetchPoseData = async () => {
@@ -76,7 +61,6 @@ function ExercisePoseManage({ poseTypeName }) {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD + `/ai/pose`
         );
-        console.log("response: ", response);
         setExerciseNameList(response.data.result);
       } catch (error) {
         console.error("Error fetching exercise data:", error);
@@ -98,7 +82,6 @@ function ExercisePoseManage({ poseTypeName }) {
   // 현재 페이지에 해당하는 운동 목록 계산
   const indexOfLastExercise = currentPage * exercisesPerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
-  console.log("exerciseNameList: ", exerciseNameList);
   const currentExercises = exerciseNameList.slice(
     indexOfFirstExercise,
     indexOfLastExercise

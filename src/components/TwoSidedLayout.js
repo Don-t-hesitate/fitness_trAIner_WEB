@@ -128,7 +128,6 @@ export default function TwoSidedLayout({ children, reversed, photo }) {
           </AspectRatio>
         </>
       )}
-      {console.log("reverse: ", reversed)}
     </Container>
   );
 }

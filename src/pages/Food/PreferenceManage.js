@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Container, Row, Col, Table, Pagination } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import LoadingModal from "../../components/LoadingModal";
+import React from "react";
+import { Row, Col } from "react-bootstrap";
+import FoodExcel from "./FoodExcel";
 import { Box, Breadcrumbs, Link, Typography } from "@mui/joy";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import FoodExcel from "./FoodExcel";
 
 function PreferenceManage() {
   return (
@@ -42,9 +39,7 @@ function PreferenceManage() {
             선호 음식 관리
           </Typography>
           <FoodExcel
-            apiDestination={
-              "http://ceprj.gachon.ac.kr:60008/admin/food/preferences/select_food_list.csv"
-            }
+            apiDestination={"/admin/food/preferences/select_food_list.csv"}
           />
         </Col>
       </Row>

@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Button,
-  Form,
-  Pagination,
-} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -17,7 +8,6 @@ import {
   Link,
   Typography,
   Sheet,
-  Stack,
   Table as MuiTable,
   Button as MuiButton,
 } from "@mui/joy";
@@ -35,6 +25,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import { ModalContext } from "../../ModalContext";
 
 const materialTheme = extendMaterialTheme();
 
@@ -48,6 +39,8 @@ const theme = createTheme({
     },
   },
 });
+
+export let cancelModelManageDownload;
 
 function WorkoutAiVersion(props) {
   const [aiVerData, setAiVerData] = useState(null); // AI 모델 정보를 저장할 상태
@@ -65,11 +58,8 @@ function WorkoutAiVersion(props) {
   useEffect(() => {
     const fetchVerData = async () => {
       try {
-        console.log("?props: ", props);
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-            // "/api" +
-            // "http://ceprj.gachon.ac.kr:60008" +
             `/ai/exercise/${props.exerciseName}`
         );
 
@@ -78,9 +68,7 @@ function WorkoutAiVersion(props) {
         setValues(
           extractValues(response.data.result, extractKeys(response.data.result))
         );
-        console.log("!aiVerData: ", aiVerData);
       } catch (error) {
-        // alert('Error fetching data:', error.response.data.message);
         if (error.response.data.code === 310) {
           alert("AI 모델이 존재하지 않습니다.");
           setAiVerData([]);
@@ -91,18 +79,6 @@ function WorkoutAiVersion(props) {
 
     fetchVerData();
   }, []);
-
-  useEffect(() => {
-    console.log("values: ", values);
-    for (let i = 0; i < values.length; i++) {
-      console.log("values[i].version: ", values[i].version);
-      if (values[i].Inuse === "true") {
-        console.log("selectedVersion: ", values[i].version);
-        setSelectedVersion(values[i].version);
-        console.log("selectedVersion: ", selectedVersion);
-      }
-    }
-  }, [values]);
 
   // AI 모델 정보에서 키와 값 추출
   const extractKeys = (data) => {
@@ -129,14 +105,14 @@ function WorkoutAiVersion(props) {
       });
   };
 
-  if (!aiVerData) {
-    return <LoadingModal data={aiVerData} />;
-  }
-
   const handleRowClick = (aiVer) => {
-    // Navigate to the desired page with the ai ID as a parameter
+    // ai ID를 매개변수로 하여 원하는 페이지로 이동
     navigate(`/aiservice/workout/${props.exerciseName}/${aiVer}`);
   };
+
+  // ModalContext에서 로딩 모달을 사용하기 위한 상태와 함수를 가져옴
+  const { startLoading, stopLoading, setProgress, setType, setCancel } =
+    useContext(ModalContext);
 
   const handleDownload = async (e, version) => {
     e.preventDefault();
@@ -147,14 +123,30 @@ function WorkoutAiVersion(props) {
     // 버전이 1.0이나 2.0 같은 형식이면 .0을 제거, 1.0.1 같은 형식이면 제거하지 않음
     if (version.split(".").length === 2 && version.includes(".0")) {
       version = version.split(".")[0];
-    } else {
-      console.log("version: ", version);
     }
+
+    // axios 요청을 취소하는 함수를 저장할 변수
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    cancelModelManageDownload = source.cancel;
+
     try {
+      startLoading(); // 로딩 모달 표시
+      setType("model"); // 내려받기 타입 설정
       const response = await axios.get(
         process.env.REACT_APP_API_URL_BLD +
           `/ai/exercise/download/${props.exerciseName}/${version}`,
-        { responseType: "blob" }
+        {
+          cancelToken: source.token,
+          responseType: "blob",
+          onDownloadProgress: (progressEvent) => {
+            const totalSize = progressEvent.total;
+            const downloadedSize = progressEvent.loaded;
+            const progress = (downloadedSize / totalSize) * 100;
+            setProgress(progress);
+          },
+        }
       );
       if (response.data) {
         // 파일 저장 다이얼로그 띄우기
@@ -165,13 +157,26 @@ function WorkoutAiVersion(props) {
         link.click();
       } else {
         console.error("Error downloading AI model:", response);
-        alert("받기 실패: " + response);
+        alert("받기 실패: ", `\n ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("!Error downloading AI model:", error);
-      alert("받기 작업 중 오류 발생");
+      if (axios.isCancel(error)) {
+        console.log("Download canceled:", error.message);
+      } else {
+        console.log("Error downloading AI model:", error);
+        alert(
+          "받기 작업 중 오류 발생: ",
+          `\n ${error.response.status}: ${error.response.statusText}`
+        );
+      }
+    } finally {
+      stopLoading(); // 로딩 모달 닫기
     }
   };
+
+  if (!aiVerData) {
+    return <LoadingModal data={aiVerData} />;
+  }
 
   // 현재 페이지에 해당하는 모델 목록 계산
   const indexOfLastModel = currentPage * modelsPerPage;
@@ -183,12 +188,6 @@ function WorkoutAiVersion(props) {
     setCurrentPage(pageNumber);
   };
 
-  // 페이지네이션에 표시할 페이지 번호 계산
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(values.length / modelsPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
   if (!currentModels) {
     return <LoadingModal data={currentModels} />;
   } else if (!keys) {
@@ -197,12 +196,9 @@ function WorkoutAiVersion(props) {
     return <LoadingModal data={values} />;
   }
 
-  const handleRadioChange = (version) => {
-    setSelectedVersion(version);
-  };
-
   return (
     <>
+      {console.log("values: ", values)}
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Breadcrumbs
           size="sm"
@@ -290,18 +286,8 @@ function WorkoutAiVersion(props) {
                 </tr>
               </thead>
               <tbody>
-                {currentModels.map(({ key, ...val }) =>
-                  console.log(
-                    "!values.version: ",
-                    val.version,
-                    " type: ",
-                    typeof val.version
-                  )
-                )}
                 {currentModels.map(({ key, ...val }) => (
                   <>
-                    {/* Fi */}
-                    {console.log("val: ", val["accuracy"])}
                     <tr
                       key={val.version}
                       onClick={() => handleRowClick(val.version)}
@@ -357,8 +343,6 @@ function WorkoutAiVersion(props) {
 }
 
 function WorkoutAiManage({ exerciseName }) {
-  console.log("id: " + exerciseName);
-
   return <WorkoutAiVersion exerciseName={exerciseName} />;
 }
 

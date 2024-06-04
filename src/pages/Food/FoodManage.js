@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import FoodExcel from "./FoodExcel";
 import { Box, Breadcrumbs, Link, Typography } from "@mui/joy";
 import {
@@ -15,14 +13,10 @@ import {
   THEME_ID as MATERIAL_THEME_ID,
   Typography as MaterialTypography,
 } from "@mui/material";
-import MuiExcel from "./MuiExcel";
 
 const materialTheme = extendMaterialTheme();
 
 function FoodManage() {
-  const [foodData, setFoodData] = useState(null);
-  const navigate = useNavigate();
-
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -57,9 +51,7 @@ function FoodManage() {
               음식 관리
             </Typography>
             <FoodExcel
-              apiDestination={
-                "http://ceprj.gachon.ac.kr:60008/admin/food/info/food_db_result_final.xlsx"
-              }
+              apiDestination={"/admin/food/info/food_db_result_final.xlsx"}
             />
           </Col>
         </MaterialCssVarsProvider>

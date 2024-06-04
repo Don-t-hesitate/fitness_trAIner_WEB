@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col, Table, Pagination } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -9,7 +8,6 @@ import {
   Link,
   Typography,
   Sheet,
-  Stack,
   Table as MuiTable,
 } from "@mui/joy";
 import {
@@ -52,7 +50,6 @@ function UserManage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log("fetchUserData");
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD + "/admin/users"
         ); // 서버에서 회원 데이터를 가져옴

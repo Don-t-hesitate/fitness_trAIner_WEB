@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Form, Button, ButtonGroup } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import LoadingModal from "../../components/LoadingModal";
 import {
   Box,
@@ -55,8 +55,6 @@ function UserInfo({ userId }) {
         let data = response.data.result;
         // data = data.find((user) => user.userId === Number(userId));
         setUserData(data); // 회원 데이터 상태 업데이트
-        console.log("data: " + JSON.stringify(data));
-        console.log("!daata: ", data);
         if (data) {
           // 각 필드 상태 업데이트
           setUsername(data.username);
@@ -113,7 +111,6 @@ function UserInfo({ userId }) {
   // 수정 버튼 클릭 시 실행되는 함수
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("gender: " + gender, "\ngender type: " + typeof gender);
     try {
       // PUT 요청을 보내 회원 정보 업데이트
       const response = await axios.put(

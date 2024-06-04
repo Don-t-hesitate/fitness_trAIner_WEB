@@ -4,35 +4,31 @@ import { AuthContext } from "../AuthContext";
 import GlobalStyles from "@mui/joy/GlobalStyles";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
 import IconButton from "@mui/joy/IconButton";
-import Input from "@mui/joy/Input";
-import LinearProgress from "@mui/joy/LinearProgress";
 import List from "@mui/joy/List";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton, { listItemButtonClasses } from "@mui/joy/ListItemButton";
 import ListItemContent from "@mui/joy/ListItemContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import SportsGymnasticsRoundedIcon from "@mui/icons-material/SportsGymnasticsRounded";
-import KitchenIcon from "@mui/icons-material/Kitchen";
-import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
-import FoodBankIcon from "@mui/icons-material/FoodBank";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import SensorOccupiedIcon from "@mui/icons-material/SensorOccupied";
-import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
-import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import {
+  HomeRounded as HomeRoundedIcon,
+  SportsGymnasticsRounded as SportsGymnasticsRoundedIcon,
+  Kitchen as KitchenIcon,
+  AccessibilityNew as AccessibilityNewIcon,
+  GroupRounded as GroupRoundedIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  FitnessCenter as FitnessCenterIcon,
+  RestaurantMenu as RestaurantMenuIcon,
+  ThumbsUpDown as ThumbsUpDownIcon,
+  AutoAwesome as AutoAwesomeIcon,
+  SmartToy as SmartToyIcon,
+  Android as AndroidIcon,
+} from "@mui/icons-material";
 import { SvgIcon } from "@mui/joy";
-import { LinkContainer } from "react-router-bootstrap";
 import { closeSidebar } from "./utils";
+import axios from "axios";
+import { ModalContext } from "../ModalContext";
 
 function DetectionAndZoneIcon() {
   // 운동 자세 데이터 관리 아이콘
@@ -53,7 +49,6 @@ function DetectionAndZoneIcon() {
 
 function Toggler({ defaultExpanded = false, renderToggle, children }) {
   const [open, setOpen] = React.useState(defaultExpanded);
-  console.log("defaultExpanded: ", defaultExpanded);
   useEffect(() => {
     setOpen(defaultExpanded);
   }, [defaultExpanded]);
@@ -76,6 +71,9 @@ function Toggler({ defaultExpanded = false, renderToggle, children }) {
     </React.Fragment>
   );
 }
+
+// axios 요청을 취소하는 함수를 저장할 변수
+export let cancelAppDownload;
 
 export default function Sidebar() {
   const { logout } = useContext(AuthContext);
@@ -110,14 +108,66 @@ export default function Sidebar() {
 
   const navigate = useNavigate();
 
+  // ModalContext에서 로딩 모달을 사용하기 위한 상태와 함수를 가져옴
+  const { startLoading, stopLoading, setProgress, setType } =
+    useContext(ModalContext);
+
+  // 앱 다운로드 요청
+  const handleDownload = async (e) => {
+    e.preventDefault();
+
+    // axios 요청을 취소하는 함수를 저장할 변수
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    cancelAppDownload = source.cancel;
+
+    try {
+      startLoading(); // 로딩 모달 표시
+      setType("app"); // 다운로드 타입을 app으로 설정
+      const response = await axios.get("/admin/app", {
+        cancelToken: source.token, // axios 요청에 CancelToken을 전달
+        responseType: "blob",
+        onDownloadProgress: (progressEvent) => {
+          const totalSize = progressEvent.total;
+          const downloadedSize = progressEvent.loaded;
+          const progress = (downloadedSize / totalSize) * 100;
+          setProgress(progress);
+        },
+      });
+      if (response.status === 200) {
+        // 다운로드된 앱 파일을 Blob으로 변환하여 안보이는 a 태그를 생성하여 클릭 이벤트를 발생, 파일 저장 다이얼로그 표시
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "trAIner.apk";
+        link.click();
+      } else {
+        console.log("Failed to download the app: ", response);
+        alert("서버에서 앱 다운로드를 실패했습니다.");
+      }
+    } catch (error) {
+      console.log("error: ", error);
+      if (axios.isCancel(error)) {
+        console.log("Download canceled:", error);
+        alert("다운로드 취소됨");
+      } else {
+        console.log("Error occurred while downloading the app: ", error);
+        alert(
+          `앱 다운로드 중 오류가 발생했습니다: \n${error.response.status}: ${error.response.statusText}`
+        );
+      }
+    } finally {
+      stopLoading(); // 로딩 모달 닫기
+    }
+  };
+
   // 선택된 리스트 아이템에 따라 상태 변경
   useEffect(() => {
     let setSelectedState;
 
     for (const route in routeStateMap) {
       const regex = new RegExp(`^${route}$`);
-      console.log("route!: ", route);
-      console.log("regex: ", regex);
       if (regex.test(window.location.pathname)) {
         setSelectedState = routeStateMap[route];
         break;
@@ -194,12 +244,21 @@ export default function Sidebar() {
         component="a"
         href="/dashboard"
       >
-        <IconButton variant="soft" color="primary" size="lg">
+        <IconButton
+          variant="soft"
+          color="primary"
+          size="lg"
+          sx={{ width: "auto", height: "auto", padding: 0, marginLeft: "5px" }}
+        >
           <a href="/dashboard">
-            <img src="/logo_ver2.png" alt="logo" style={{ width: "44px" }} />
+            <img
+              src="/logo_ver2.png"
+              alt="logo"
+              style={{ width: "44px", height: "44px", borderRadius: "12.5%" }}
+            />
           </a>
         </IconButton>
-        <div style={{ marginLeft: "25px", marginTop: "5px" }}>
+        <div style={{ marginLeft: "30px", marginTop: "5px" }}>
           <Typography level="title-lg" fontFamily="GmarketSansMedium">
             tr
             <span style={{ color: "#219BCC", fontFamily: "GmarketSansMedium" }}>
@@ -258,6 +317,7 @@ export default function Sidebar() {
 
           <ListItem nested>
             <Toggler
+              // posture, category가 true일 때 defaultExpanded가 true로 설정하여 '운동 데이터 관리' 리스트 아이템이 열린 상태로 시작
               defaultExpanded={posture || category ? true : false}
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
@@ -301,6 +361,7 @@ export default function Sidebar() {
 
           <ListItem nested>
             <Toggler
+              // food, preference가 true일 때 defaultExpanded가 true로 설정하여 '식품 데이터 관리' 리스트 아이템이 열린 상태로 시작
               defaultExpanded={food || preference ? true : false}
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
@@ -340,6 +401,7 @@ export default function Sidebar() {
 
           <ListItem nested>
             <Toggler
+              // exerciseAiLearn, exerciseAiModel이 true일 때 defaultExpanded가 true로 설정하여 '운동 자세 분석 AI 관리' 리스트 아이템이 열린 상태로 시작
               defaultExpanded={
                 exerciseAiLearn || exerciseAiModel ? true : false
               }
@@ -382,16 +444,16 @@ export default function Sidebar() {
               </List>
             </Toggler>
           </ListItem>
-          {/* <ListItem>
-            <ListItemButton component="a" href="/download">
-              <CloudDownloadIcon />
+          <ListItem>
+            <ListItemButton onClick={(e) => handleDownload(e)}>
+              <AndroidIcon />
               <ListItemContent>
                 <Typography level="title-sm" fontFamily="Pretendard-Regular">
                   앱 다운로드
                 </Typography>
               </ListItemContent>
             </ListItemButton>
-          </ListItem> */}
+          </ListItem>
         </List>
         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <Button

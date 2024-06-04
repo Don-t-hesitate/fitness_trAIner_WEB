@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -10,7 +10,6 @@ import {
   Typography,
   Sheet,
   Stack,
-  Table as MuiTable,
   Button as MuiButton,
   ButtonGroup,
 } from "@mui/joy";
@@ -19,6 +18,9 @@ import {
   HomeRounded as HomeRoundedIcon,
   CloudDownload as CloudDownloadIcon,
 } from "@mui/icons-material";
+import { ModalContext } from "../../ModalContext";
+
+export let cancelModelInfoDownload;
 
 function WorkoutAiInfo({ parentId, subId }) {
   const [aiData, setAiData] = useState(null); // 운동 AI 정보를 저장할 상태
@@ -34,29 +36,22 @@ function WorkoutAiInfo({ parentId, subId }) {
       try {
         const response = await axios.get(
           process.env.REACT_APP_API_URL_BLD +
-            // "/api" +
-            // "http://ceprj.gachon.ac.kr:60008" +
             `/ai/exercise/${parentId}/${subId}`
         );
         setAiData(response.data.result);
-        console.log("inuse: ", response.data.result.Inuse);
         setInuse(response.data.result.Inuse);
-        console.log("res : ", response.data.result);
-        // console.log('response: ', response.data.result);
       } catch (error) {
         console.error("Error fetching ai data:", error);
       }
     };
 
     fetchAiData();
-    console.log(aiData);
   }, [parentId, subId]);
 
   useEffect(() => {
     if (aiData) {
       setParams(aiData.modelParams);
       setCreated(aiData.createdTime);
-      console.log("!params:", params);
     }
   }, [aiData]);
 
@@ -94,26 +89,9 @@ function WorkoutAiInfo({ parentId, subId }) {
     }
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.put(
-        process.env.REACT_APP_API_URL_BLD + `/ai/exercise/${parentId}/${subId}`
-      );
-      if (response.data.success) {
-        alert("업데이트 성공");
-        navigate("/aiservice/workout");
-      } else {
-        alert("업데이트 실패: " + response.data.message);
-      }
-    } catch (error) {
-      console.error(
-        "Error updating exercise data:",
-        error.response.data.message
-      );
-      alert("업데이트 실패: " + error.response.data.message);
-    }
-  };
+  // ModalContext에서 로딩 모달을 사용하기 위한 상태와 함수를 가져옴
+  const { startLoading, stopLoading, setProgress, setType, setCancel } =
+    useContext(ModalContext);
 
   const handleDownload = async (e, subId) => {
     e.preventDefault();
@@ -123,11 +101,29 @@ function WorkoutAiInfo({ parentId, subId }) {
     } else {
       console.log("subId: ", subId);
     }
+
+    // axios 요청을 취소하는 함수를 저장할 변수
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
+    cancelModelInfoDownload = source.cancel;
+
     try {
+      startLoading(); // 로딩 모달 표시
+      setType("model"); // 내려받기 타입 설정
       const response = await axios.get(
         process.env.REACT_APP_API_URL_BLD +
           `/ai/exercise/download/${parentId}/${subId}`,
-        { responseType: "blob" }
+        {
+          cancelToken: source.token,
+          responseType: "blob",
+          onDownloadProgress: (progressEvent) => {
+            const totalSize = progressEvent.total;
+            const downloadedSize = progressEvent.loaded;
+            const progress = (downloadedSize / totalSize) * 100;
+            setProgress(progress);
+          },
+        }
       );
       if (response.data) {
         // 파일 저장 다이얼로그 띄우기
@@ -141,8 +137,18 @@ function WorkoutAiInfo({ parentId, subId }) {
         alert("받기 실패: ", response);
       }
     } catch (error) {
-      console.error("Error downloading AI model:", error);
-      alert("받기 작업 중 오류 발생");
+      if (axios.isCancel(error)) {
+        console.log("Download canceled:", error.message);
+        alert("받기 취소됨");
+      } else {
+        console.error("Error downloading AI model:", error);
+        alert(
+          "모델 받기 작업 중 오류 발생: ",
+          `\n${error.response.status}: ${error.response.statusText}`
+        );
+      }
+    } finally {
+      stopLoading(); // 로딩 모달 닫기
     }
   };
 
@@ -361,39 +367,8 @@ function WorkoutAiInfo({ parentId, subId }) {
               <Form.Control value={params.num_epochs} disabled />
             </Col>
           </Form.Group>
-          {/* <Form.Group as={Row}>
-            <Form.Label column sm="3">
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  verticalAlign: "middle",
-                  marginRight: "5px",
-                  fontVariationSettings: "'FILL' 1",
-                }}
-              >
-                trending_down
-              </span>
-              <span style={{ verticalAlign: "middle", color: "#171a1c" }}>
-                {" "}
-                dropout
-              </span>
-            </Form.Label>
-            <Col sm="9">
-              <Form.Control
-                value={"0.2"}
-                style={{ backgroundColor: "#626b74", color: "#fff" }}
-              />
-            </Col>
-          </Form.Group> */}
           <Stack direction justifyContent="space-between" position="relative">
             <div>
-              {/* <Typography
-                variant="h6"
-                fontWeight={500}
-                style={{ fontFamily: "Pretendard-Regular", color: "#171a1c" }}
-              >
-                사용 데이터셋: 001-1-1-01-A2
-              </Typography> */}
               <Typography
                 variant="h6"
                 fontWeight={500}
@@ -409,24 +384,6 @@ function WorkoutAiInfo({ parentId, subId }) {
                 // minWidth: "240px",
               }}
             >
-              {/* <MuiButton
-                variant="solid"
-                color="primary"
-                onClick={handleUpdate}
-                sx={{ width: "250%" }}
-                startDecorator={
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ marginRight: "5px" }}
-                  >
-                    sync_alt
-                  </span>
-                }
-              >
-                <span style={{ verticalAlign: "middle", fontWeight: "bold" }}>
-                  업데이트
-                </span>
-              </MuiButton> */}
               <MuiButton
                 variant="solid"
                 color="primary"

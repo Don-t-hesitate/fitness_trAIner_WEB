@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import './UploadBox.css';
+import React, { useEffect, useState } from "react";
+import "./UploadBox.css";
 
 const FileInfo = ({ uploadedInfo, multiple }) => {
   const [object, setObject] = useState([]);
 
-
   // multiple true|false 서로의 setObject 형태가 다름 --> **추후 통일 필요**
   useEffect(() => {
     if (multiple && Array.isArray(uploadedInfo)) {
-      console.log("?uploadedInfo: ", uploadedInfo);
       setObject(
         uploadedInfo.map(({ name, size, type }, index) => (
           <li key={`${name}-${index}`}>
@@ -18,11 +16,13 @@ const FileInfo = ({ uploadedInfo, multiple }) => {
             <span className="info_value">{size}</span>
             <span className="info_key">Type:</span>
             <span className="info_value">{type}</span>
-            <div>---------------------------------------------------------------------------</div>
+            <div>
+              ---------------------------------------------------------------------------
+            </div>
           </li>
         ))
       );
-    } else if (!multiple && typeof uploadedInfo === 'object') {
+    } else if (!multiple && typeof uploadedInfo === "object") {
       setObject(
         Object.entries(uploadedInfo).map(([key, value]) => (
           <li key={key}>
@@ -35,12 +35,15 @@ const FileInfo = ({ uploadedInfo, multiple }) => {
   }, [uploadedInfo, multiple]);
 
   return (
-    <ul className="preview_info" style={{ maxHeight: '100%', overflowY: 'auto', marginBottom: 0 }}>
+    <ul
+      className="preview_info"
+      style={{ maxHeight: "100%", overflowY: "auto", marginBottom: 0 }}
+    >
       {object}
     </ul>
   );
-}
-  
+};
+
 const Logo = () => (
   <svg className="icon" x="0px" y="0px" viewBox="0 0 24 24">
     <path fill="transparent" d="M0,0h24v24H0V0z" />
@@ -63,14 +66,13 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
 
   const setFileInfo = (file) => {
     const { name, size: byteSize, type } = file;
-    const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
-    
+    const size = (byteSize / (1024 * 1024)).toFixed(2) + "mb";
+
     // name, size, type 정보를 uploadedInfo에 저장
     if (multiple) {
       setUploadedInfo((prev) => [...(prev || []), { name, size, type }]);
-      console.log("In setFileInfo: ", uploadedInfo);
     } else {
-      setUploadedInfo({ name, size, type }); 
+      setUploadedInfo({ name, size, type });
     }
   };
 
@@ -78,7 +80,6 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
     event.preventDefault();
     setActive(false);
     const files = event.dataTransfer.files;
-    console.log("drop file: ", files);
 
     if (files.length > 0) {
       const formData = new FormData();
@@ -87,22 +88,21 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
       setUploadedInfo(null);
       if (multiple) {
         for (let i = 0; i < files.length; i++) {
-          formData.append('files', files[i]);
+          formData.append("files", files[i]);
           setFileInfo(files[i]);
         }
       } else {
-        formData.append('file', files[0]);
+        formData.append("file", files[0]);
         setFileInfo(files[0]);
       }
-      
+
       if (!extension) {
         onFileUpload(formData); // 파일 정보를 부모 컴포넌트로 전달
       } else {
-        let extensionType = files[0].name.split('.').pop();
-        if (extensionType === 'jpg' || extensionType === 'jpeg') {
-          extensionType = 'jpg';
+        let extensionType = files[0].name.split(".").pop();
+        if (extensionType === "jpg" || extensionType === "jpeg") {
+          extensionType = "jpg";
         }
-        console.log('---uploadedInfo: ', uploadedInfo);
         if (extensionType === extension) {
           onFileUpload(formData, extension); // 파일 정보를 부모 컴포넌트로 전달
         } else {
@@ -117,8 +117,7 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
     event.preventDefault();
     setActive(false);
     const files = event.target.files;
-    console.log("?file: ", files);
-    
+
     if (files.length > 0) {
       const formData = new FormData();
 
@@ -126,22 +125,21 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
       setUploadedInfo(null);
       if (multiple) {
         for (let i = 0; i < files.length; i++) {
-          formData.append('files', files[i]);
+          formData.append("files", files[i]);
           setFileInfo(files[i]);
         }
       } else {
-        formData.append('file', files[0]);
+        formData.append("file", files[0]);
         setFileInfo(files[0]);
       }
 
       if (!extension) {
         onFileUpload(formData); // 파일 정보를 부모 컴포넌트로 전달
       } else {
-        let extensionType = files[0].name.split('.').pop();
-        if (extensionType === 'jpg' || extensionType === 'jpeg') {
-          extensionType = 'jpg';
+        let extensionType = files[0].name.split(".").pop();
+        if (extensionType === "jpg" || extensionType === "jpeg") {
+          extensionType = "jpg";
         }
-        console.log('---uploadedInfo: ', uploadedInfo);
         if (extensionType === extension) {
           onFileUpload(formData, extension); // 파일 정보를 부모 컴포넌트로 전달
         } else {
@@ -151,22 +149,32 @@ const UploadBox = ({ onFileUpload, multiple = false, extension = null }) => {
       }
     }
   };
-  
+
   return (
     <label
-      className={`preview${isActive ? ' active' : ''} rt`}
+      className={`preview${isActive ? " active" : ""} rt`}
       onDragEnter={handleDragStart}
       onDragOver={handleDragOver}
       onDragLeave={handleDragEnd}
       onDrop={handleDrop}
     >
-      <input type="file" className="file" onChange={handleUpload} multiple={multiple} />
-      {uploadedInfo && <FileInfo uploadedInfo={uploadedInfo} multiple={multiple}/>}
+      <input
+        type="file"
+        className="file"
+        onChange={handleUpload}
+        multiple={multiple}
+      />
+      {uploadedInfo && (
+        <FileInfo uploadedInfo={uploadedInfo} multiple={multiple} />
+      )}
       {!uploadedInfo && (
         <>
           <Logo />
           {multiple ? (
-            <p className="preview_msg">클릭 혹은 파일을 이곳에 드롭하세요. 파일을 다중으로 추가할 수 있습니다.</p>
+            <p className="preview_msg">
+              클릭 혹은 파일을 이곳에 드롭하세요. 파일을 다중으로 추가할 수
+              있습니다.
+            </p>
           ) : (
             <p className="preview_msg">클릭 혹은 파일을 이곳에 드롭하세요.</p>
           )}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DataGrid, { textEditor } from "react-data-grid";
 import { read, utils, write } from "xlsx";
-import { Button, ButtonGroup, Stack } from "react-bootstrap";
 import "react-data-grid/lib/styles.css";
 import LoadingModal from "../../components/LoadingModal";
 import {
@@ -126,29 +125,6 @@ export default function FoodExcel({ apiDestination }) {
       console.log("excel data: ", data);
       console.log("rows: ", rows);
 
-      // // 디버깅용
-      // const startingWithS = Object.fromEntries(
-      //   Object.entries(workBook['final_food_db'])
-      //     .filter(([key, value]) => key.startsWith('S49'))
-      // );
-      // const startingWithR = Object.fromEntries(
-      //   Object.entries(workBook['final_food_db'])
-      //     .filter(([key, value]) => key.startsWith('R49'))
-      // );
-      // const startingWithQ = Object.fromEntries(
-      //   Object.entries(workBook['final_food_db'])
-      //     .filter(([key, value]) => key.startsWith('Q49'))
-      // );
-      // const startingWithP = Object.fromEntries(
-      //   Object.entries(workBook['final_food_db'])
-      //     .filter(([key, value]) => key.startsWith('P49'))
-      // );
-
-      // console.log('workbook with keys and values starting with "P": ', startingWithP);
-      // console.log('workbook with keys and values starting with "Q": ', startingWithQ);
-      // console.log('workbook with keys and values starting with "R": ', startingWithR)
-      // console.log('workbook with keys and values starting with "S": ', startingWithS);
-
       /* FormData 생성 */
       const fdata = new FormData();
       fdata.append("file", new File([data], "sheetjs.xlsx"));
@@ -164,9 +140,8 @@ export default function FoodExcel({ apiDestination }) {
         alert(response.data.message + "\n파일 크기: " + size.toFixed(2) + "MB");
       })();
     } catch (error) {
-      console.log("error!: ", error);
-      console.error("error: ", error);
-      alert("Error saving file:", error);
+      console.log("error: ", error);
+      alert("Error saving file: ", error);
     }
   }
 
@@ -274,34 +249,6 @@ export default function FoodExcel({ apiDestination }) {
               </MuiButton>
             </MuiBtnGroup>
           </MuiStack>
-          {/* <Stack direction="horizontal">
-            <ButtonGroup className="ms-auto mb-1 mt-2">
-              <Button variant="secondary" onClick={addRow}>
-                <span
-                  className="material-symbols-outlined"
-                  style={{ verticalAlign: "middle" }}
-                >
-                  add
-                </span>
-                <span style={{ verticalAlign: "middle", fontWeight: "bold" }}>
-                  {" "}
-                  행 추가
-                </span>
-              </Button>
-              <Button onClick={() => saveFile()}>
-                <span
-                  className="material-symbols-outlined"
-                  style={{ verticalAlign: "middle" }}
-                >
-                  save
-                </span>
-                <span style={{ verticalAlign: "middle", fontWeight: "bold" }}>
-                  {" "}
-                  저장
-                </span>
-              </Button>
-            </ButtonGroup>
-          </Stack> */}
           <DataGrid
             columns={columns}
             rows={rows}

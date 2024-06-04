@@ -29,7 +29,6 @@ import {
   WorkoutAiInfo,
 } from "./pages/Ai";
 import TitlePage from "./pages/TitlePage";
-import ExcelTest from "./ExcelTest";
 
 // 브라우저 라우터 생성 및 라우트 정의
 const routes = createBrowserRouter([
@@ -67,17 +66,6 @@ const routes = createBrowserRouter([
           <title>로그인</title>
         </Helmet>
         <LoginPage />
-      </>
-    ),
-  },
-  {
-    path: "/excel",
-    element: (
-      <>
-        <Helmet>
-          <title>엑셀 테스트</title>
-        </Helmet>
-        <ExcelTest />
       </>
     ),
   },
@@ -476,9 +464,6 @@ const routes = createBrowserRouter([
       />
     ),
   },
-
-  // // 사용자 음식 선호도 상세보기 페이지 (GenericWrapper 컴포넌트 사용)
-  // { path: '/preference/:userId', element: <><Helmet><title>음식 선호도 상세보기</title></Helmet><GenericWrapper mainComponent={PreferenceInfo} paramKeys={["userId"]} /></> },
 
   // 운동 자세 AI 종류 고르기 페이지 (GenericWrapper 컴포넌트 사용)
   {

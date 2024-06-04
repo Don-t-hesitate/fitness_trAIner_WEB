@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import {
@@ -9,7 +9,6 @@ import {
   Typography,
   Sheet,
   Stack,
-  Table as MuiTable,
   Button as MuiButton,
 } from "@mui/joy";
 import {
@@ -80,8 +79,6 @@ const ProgressWindow = ({ progressMessages }) => {
 };
 
 function WorkoutAiTrain() {
-  // const [formInput, setFormInput] = useState(`--learning_rate 0.001 --batch_size 32 --num_epochs 100 --output_file model_params.json`); // 하이퍼 파라미터를 담을 상태
-  const [formInput, setFormInput] = useState(``); // 하이퍼 파라미터를 담을 상태
   const [exercise, setExercise] = useState("push_up"); // 운동 이름을 담을 상태
   const [learningRate, setLearningRate] = useState(0.001); // 학습률을 담을 상태
   const [batchSize, setBatchSize] = useState(32); // 배치 크기를 담을 상태
@@ -132,32 +129,6 @@ function WorkoutAiTrain() {
       setSocket(sckt);
       console.log("소켓 준비");
       console.log("params: ", params);
-      // console.log("formInput: ", formInput);
-      // const convertToObject = () => {
-      //   const inputValue = formInput.trim();
-      //   console.log("!inputValue: ", inputValue);
-      //   if (inputValue) {
-      //     try {
-      //       // `inputValue`에서 큰따옴표로 둘러싸인 문자열 뒤에 오는 공백과 콜론을 찾아, 공백을 제거하고 콜론만 남김
-      //       const jsonString = `{${inputValue.replace(
-      //         /("([^"]+)")\s*:/g,
-      //         "$1:"
-      //       )}}`;
-      //       const parsedParams = JSON.parse(jsonString);
-      //       console.log("!parsedParams: ", parsedParams);
-      //       setParams(parsedParams);
-      //     } catch (error) {
-      //       console.error("Invalid input:", error);
-      //       // setParams(inputValue + " --version " + version);
-      //       setParams(inputValue);
-      //       console.log("!!params: ", params);
-      //     }
-      //   } else {
-      //     console.log("inputValue is empty");
-      //     setParams({});
-      //   }
-      // };
-      // convertToObject();
     } catch (error) {
       alert("서버와 연결 중 오류가 발생했습니다.");
       console.error("Error while connecting to WebSocket: ", error);
@@ -192,8 +163,6 @@ function WorkoutAiTrain() {
             });
 
             if (stompClient.connected) {
-              console.log("params: ", params);
-
               const requestData = {
                 pythonFilePath: filePath,
                 exerciseName: exercise,
@@ -366,32 +335,6 @@ function WorkoutAiTrain() {
               />
             </Col>
           </Form.Group>
-          {/* <Form.Group as={Row} style={{ marginBottom: "10px" }}>
-            <Form.Label column sm="3">
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  verticalAlign: "middle",
-                  marginRight: "5px",
-                  fontVariationSettings: "'FILL' 1",
-                }}
-              >
-                code
-              </span>
-              <span style={{ verticalAlign: "middle" }}>
-                &nbsp;하이퍼 파라미터
-              </span>
-            </Form.Label>
-            <Col sm="9">
-              <Form.Control
-                placeholder={
-                  "예시: " +
-                  '\'{"learning_rate": 0.002,"batch_size": 32,"num_epochs": 100,"version": 1.2}\''
-                }
-                onChange={(e) => setFormInput(e.target.value)}
-              />
-            </Col>
-          </Form.Group> */}
           <Form.Group as={Row}>
             <Form.Label column sm="3" style={{ marginBottom: "10px" }}>
               <span

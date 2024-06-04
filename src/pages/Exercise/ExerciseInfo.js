@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  ButtonGroup,
-} from "react-bootstrap";
+import { Row, Col, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import UploadBox from "../../components/UploadBox";
 import LoadingModal from "../../components/LoadingModal";
@@ -17,7 +10,6 @@ import {
   Link,
   Typography,
   Sheet,
-  Table as MuiTable,
   Button as MuiButton,
   Stack,
 } from "@mui/joy";
@@ -37,9 +29,6 @@ function ExerciseInfo({ exerId }) {
   // 운동 영상 존재 여부에 따라 <div> 안의 컴포넌트를 조건부 렌더링하기 위한 상태
   const [videoUrl, setVideoUrl] = useState(null);
   const [showUploadBox, setShowUploadBox] = useState(false);
-
-  // 숫자만 입력 가능하도록 하는 함수의 에러용 상태
-  const [error, setError] = useState(null);
 
   // 페이지 이동을 위한 useNavigate 함수 가져오기
   const navigate = useNavigate();
@@ -66,16 +55,13 @@ function ExerciseInfo({ exerId }) {
           // 운동 영상 URL 가져오기
           const fetchVideoUrl = async () => {
             try {
-              console.log("data.exerciseName:", data.exerciseName);
               const videoResponse = await axios.get(
                 process.env.REACT_APP_API_URL_BLD +
-                  // "/api" +
                   `/exercises/video/stream/${data.exerciseName}`,
                 {
                   responseType: "blob",
                 }
               );
-              console.log("videRes:", videoResponse);
               if (videoResponse.status === 200) {
                 const blob = videoResponse.data;
                 const videoUrl = URL.createObjectURL(blob);
@@ -126,7 +112,7 @@ function ExerciseInfo({ exerId }) {
           alert("영상 삭제 실패");
         }
       } catch (error) {
-        console.log("?Error deleting video:" + error);
+        console.log("Error deleting video:" + error);
         alert("Error deleting video:" + error);
       }
     }
@@ -156,58 +142,11 @@ function ExerciseInfo({ exerId }) {
     setFormData(data);
   };
 
-  // 수정 버튼 클릭 시 실행되는 함수
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     // PUT 요청을 보내 운동 정보 업데이트
-  //     const response = await axios.put(process.env.REACT_APP_API_URL_BLD + `/exercises`, {
-  //       exerciseName: exerciseData.exerciseName,
-  //       newExerciseName: exerciseName,
-  //       newExerciseType: exerciseType,
-  //       newPerKcal: perKcal
-  //     });
-
-  //     // response 객체와 response.data 객체가 존재하는지 확인
-  //     if (response && response.data) {
-  //       if (response.data.success) {
-  //         if (formData) {
-  //           console.log("?uploadFile: ", formData.get('file'));
-  //           const videoResponse = await axios.post(
-  //             process.env.REACT_APP_API_URL_BLD + `/exercises/video/${exerciseName}`,
-  //             formData,
-  //             {
-  //               headers: {
-  //                 'Content-Type': 'multipart/form-data',
-  //               },
-  //             }
-  //           );
-  //           console.log("Video upload response: ", videoResponse);
-  //           // 비디오 업로드 성공 시 추가 작업 수행 (예: 비디오 URL 저장)
-  //         }
-  //         console.log("?response: ", response);
-  //         alert("운동 정보 수정 성공: ", response.data.message);
-  //         window.location.reload();
-  //       } else {
-  //         alert('운동 정보 수정 실패: ' + response.data.message);
-  //       }
-  //     } else {
-  //       // response 객체나 response.data 객체가 없는 경우 처리
-  //       alert('서버 응답 오류: ' + response.data.message);
-  //     }
-  //   } catch (error) {
-  //     // 에러 메시지 출력
-  //     console.log('error: ', error);
-  //     alert('Error updating exercise data:', error.response.data.message);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (formData) {
-        console.log("?uploadFile: ", formData.get("file"));
+        console.log("uploadFile: ", formData.get("file"));
         const response = await axios.post(
           process.env.REACT_APP_API_URL_BLD +
             `/exercises/video/${exerciseName}`,
@@ -220,7 +159,6 @@ function ExerciseInfo({ exerId }) {
         );
         if (response.data.success) {
           alert("영상 업로드 성공");
-          console.log("Video upload response: ", response);
           window.location.reload();
         }
         // 비디오 업로드 성공 시 추가 작업 수행 (예: 비디오 URL 저장)
@@ -236,19 +174,6 @@ function ExerciseInfo({ exerId }) {
   if (!exerciseData) {
     return <LoadingModal data={exerciseData} />;
   }
-
-  // 숫자만 입력 가능하도록 하는 함수
-  // const handleChange = (e, setValue, setError) => {
-  //   const inputValue = e.target.value;
-  //   const isNumber = /^\d+$/.test(inputValue);
-
-  //   if (!isNumber && inputValue !== '') {
-  //     setError('숫자(소수점 *제외*)만 입력 가능합니다.');
-  //   } else {
-  //     setError(null);
-  //     setValue(inputValue);
-  //   }
-  // };
 
   return (
     <>
@@ -422,7 +347,6 @@ function ExerciseInfo({ exerId }) {
             </Form.Label>
             <Col sm="9">
               <Form.Control value={perKcal || ""} disabled />
-              {/* <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback> */}
             </Col>
           </Form.Group>
           <Form.Group as={Row} style={{ marginBottom: "0px" }}>
@@ -468,13 +392,6 @@ function ExerciseInfo({ exerId }) {
                 운동 삭제
               </span>
             </MuiButton>
-            {/* <ButtonGroup className="pt-2 ms-auto"> */}
-            {/* <Button variant="primary" type="submit" style={{fontWeight: "bold"}}>
-                  <span className="material-symbols-outlined" style={{verticalAlign: "middle"}}>edit</span>
-                  <span style={{verticalAlign: "middle"}}> 운동 수정</span>
-                </Button> */}
-            {/* 운동 수정은 DB 무결성에 악영향을 주므로 deprecated */}
-            {/* </ButtonGroup> */}
           </Stack>
         </Form>
       </Sheet>

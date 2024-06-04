@@ -9,14 +9,12 @@ import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
 import Input from "@mui/joy/Input";
 import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
 import Stack from "@mui/joy/Stack";
 import Button from "@mui/joy/Button";
 import IconButton from "@mui/joy/IconButton";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import PasswordIcon from "@mui/icons-material/Password";
-import styled from "styled-components";
 
 function LoginPage() {
   const usernameRef = useRef(null);
@@ -24,36 +22,6 @@ function LoginPage() {
 
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log('usernameRef.current.value: ', usernameRef.current);
-  //   console.log('passwordRef.current.value: ', passwordRef.current);
-
-  //   try {
-  //     // const data = new FormData(e.currentTarget);
-  //     // const username = data.get('username');
-  //     const username = usernameRef.current.value;
-  //     const password = passwordRef.current.value;
-  //     console.log("here");
-  //     const response = await axios.post(
-  //       process.env.REACT_APP_API_URL_BLD + '/admin/login',
-  //       { username, password },
-  //       { withCredentials: true }
-  //     );
-
-  //     if (response.data.success) {
-  //       const user = JSON.parse(response.config.data);
-  //       login(user);
-  //       navigate('/dashboard');
-  //     }
-  //   } catch (error) {
-  //     console.log('error: ', error);
-  //     console.error('Login failed:', error);
-  //   }
-  // };
-
-  // const StyledForm = styled()
 
   return (
     <CssVarsProvider disableTransitionOnChange>
